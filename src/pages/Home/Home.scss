@@ -1,0 +1,19 @@
+.home-container {
+    .home-content {
+        .content-top {
+            .content-top-item {
+                height       : 300px;
+                border-radius: 10px;
+
+                .content-top-item-left {
+                    background-color: #f4f4f4 !important
+                }
+
+                &.content-top-item-right {
+                    background-color: #f4f4f4 !important
+                }
+            }
+
+        }
+    }
+}

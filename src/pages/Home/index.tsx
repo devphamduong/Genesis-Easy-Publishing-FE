@@ -1,8 +1,10 @@
 import { FC } from "react";
-import { Button, Card, Carousel, Col, List, Row } from "antd";
+import { Button, Card, Carousel, Col, List, Row, Typography } from "antd";
 import { useState } from "react";
 import "./Home.scss";
 import { RiDoubleQuotesL, RiDoubleQuotesR } from "react-icons/ri";
+import ListBooks from "../../components/ListBooks";
+const { Text } = Typography;
 
 const HomePage: FC = (props) => {
   const [categories, setCategories] = useState([
@@ -83,6 +85,65 @@ const HomePage: FC = (props) => {
         "Trần Lạc – Quân vương hư không dựa vào năng lực không ai bì kịp sống sót trong tận thế, khi mà nhân loại đã hoàn toàn diệt vong, thế giới chỉ còn lại quái vật. Hắn không còn ý niệm sống sót, quyết định tự đào hố chôn mình. Ai dè hắn vậy mà trọng sinh vào thời điểm một tháng trước tận thế, dị năng không gian của kiếp trước cũng đi theo hắn quay về quá khứ. Không nói nhiều, trước cứ trữ một tỷ vật tư rồi tính tiếp.",
     },
   ]);
+  const [threeCategories, setThreeCategories] = useState({
+    top: {
+      books: [
+        {
+          name: "Cẩu Tại Yêu Võ Loạn Thế Tu Tiên (Bản Dịch)",
+          chapters: 1670,
+          author: "Văn Sao Công",
+        },
+        {
+          name: "Cẩu Tại Yêu Võ Loạn Thế Tu Tiên (Bản Dịch)",
+          chapters: 1670,
+          author: "Văn Sao Công",
+        },
+        {
+          name: "Cẩu Tại Yêu Võ Loạn Thế Tu Tiên (Bản Dịch)",
+          chapters: 1670,
+          author: "Văn Sao Công",
+        },
+      ],
+    },
+    free: {
+      books: [
+        {
+          name: "Khai Cuộc Nữ Đế Làm Chính Cung (Dịch)",
+          chapters: 71,
+          author: "Kình Bạo Tiểu Long Hà",
+        },
+        {
+          name: "Khai Cuộc Nữ Đế Làm Chính Cung (Dịch)",
+          chapters: 71,
+          author: "Kình Bạo Tiểu Long Hà",
+        },
+        {
+          name: "Khai Cuộc Nữ Đế Làm Chính Cung (Dịch)",
+          chapters: 71,
+          author: "Kình Bạo Tiểu Long Hà",
+        },
+      ],
+    },
+    new: {
+      books: [
+        {
+          name: "Hổ Khen Tôi Vuốt Lông Giỏi",
+          chapters: 522,
+          author: "Huyền Tam Thiên",
+        },
+        {
+          name: "Hổ Khen Tôi Vuốt Lông Giỏi",
+          chapters: 522,
+          author: "Huyền Tam Thiên",
+        },
+        {
+          name: "Hổ Khen Tôi Vuốt Lông Giỏi",
+          chapters: 522,
+          author: "Huyền Tam Thiên",
+        },
+      ],
+    },
+  });
 
   const contentStyle: React.CSSProperties = {
     margin: 0,
@@ -174,7 +235,7 @@ const HomePage: FC = (props) => {
               <Col>
                 <List
                   size="small"
-                  header={<strong>Truyện Mới Cập Nhật</strong>}
+                  header={<strong>Sáng Tác Nhiều Người Đọc</strong>}
                   bordered
                   dataSource={data}
                   renderItem={(item) => <List.Item>{item}</List.Item>}
@@ -232,13 +293,25 @@ const HomePage: FC = (props) => {
                   </Row>
                 </Card>
               </Col>
-              <Col>
-                <List
-                  size="small"
-                  header={<strong>Truyện Mới Cập Nhật</strong>}
-                  bordered
-                  dataSource={data}
-                  renderItem={(item) => <List.Item>{item}</List.Item>}
+              <Col span={8}>
+                <ListBooks
+                  showDetailFirstBook={true}
+                  title="Kim Thánh Bảnh"
+                  books={[...threeCategories.top.books]}
+                />
+              </Col>
+              <Col span={8}>
+                <ListBooks
+                  showDetailFirstBook={true}
+                  title="Truyện Dịch Miễn Phí"
+                  books={[...threeCategories.free.books]}
+                />
+              </Col>
+              <Col span={8}>
+                <ListBooks
+                  showDetailFirstBook={true}
+                  title="Truyện Mới Trình Làng"
+                  books={[...threeCategories.new.books]}
                 />
               </Col>
             </Row>

@@ -1,8 +1,11 @@
 import { Outlet } from "react-router-dom";
 import Footer from "../../components/Footer";
 import Headers from "../../components/Header";
+import { FC } from "react";
 
-function UserLayout() {
+interface IProps {}
+
+const UserLayout: FC<IProps> = (props: IProps) => {
   return (
     <div className="layout-app">
       <Headers />
@@ -12,6 +15,6 @@ function UserLayout() {
       <Footer />
     </div>
   );
-}
+};
 
 export default UserLayout;

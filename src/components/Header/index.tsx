@@ -7,8 +7,11 @@ import { Col, Menu, MenuProps, Row } from "antd";
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import "./Header.scss";
+import { FC } from "react";
 
-function Header(props) {
+interface IProps {}
+
+const Header: FC<IProps> = (props: IProps) => {
   const [current, setCurrent] = useState("mail");
   const items: MenuProps["items"] = [
     {
@@ -93,6 +96,6 @@ function Header(props) {
       </div>
     </nav>
   );
-}
+};
 
 export default Header;

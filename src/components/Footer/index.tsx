@@ -1,7 +1,11 @@
 import { Col, Row } from "antd";
+
+import { FC } from "react";
 import "./Footer.scss";
 
-function Footer() {
+interface IProps {}
+
+const Footer: FC<IProps> = (props: IProps) => {
   return (
     <div className="footer-container text-start">
       <Row className="container gap-3">
@@ -114,6 +118,6 @@ function Footer() {
       </Row>
     </div>
   );
-}
+};
 
 export default Footer;

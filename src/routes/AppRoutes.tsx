@@ -1,12 +1,15 @@
 import UserLayout from "../layouts/User";
 import HomePage from "../pages/Home";
 import { Route, Routes } from "react-router-dom";
+import { FC } from "react";
 
 function Test() {
   return <>abc</>;
 }
 
-function AppRoutes() {
+interface IProps {}
+
+const AppRoutes: FC<IProps> = (props: IProps) => {
   return (
     <>
       <Routes>
@@ -23,6 +26,6 @@ function AppRoutes() {
              <PrivateRoutes path='/project' element={User}></PrivateRoutes> */}
     </>
   );
-}
+};
 
 export default AppRoutes;

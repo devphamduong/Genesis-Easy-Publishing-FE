@@ -4,7 +4,7 @@ import { Button, Col, List, Row, Typography } from "antd";
 const { Text } = Typography;
 
 interface IProps {
-  showDetailFirstBook: boolean;
+  showDetailFirstBook?: boolean;
   title: string;
   books: { name: string; chapters: number; author: string }[];
 }

@@ -4,6 +4,7 @@ import { useState } from "react";
 import "./Home.scss";
 import { RiDoubleQuotesL, RiDoubleQuotesR } from "react-icons/ri";
 import ListBooks from "../../components/ListBooks";
+import { kFormatter } from "../../shared/function";
 const { Text } = Typography;
 
 const HomePage: FC = (props) => {
@@ -174,17 +175,19 @@ const HomePage: FC = (props) => {
           <Col span={5} className="content-top-item">
             <Row
               justify={"center"}
-              className="content-top-item content-top-item-left"
+              className="content-top-item content-top-item-left py-2"
             >
               {categories &&
                 categories.map((item, index) => {
                   return (
                     <Col span={12} key={`cate-${item.name}`}>
-                      <div className="d-flex align-items-center px-2">
-                        <div>{item.icon}</div>
+                      <div className="d-flex align-items-center px-2 category gap-2">
+                        <div className="icon">{item.icon}</div>
                         <div>
-                          <strong>{item.name}</strong>
-                          <div>{item.amount}</div>
+                          <strong className="name">{item.name}</strong>
+                          <div className="amount">
+                            {kFormatter(item.amount)}
+                          </div>
                         </div>
                       </div>
                     </Col>
@@ -270,7 +273,11 @@ const HomePage: FC = (props) => {
                                   {item.name}
                                 </strong>
                               </div>
-                              <div className="author-text">{item.author}</div>
+                              <div>
+                                <span className="author-text">
+                                  {item.author}
+                                </span>
+                              </div>
                               <div className="d-flex gap-1">
                                 <span className="chapters">
                                   {item.chapters}
@@ -316,8 +323,39 @@ const HomePage: FC = (props) => {
               </Col>
             </Row>
           </Col>
+          <Col span={24}>
+            <div className="premium-cover text-center p-3">PREMIUM MEMBER</div>
+          </Col>
+          <Col span={6}>
+            <ListBooks
+              title="Kim Thánh Bảnh"
+              books={[...threeCategories.top.books]}
+            />
+          </Col>
+          <Col span={6}>
+            <ListBooks
+              title="Truyện Dịch Miễn Phí"
+              books={[...threeCategories.free.books]}
+            />
+          </Col>
+          <Col span={6}>
+            <ListBooks
+              title="Truyện Mới Trình Làng"
+              books={[...threeCategories.new.books]}
+            />
+          </Col>
+          <Col span={6}>
+            <ListBooks
+              title="Truyện Mới Trình Làng"
+              books={[...threeCategories.new.books]}
+            />
+          </Col>
+          <Col span={24}>
+            <div className="premium-cover text-center p-3">
+              HƯỚNG DẪN ĐĂNG TRUYỆN
+            </div>
+          </Col>
         </Row>
-        <Row className="content-middle"></Row>
       </div>
     </div>
   );

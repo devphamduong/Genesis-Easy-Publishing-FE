@@ -1,8 +1,30 @@
 .footer-container {
-    background-color   : white;
+    border-top         : 1px solid #ddd;
+    background-color   : #f4f4f4;
     // position        : fixed;
     bottom             : 0;
     text-align         : center;
-    width              : 100vw;
+    // width           : 100vw;
     padding            : 15px 0;
+
+    .copy-right,
+    .category {
+        color: #888;
+    }
+
+    .description {
+        font-size: 13px;
+    }
+
+    .copy-right {
+        font-size: 13px;
+    }
+
+    .category {
+        cursor: pointer;
+
+        &:hover {
+            color: #4497f8;
+        }
+    }
 }

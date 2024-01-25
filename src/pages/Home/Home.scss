@@ -6,7 +6,21 @@
         }
 
         .content-top-item-left {
-            background-color: #f4f4f4 !important
+            background-color: #f4f4f4 !important;
+
+            .category {
+                cursor: pointer;
+
+                &:hover {
+                    color: #4497f8;
+                }
+            }
+
+            .name {}
+
+            .amount {
+                font-size: 12px;
+            }
         }
     }
 
@@ -16,6 +30,14 @@
 
     .content-top-item-right {
         background-color: #f4f4f4 !important
+    }
+
+    .premium-cover {
+        border                : 1px solid red;
+        // background-image   : url('https://i.pinimg.com/736x/b3/09/66/b309668eab49a195f36e4ef37d39a3e4.jpg');
+        // background-size    : cover;
+        // background-repeat  : no-repeat;
+        // background-position: center;
     }
 }
 

@@ -1,0 +1,97 @@
+.home-container {
+    .home-content {
+        .content-top-item {
+            height       : 300px;
+            border-radius: 10px;
+        }
+
+        .content-top-item-left {
+            background-color: #f4f4f4 !important;
+
+            .category {
+                cursor: pointer;
+
+                &:hover {
+                    color: #4497f8;
+                }
+            }
+
+            .name {}
+
+            .amount {
+                font-size: 12px;
+            }
+        }
+    }
+
+    .slick-list {
+        border-radius: 10px;
+    }
+
+    .content-top-item-right {
+        background-color: #f4f4f4 !important
+    }
+
+    .premium-cover {
+        border                : 1px solid red;
+        // background-image   : url('https://i.pinimg.com/736x/b3/09/66/b309668eab49a195f36e4ef37d39a3e4.jpg');
+        // background-size    : cover;
+        // background-repeat  : no-repeat;
+        // background-position: center;
+    }
+}
+
+.book-container {
+    .book-item {
+
+        .name-text,
+        .author-text {
+            &:hover {
+                cursor: pointer;
+                color : #4497f8;
+            }
+        }
+
+        .chapters {
+            color: #f50;
+        }
+
+        .read {
+            color: #4497f8;
+        }
+
+        .text-small {
+            font-size: 10px;
+        }
+
+        .image {
+            height       : 120px;
+            overflow     : hidden;
+            width        : 100%;
+            border-radius: 10px;
+
+            .image-hover {
+                height             : 100%;
+                background-size    : cover;
+                background-repeat  : no-repeat;
+                background-position: center;
+                transform          : scale(1);
+                transition         : .25s ease-in-out;
+
+                &:hover {
+                    transform: scale(1.1);
+                }
+            }
+        }
+
+        .description {
+            svg {
+                font-size: 20px;
+            }
+
+            span {
+                font-size: 12px;
+            }
+        }
+    }
+}

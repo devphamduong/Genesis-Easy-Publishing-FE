@@ -1,5 +1,27 @@
-.list-books-container {
-    .book-item {
+.list-story-container {
+    .header {
+        height: 25px;
+    }
+
+    .icon-go-to {
+        cursor       : pointer;
+        width        : 25px;
+        border-radius: 50%;
+        height       : 100%;
+    }
+
+    &:hover {
+        .header {
+            .icon-go-to {
+                background-color: #f0e9e9;
+                display         : flex !important;
+                align-items     : center;
+                justify-content : center;
+            }
+        }
+    }
+
+    .story-item {
         .rank {
             display        : flex;
             justify-content: center;

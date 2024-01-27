@@ -41,8 +41,8 @@
     }
 }
 
-.book-container {
-    .book-item {
+.story-container {
+    .story-item {
 
         .name-text,
         .author-text {
@@ -67,7 +67,6 @@
         .image {
             height       : 120px;
             overflow     : hidden;
-            width        : 100%;
             border-radius: 10px;
 
             .image-hover {

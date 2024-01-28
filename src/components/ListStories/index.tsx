@@ -45,7 +45,7 @@ const ListStories: FC<IProps> = (props: IProps) => {
         {displayCategory ? (
           <Col span={2}>
             <div className="chapters">
-              {item.storyCategories![0].categoryName}
+              {item.storyCategories[0].categoryName}
             </div>
           </Col>
         ) : (
@@ -73,7 +73,7 @@ const ListStories: FC<IProps> = (props: IProps) => {
           </div>
           <div className="category">
             <Button size={"small"}>
-              {item.storyCategories![0].categoryName}
+              {item.storyCategories[0].categoryName}
             </Button>
           </div>
         </Col>

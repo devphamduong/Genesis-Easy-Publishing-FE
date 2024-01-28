@@ -5,7 +5,7 @@ export interface IStory {
   storyTitle: string;
   storyImage: string;
   storyDescription: string;
-  storyCategories?: ICategory[];
+  storyCategories: ICategory[];
   storyAuthor: {
     userId: number;
     userFullname: number;

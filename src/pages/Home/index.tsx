@@ -64,7 +64,7 @@ const HomePage: FC = (props) => {
               className="content-top-item content-top-item-left py-2"
             >
               {categories &&
-                categories.map((item, index) => {
+                categories?.map((item, index) => {
                   return (
                     <Col
                       span={12}
@@ -137,7 +137,7 @@ const HomePage: FC = (props) => {
                 <Card size="small" title="Lựa Chọn Của Biên Tập Viên">
                   <Row gutter={[30, 30]} className="story-container">
                     {stories &&
-                      stories.map((item, index) => {
+                      stories?.map((item, index) => {
                         return (
                           <Col
                             span={12}
@@ -221,7 +221,7 @@ const HomePage: FC = (props) => {
           </Col>
           {categories &&
             categories.length > 0 &&
-            categories.slice(0, 8).map((item, index) => {
+            categories.slice(0, 8)?.map((item, index) => {
               return (
                 <Col span={6} key={`category-item-${item.categoryId}`}>
                   <ListStories

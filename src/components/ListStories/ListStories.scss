@@ -1,0 +1,77 @@
+.list-story-container {
+    .header {
+        height: 25px;
+    }
+
+    .icon-go-to {
+        cursor       : pointer;
+        width        : 25px;
+        border-radius: 50%;
+        height       : 100%;
+    }
+
+    &:hover {
+        .header {
+            .icon-go-to {
+                background-color: #f0e9e9;
+                display         : flex !important;
+                align-items     : center;
+                justify-content : center;
+            }
+        }
+    }
+
+    .story-item {
+        .rank {
+            display         : flex;
+            justify-content : center;
+            align-items     : center;
+            width           : 25px;
+            height          : 25px;
+            background-color: #f0e9e9;
+            border-radius   : 50%;
+        }
+
+        .top {
+            color: white;
+
+            &.top-1 {
+                background-color: #4497f8;
+            }
+
+            &.top-2 {
+                background-color: #75b2fa;
+            }
+
+            &.top-3 {
+                background-color: #a6cefc;
+            }
+        }
+
+        .name {
+            cursor: pointer;
+
+            &:hover {
+                color: #4497f8;
+            }
+        }
+
+        .chapters,
+        .author {
+            font-size: 12px;
+            color    : #bba1a1;
+        }
+
+        .author {
+            cursor: pointer;
+
+            &:hover {
+                color: #4497f8;
+            }
+        }
+
+        .image-hover {
+            cursor: pointer;
+        }
+    }
+}

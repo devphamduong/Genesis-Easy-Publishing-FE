@@ -1,0 +1,38 @@
+.image {
+    position     : relative;
+    height       : 120px;
+    overflow     : hidden;
+    border-radius: 10px;
+
+    .image-hover {
+        height             : 100%;
+        background-size    : cover;
+        background-repeat  : no-repeat;
+        background-position: center;
+        transform          : scale(1);
+        transition         : .25s ease-in-out;
+
+        &:hover {
+            transform: scale(1.1);
+        }
+    }
+
+    .top-label {
+        font-size       : 13px;
+        background-color: rgba(255, 99, 71, 0.8);
+        width           : 100%;
+        position        : absolute;
+        bottom          : 0;
+        color           : white;
+        text-align      : center;
+
+        .icon {
+            font-size: 14px;
+        }
+
+        &.top-1 {
+            background: rgba(242, 255, 0, .6);
+            color     : #000;
+        }
+    }
+}

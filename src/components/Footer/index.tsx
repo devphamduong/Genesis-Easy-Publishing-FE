@@ -2,10 +2,15 @@ import { Col, Row } from "antd";
 
 import { FC } from "react";
 import "./Footer.scss";
+import { ICategory } from "../../interfaces/category.interface";
 
-interface IProps {}
+interface IProps {
+  categories: ICategory[];
+}
 
 const Footer: FC<IProps> = (props: IProps) => {
+  const { categories } = props;
+
   return (
     <div className="footer-container text-start">
       <Row className="container gap-3">
@@ -30,83 +35,48 @@ const Footer: FC<IProps> = (props: IProps) => {
                 Genesis sẽ mang lại cho những trải nghiệm tuyệt vời nhất.
               </div>
             </Col>
-            <Col span={4} className="text-center">
-              <div>
-                <span className="category">Truyện Huyền Nhuyễn</span>
-              </div>
-              <div>
-                <span className="category">Truyện Huyền Nhuyễn</span>
-              </div>
-              <div>
-                <span className="category">Truyện Huyền Nhuyễn</span>
-              </div>
-              <div>
-                <span className="category">Truyện Huyền Nhuyễn</span>
-              </div>
-              <div>
-                <span className="category">Truyện Huyền Nhuyễn</span>
-              </div>
-              <div>
-                <span className="category">Truyện Huyền Nhuyễn</span>
-              </div>
-              <div>
-                <span className="category">Truyện Huyền Nhuyễn</span>
-              </div>
-              <div>
-                <span className="category">Truyện Huyền Nhuyễn</span>
-              </div>
-            </Col>
-            <Col span={4} className="text-center">
-              <div>
-                <span className="category">Truyện Huyền Nhuyễn</span>
-              </div>
-              <div>
-                <span className="category">Truyện Huyền Nhuyễn</span>
-              </div>
-              <div>
-                <span className="category">Truyện Huyền Nhuyễn</span>
-              </div>
-              <div>
-                <span className="category">Truyện Huyền Nhuyễn</span>
-              </div>
-              <div>
-                <span className="category">Truyện Huyền Nhuyễn</span>
-              </div>
-              <div>
-                <span className="category">Truyện Huyền Nhuyễn</span>
-              </div>
-              <div>
-                <span className="category">Truyện Huyền Nhuyễn</span>
-              </div>
-              <div>
-                <span className="category">Truyện Huyền Nhuyễn</span>
-              </div>
-            </Col>
-            <Col span={4} className="text-center">
-              <div>
-                <span className="category">Truyện Huyền Nhuyễn</span>
-              </div>
-              <div>
-                <span className="category">Truyện Huyền Nhuyễn</span>
-              </div>
-              <div>
-                <span className="category">Truyện Huyền Nhuyễn</span>
-              </div>
-              <div>
-                <span className="category">Truyện Huyền Nhuyễn</span>
-              </div>
-              <div>
-                <span className="category">Truyện Huyền Nhuyễn</span>
-              </div>
-              <div>
-                <span className="category">Truyện Huyền Nhuyễn</span>
-              </div>
-              <div>
-                <span className="category">Truyện Huyền Nhuyễn</span>
-              </div>
-              <div>
-                <span className="category">Truyện Huyền Nhuyễn</span>
-              </div>
+            <Col span={13}>
+              <Row>
+                <Col span={8} className="text-start">
+                  {categories &&
+                    categories.length > 0 &&
+                    categories.slice(0, 8).map((item, index) => {
+                      return (
+                        <div key={`footer-category-${item.categoryId}`}>
+                          <span className="category">
+                            Truyện {item.categoryName}
+                          </span>
+                        </div>
+                      );
+                    })}
+                </Col>
+                <Col span={8} className="text-start">
+                  {categories &&
+                    categories.length > 0 &&
+                    categories.slice(9, 17).map((item, index) => {
+                      return (
+                        <div key={`footer-category-${item.categoryId}`}>
+                          <span className="category">
+                            Truyện {item.categoryName}
+                          </span>
+                        </div>
+                      );
+                    })}
+                </Col>
+                <Col span={8} className="text-start">
+                  {categories &&
+                    categories.length > 0 &&
+                    categories.slice(18, 25).map((item, index) => {
+                      return (
+                        <div key={`footer-category-${item.categoryId}`}>
+                          <span className="category">
+                            Truyện {item.categoryName}
+                          </span>
+                        </div>
+                      );
+                    })}
+                </Col>
+              </Row>
             </Col>
           </Row>
         </Col>

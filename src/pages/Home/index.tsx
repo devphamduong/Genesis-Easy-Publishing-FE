@@ -1,150 +1,43 @@
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { Button, Card, Carousel, Col, List, Row, Typography } from "antd";
 import { useState } from "react";
 import "./Home.scss";
-import { RiDoubleQuotesL, RiDoubleQuotesR } from "react-icons/ri";
-import ListBooks from "../../components/ListBooks";
+import { RiDoubleQuotesL } from "react-icons/ri";
 import { kFormatter } from "../../shared/function";
-const { Text } = Typography;
+import { ICategory } from "../../interfaces/category.interface";
+import {
+  getTop6Purchase,
+  getTopFamous,
+} from "../../services/story-api.service";
+import { IStory } from "../../interfaces/home/home.interface";
+import ListStories from "../../components/ListStories";
+import { useOutletContext } from "react-router-dom";
+import VerticalImageHover from "../../components/VerticalImageHover";
+const { Paragraph } = Typography;
 
 const HomePage: FC = (props) => {
-  const [categories, setCategories] = useState([
-    { icon: "O", name: "Huyền", amount: 1234 },
-    { icon: "O", name: "Huyền", amount: 1234 },
-    { icon: "O", name: "Huyền", amount: 1234 },
-    { icon: "O", name: "Huyền", amount: 1234 },
-    { icon: "O", name: "Huyền", amount: 1234 },
-    { icon: "O", name: "Huyền", amount: 1234 },
-    { icon: "O", name: "Huyền", amount: 1234 },
-    { icon: "O", name: "Huyền", amount: 1234 },
-    { icon: "O", name: "Huyền", amount: 1234 },
-    { icon: "O", name: "Huyền", amount: 1234 },
-    { icon: "O", name: "Huyền", amount: 1234 },
-    { icon: "O", name: "Huyền", amount: 1234 },
-    { icon: "O", name: "Huyền", amount: 1234 },
-    { icon: "O", name: "Huyền", amount: 1234 },
-  ]);
-  const [books, setBooks] = useState([
-    {
-      image:
-        "https://cdn.pixabay.com/photo/2015/05/13/14/34/cube-765526_640.jpg",
-      name: "Mạt Thế: Ta Có Kho Vật Tư Vô Hạn",
-      author: "Hận Niên Thiếu Vô Tri",
-      chapters: 1009,
-      read: 76998,
-      description:
-        "Trần Lạc – Quân vương hư không dựa vào năng lực không ai bì kịp sống sót trong tận thế, khi mà nhân loại đã hoàn toàn diệt vong, thế giới chỉ còn lại quái vật. Hắn không còn ý niệm sống sót, quyết định tự đào hố chôn mình. Ai dè hắn vậy mà trọng sinh vào thời điểm một tháng trước tận thế, dị năng không gian của kiếp trước cũng đi theo hắn quay về quá khứ. Không nói nhiều, trước cứ trữ một tỷ vật tư rồi tính tiếp.",
-    },
-    {
-      image:
-        "https://cdn.pixabay.com/photo/2015/05/13/14/34/cube-765526_640.jpg",
-      name: "Mạt Thế: Ta Có Kho Vật Tư Vô Hạn",
-      author: "Hận Niên Thiếu Vô Tri",
-      chapters: 1009,
-      read: 76998,
-      description:
-        "Trần Lạc – Quân vương hư không dựa vào năng lực không ai bì kịp sống sót trong tận thế, khi mà nhân loại đã hoàn toàn diệt vong, thế giới chỉ còn lại quái vật. Hắn không còn ý niệm sống sót, quyết định tự đào hố chôn mình. Ai dè hắn vậy mà trọng sinh vào thời điểm một tháng trước tận thế, dị năng không gian của kiếp trước cũng đi theo hắn quay về quá khứ. Không nói nhiều, trước cứ trữ một tỷ vật tư rồi tính tiếp.",
-    },
-    {
-      image:
-        "https://cdn.pixabay.com/photo/2015/05/13/14/34/cube-765526_640.jpg",
-      name: "Mạt Thế: Ta Có Kho Vật Tư Vô Hạn",
-      author: "Hận Niên Thiếu Vô Tri",
-      chapters: 1009,
-      read: 76998,
-      description:
-        "Trần Lạc – Quân vương hư không dựa vào năng lực không ai bì kịp sống sót trong tận thế, khi mà nhân loại đã hoàn toàn diệt vong, thế giới chỉ còn lại quái vật. Hắn không còn ý niệm sống sót, quyết định tự đào hố chôn mình. Ai dè hắn vậy mà trọng sinh vào thời điểm một tháng trước tận thế, dị năng không gian của kiếp trước cũng đi theo hắn quay về quá khứ. Không nói nhiều, trước cứ trữ một tỷ vật tư rồi tính tiếp.",
-    },
-    {
-      image:
-        "https://cdn.pixabay.com/photo/2015/05/13/14/34/cube-765526_640.jpg",
-      name: "Mạt Thế: Ta Có Kho Vật Tư Vô Hạn",
-      author: "Hận Niên Thiếu Vô Tri",
-      chapters: 1009,
-      read: 76998,
-      description:
-        "Trần Lạc – Quân vương hư không dựa vào năng lực không ai bì kịp sống sót trong tận thế, khi mà nhân loại đã hoàn toàn diệt vong, thế giới chỉ còn lại quái vật. Hắn không còn ý niệm sống sót, quyết định tự đào hố chôn mình. Ai dè hắn vậy mà trọng sinh vào thời điểm một tháng trước tận thế, dị năng không gian của kiếp trước cũng đi theo hắn quay về quá khứ. Không nói nhiều, trước cứ trữ một tỷ vật tư rồi tính tiếp.",
-    },
-    {
-      image:
-        "https://cdn.pixabay.com/photo/2015/05/13/14/34/cube-765526_640.jpg",
-      name: "Mạt Thế: Ta Có Kho Vật Tư Vô Hạn",
-      author: "Hận Niên Thiếu Vô Tri",
-      chapters: 1009,
-      read: 76998,
-      description:
-        "Trần Lạc – Quân vương hư không dựa vào năng lực không ai bì kịp sống sót trong tận thế, khi mà nhân loại đã hoàn toàn diệt vong, thế giới chỉ còn lại quái vật. Hắn không còn ý niệm sống sót, quyết định tự đào hố chôn mình. Ai dè hắn vậy mà trọng sinh vào thời điểm một tháng trước tận thế, dị năng không gian của kiếp trước cũng đi theo hắn quay về quá khứ. Không nói nhiều, trước cứ trữ một tỷ vật tư rồi tính tiếp.",
-    },
-    {
-      image:
-        "https://cdn.pixabay.com/photo/2015/05/13/14/34/cube-765526_640.jpg",
-      name: "Mạt Thế: Ta Có Kho Vật Tư Vô Hạn",
-      author: "Hận Niên Thiếu Vô Tri",
-      chapters: 1009,
-      read: 76998,
-      description:
-        "Trần Lạc – Quân vương hư không dựa vào năng lực không ai bì kịp sống sót trong tận thế, khi mà nhân loại đã hoàn toàn diệt vong, thế giới chỉ còn lại quái vật. Hắn không còn ý niệm sống sót, quyết định tự đào hố chôn mình. Ai dè hắn vậy mà trọng sinh vào thời điểm một tháng trước tận thế, dị năng không gian của kiếp trước cũng đi theo hắn quay về quá khứ. Không nói nhiều, trước cứ trữ một tỷ vật tư rồi tính tiếp.",
-    },
-  ]);
-  const [threeCategories, setThreeCategories] = useState({
-    top: {
-      books: [
-        {
-          name: "Cẩu Tại Yêu Võ Loạn Thế Tu Tiên (Bản Dịch)",
-          chapters: 1670,
-          author: "Văn Sao Công",
-        },
-        {
-          name: "Cẩu Tại Yêu Võ Loạn Thế Tu Tiên (Bản Dịch)",
-          chapters: 1670,
-          author: "Văn Sao Công",
-        },
-        {
-          name: "Cẩu Tại Yêu Võ Loạn Thế Tu Tiên (Bản Dịch)",
-          chapters: 1670,
-          author: "Văn Sao Công",
-        },
-      ],
-    },
-    free: {
-      books: [
-        {
-          name: "Khai Cuộc Nữ Đế Làm Chính Cung (Dịch)",
-          chapters: 71,
-          author: "Kình Bạo Tiểu Long Hà",
-        },
-        {
-          name: "Khai Cuộc Nữ Đế Làm Chính Cung (Dịch)",
-          chapters: 71,
-          author: "Kình Bạo Tiểu Long Hà",
-        },
-        {
-          name: "Khai Cuộc Nữ Đế Làm Chính Cung (Dịch)",
-          chapters: 71,
-          author: "Kình Bạo Tiểu Long Hà",
-        },
-      ],
-    },
-    new: {
-      books: [
-        {
-          name: "Hổ Khen Tôi Vuốt Lông Giỏi",
-          chapters: 522,
-          author: "Huyền Tam Thiên",
-        },
-        {
-          name: "Hổ Khen Tôi Vuốt Lông Giỏi",
-          chapters: 522,
-          author: "Huyền Tam Thiên",
-        },
-        {
-          name: "Hổ Khen Tôi Vuốt Lông Giỏi",
-          chapters: 522,
-          author: "Huyền Tam Thiên",
-        },
-      ],
-    },
-  });
+  const categories: ICategory[] = useOutletContext();
+  const [stories, setStories] = useState<IStory[]>([]);
+  const [famousStories, setFamousStories] = useState<IStory[]>([]);
+
+  useEffect(() => {
+    fetchTop6Purchase();
+    fetchTopFamous();
+  }, []);
+
+  const fetchTop6Purchase = async () => {
+    const res = await getTop6Purchase();
+    if (res && res.ec === 0) {
+      setStories(res.dt);
+    }
+  };
+
+  const fetchTopFamous = async () => {
+    const res = await getTopFamous();
+    if (res && res.ec === 0) {
+      setFamousStories(res.dt);
+    }
+  };
 
   const contentStyle: React.CSSProperties = {
     margin: 0,
@@ -160,33 +53,29 @@ const HomePage: FC = (props) => {
     padding: 2,
   };
 
-  const data = [
-    "Racing car sprays burning fuel into crowd.",
-    "Japanese princess to wed commoner.",
-    "Australian walks 100km after outback crash.",
-    "Man charged over missing wedding girl.",
-    "Los Angeles battles huge wildfires.",
-  ];
-
   return (
-    <div className="home-container">
+    <div className="home-container container py-3">
       <div className="home-content">
         <Row gutter={[16, 16]} className="content-top">
           <Col span={5} className="content-top-item">
             <Row
-              justify={"center"}
+              justify={"start"}
+              align={"middle"}
               className="content-top-item content-top-item-left py-2"
             >
               {categories &&
                 categories.map((item, index) => {
                   return (
-                    <Col span={12} key={`cate-${item.name}`}>
+                    <Col
+                      span={12}
+                      key={`cate-${item.categoryId}-${item.categoryName}`}
+                    >
                       <div className="d-flex align-items-center px-2 category gap-2">
-                        <div className="icon">{item.icon}</div>
+                        <div className="icon">{item.icon ?? "O"}</div>
                         <div>
-                          <strong className="name">{item.name}</strong>
+                          <strong className="name">{item.categoryName}</strong>
                           <div className="amount">
-                            {kFormatter(item.amount)}
+                            {kFormatter(item.stories.length)}
                           </div>
                         </div>
                       </div>
@@ -226,22 +115,18 @@ const HomePage: FC = (props) => {
           </Col>
           <Col span={5}>
             <Row gutter={[16, 16]}>
-              <Col>
-                <List
-                  size="small"
-                  header={<strong>Truyện Mới Cập Nhật</strong>}
-                  bordered
-                  dataSource={data}
-                  renderItem={(item) => <List.Item>{item}</List.Item>}
+              <Col className="w-100">
+                <ListStories
+                  displayCategory
+                  title="Truyện Mới Cập Nhật"
+                  stories={[...stories]}
                 />
               </Col>
-              <Col>
-                <List
-                  size="small"
-                  header={<strong>Sáng Tác Nhiều Người Đọc</strong>}
-                  bordered
-                  dataSource={data}
-                  renderItem={(item) => <List.Item>{item}</List.Item>}
+              <Col className="w-100">
+                <ListStories
+                  displayCategory
+                  title="Sáng Tác Nhiều Người Đọc"
+                  stories={[...stories]}
                 />
               </Col>
             </Row>
@@ -250,50 +135,55 @@ const HomePage: FC = (props) => {
             <Row gutter={[16, 16]}>
               <Col>
                 <Card size="small" title="Lựa Chọn Của Biên Tập Viên">
-                  <Row gutter={[30, 30]} className="book-container">
-                    {books &&
-                      books.map((item, index) => {
+                  <Row gutter={[30, 30]} className="story-container">
+                    {stories &&
+                      stories.map((item, index) => {
                         return (
                           <Col
                             span={12}
-                            className="d-flex book-item gap-2"
-                            key={`book-${item.name}`}
+                            className="d-flex story-item"
+                            key={`story-${item.storyId}-${item.storyTitle}`}
                           >
-                            <div className="image">
-                              <div
-                                className="image-hover"
-                                style={{
-                                  backgroundImage: `url("${item.image}")`,
-                                }}
-                              ></div>
-                            </div>
-                            <div>
-                              <div>
-                                <strong className="name-text">
-                                  {item.name}
-                                </strong>
-                              </div>
-                              <div>
-                                <span className="author-text">
-                                  {item.author}
-                                </span>
-                              </div>
-                              <div className="d-flex gap-1">
-                                <span className="chapters">
-                                  {item.chapters}
-                                  <span className="text-small"> Chương</span>
-                                </span>
-                                <span className="read">
-                                  {item.read}
-                                  <span className="text-small"> Đọc</span>
-                                </span>
-                              </div>
-                              <div className="description">
-                                <RiDoubleQuotesL />
-                                <span>{item.description}</span>
-                                <RiDoubleQuotesR />
-                              </div>
-                            </div>
+                            <Row>
+                              <Col span={4}>
+                                <VerticalImageHover
+                                  imageUrl={item.storyImage}
+                                />
+                              </Col>
+                              <Col span={20}>
+                                <div className="px-2">
+                                  <div>
+                                    <strong className="name-text">
+                                      {item.storyTitle}
+                                    </strong>
+                                  </div>
+                                  <div>
+                                    <span className="author-text">
+                                      {item.storyAuthor.userFullname}
+                                    </span>
+                                  </div>
+                                  <div className="d-flex gap-1">
+                                    <span className="chapters">
+                                      {item.storyChapterNumber}
+                                      <span className="text-small">
+                                        {" "}
+                                        Chương
+                                      </span>
+                                    </span>
+                                    <span className="read">
+                                      {item.read}
+                                      <span className="text-small"> Đọc</span>
+                                    </span>
+                                  </div>
+                                  <div className="description">
+                                    <Paragraph ellipsis={{ rows: 8 }}>
+                                      <RiDoubleQuotesL />{" "}
+                                      <span>{item.storyDescription}</span>
+                                    </Paragraph>
+                                  </div>
+                                </div>
+                              </Col>
+                            </Row>
                           </Col>
                         );
                       })}
@@ -301,24 +191,27 @@ const HomePage: FC = (props) => {
                 </Card>
               </Col>
               <Col span={8}>
-                <ListBooks
-                  showDetailFirstBook={true}
+                <ListStories
+                  urlToNavigate="rank-stories"
+                  showDetailFirstStory
                   title="Kim Thánh Bảnh"
-                  books={[...threeCategories.top.books]}
+                  stories={[...famousStories.slice(0, 10)]}
                 />
               </Col>
               <Col span={8}>
-                <ListBooks
-                  showDetailFirstBook={true}
+                <ListStories
+                  urlToNavigate="rank-stories"
+                  showDetailFirstStory
                   title="Truyện Dịch Miễn Phí"
-                  books={[...threeCategories.free.books]}
+                  stories={[...stories]}
                 />
               </Col>
               <Col span={8}>
-                <ListBooks
-                  showDetailFirstBook={true}
+                <ListStories
+                  urlToNavigate="rank-stories"
+                  showDetailFirstStory
                   title="Truyện Mới Trình Làng"
-                  books={[...threeCategories.new.books]}
+                  stories={[...stories]}
                 />
               </Col>
             </Row>
@@ -326,30 +219,18 @@ const HomePage: FC = (props) => {
           <Col span={24}>
             <div className="premium-cover text-center p-3">PREMIUM MEMBER</div>
           </Col>
-          <Col span={6}>
-            <ListBooks
-              title="Kim Thánh Bảnh"
-              books={[...threeCategories.top.books]}
-            />
-          </Col>
-          <Col span={6}>
-            <ListBooks
-              title="Truyện Dịch Miễn Phí"
-              books={[...threeCategories.free.books]}
-            />
-          </Col>
-          <Col span={6}>
-            <ListBooks
-              title="Truyện Mới Trình Làng"
-              books={[...threeCategories.new.books]}
-            />
-          </Col>
-          <Col span={6}>
-            <ListBooks
-              title="Truyện Mới Trình Làng"
-              books={[...threeCategories.new.books]}
-            />
-          </Col>
+          {categories &&
+            categories.length > 0 &&
+            categories.slice(0, 8).map((item, index) => {
+              return (
+                <Col span={6} key={`category-item-${item.categoryId}`}>
+                  <ListStories
+                    title={item.categoryName}
+                    stories={[...item.stories]}
+                  />
+                </Col>
+              );
+            })}
           <Col span={24}>
             <div className="premium-cover text-center p-3">
               HƯỚNG DẪN ĐĂNG TRUYỆN

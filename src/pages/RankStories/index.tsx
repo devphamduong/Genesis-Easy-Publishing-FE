@@ -38,7 +38,7 @@ const RankStories: FC<IProps> = (props: IProps) => {
       label: "Tất cả thể loại",
       children: <></>,
     },
-    ...categories.map((item, index) => {
+    ...categories?.map((item, index) => {
       return {
         key: "" + item.categoryId,
         label: item.categoryName,
@@ -61,7 +61,7 @@ const RankStories: FC<IProps> = (props: IProps) => {
           <Spin spinning={isLoading}>
             {famousStories &&
               famousStories.length > 0 &&
-              famousStories.map((item, index) => (
+              famousStories?.map((item, index) => (
                 <RowStory
                   key={`famous-story-${item.storyId}`}
                   story={item}

@@ -40,7 +40,7 @@ const Footer: FC<IProps> = (props: IProps) => {
                 <Col span={8} className="text-start">
                   {categories &&
                     categories.length > 0 &&
-                    categories.slice(0, 8).map((item, index) => {
+                    categories.slice(0, 8)?.map((item, index) => {
                       return (
                         <div key={`footer-category-${item.categoryId}`}>
                           <span className="category">
@@ -53,7 +53,7 @@ const Footer: FC<IProps> = (props: IProps) => {
                 <Col span={8} className="text-start">
                   {categories &&
                     categories.length > 0 &&
-                    categories.slice(9, 17).map((item, index) => {
+                    categories.slice(9, 17)?.map((item, index) => {
                       return (
                         <div key={`footer-category-${item.categoryId}`}>
                           <span className="category">
@@ -66,7 +66,7 @@ const Footer: FC<IProps> = (props: IProps) => {
                 <Col span={8} className="text-start">
                   {categories &&
                     categories.length > 0 &&
-                    categories.slice(18, 25).map((item, index) => {
+                    categories.slice(18, 25)?.map((item, index) => {
                       return (
                         <div key={`footer-category-${item.categoryId}`}>
                           <span className="category">

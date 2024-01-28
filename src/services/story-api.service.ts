@@ -9,3 +9,7 @@ export const getTop6Purchase = (): Promise<IApiResponse<IStory[]>> => {
 export const getTopLatestByChapter = (): Promise<IApiResponse<IStory[]>> => {
   return axios.get("story/top_latest_by_chapter");
 };
+
+export const getTopFamous = (): Promise<IApiResponse<IStory[]>> => {
+  return axios.get("story/top_famous");
+};

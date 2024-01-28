@@ -3,13 +3,15 @@ import "./ListStories.scss";
 import { Button, Col, List, Row, Tooltip, Typography } from "antd";
 import { IStory } from "../../interfaces/home/home.interface";
 import { FaArrowRightLong } from "react-icons/fa6";
+import { NavLink } from "react-router-dom";
 const { Text } = Typography;
 
 interface IProps {
   showDetailFirstStory?: true;
-  displayRankAndCategory?: true;
+  displayRank?: true;
+  displayCategory?: true;
   title: string;
-  category?: string;
+  urlToNavigate: string;
   stories: IStory[];
 }
 
@@ -18,28 +20,33 @@ const ListStories: FC<IProps> = (props: IProps) => {
     showDetailFirstStory,
     title,
     stories,
-    category,
-    displayRankAndCategory,
+    displayRank,
+    displayCategory,
+    urlToNavigate,
   } = props;
 
   const renderItemStory = (item: IStory, index: number) => {
     return (
       <Row className="w-100" align={"middle"} justify={"space-between"}>
-        {!displayRankAndCategory && (
+        {!displayRank && (
           <Col span={2}>
-            <div className={`rank ${index + 1 <= 3 && `top top-${index + 1}`}`}>
+            <div
+              className={`rank ${index + 1 <= 3 ? `top top-${index + 1}` : ""}`}
+            >
               <span>{index + 1}</span>
             </div>
           </Col>
         )}
         <Col span={19}>
-          <Text ellipsis={true} className="name">
+          <Text ellipsis={true} className="name w-100">
             <span>{item.storyTitle}</span>
           </Text>
         </Col>
-        {displayRankAndCategory ? (
+        {displayCategory ? (
           <Col span={2}>
-            <div className="chapters">{item.storyAuthor.userFullname}</div>
+            <div className="chapters">
+              {item.storyCategories![0].categoryName}
+            </div>
           </Col>
         ) : (
           <Col span={2}>
@@ -65,14 +72,16 @@ const ListStories: FC<IProps> = (props: IProps) => {
             <span className="author">{item.storyAuthor.userFullname}</span>
           </div>
           <div className="category">
-            <Button size={"small"}>{category}</Button>
+            <Button size={"small"}>
+              {item.storyCategories![0].categoryName}
+            </Button>
           </div>
         </Col>
         <Col span={5}>
           <div className="image-hover">
             <img
-              src="https://cdn.pixabay.com/photo/2015/05/13/14/34/cube-765526_640.jpg"
-              alt=""
+              src={`${item.storyImage}`}
+              alt={item.storyTitle}
               width={60}
               height={90}
             />
@@ -89,17 +98,17 @@ const ListStories: FC<IProps> = (props: IProps) => {
         header={
           <div className="header d-flex justify-content-between align-items-center">
             <strong>{title}</strong>
-            {displayRankAndCategory === true ||
+            {displayRank === true ||
             showDetailFirstStory === !showDetailFirstStory ? (
               <Tooltip title="Danh sách đầy đủ">
-                <div className="d-none icon-go-to">
+                <NavLink to={urlToNavigate} className="d-none icon-go-to">
                   <FaArrowRightLong />
-                </div>
+                </NavLink>
               </Tooltip>
             ) : (
-              <div className="d-none icon-go-to">
+              <NavLink to={urlToNavigate} className="d-none icon-go-to">
                 <FaArrowRightLong />
-              </div>
+              </NavLink>
             )}
           </div>
         }

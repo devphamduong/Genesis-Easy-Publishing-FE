@@ -1,25 +1,15 @@
 import { Col, Row } from "antd";
 
-import { FC, useEffect, useState } from "react";
+import { FC } from "react";
 import "./Footer.scss";
 import { ICategory } from "../../interfaces/category.interface";
-import { getAllCategories } from "../../services/category-api.service";
 
-interface IProps {}
+interface IProps {
+  categories: ICategory[];
+}
 
 const Footer: FC<IProps> = (props: IProps) => {
-  const [categories, setCategories] = useState<ICategory[]>([]);
-
-  useEffect(() => {
-    fetchAllCategories();
-  }, []);
-
-  const fetchAllCategories = async () => {
-    const res = await getAllCategories();
-    if (res && res.ec === 0) {
-      setCategories(res.dt);
-    }
-  };
+  const { categories } = props;
 
   return (
     <div className="footer-container text-start">
@@ -53,7 +43,9 @@ const Footer: FC<IProps> = (props: IProps) => {
                     categories.slice(0, 8).map((item, index) => {
                       return (
                         <div key={`footer-category-${item.categoryId}`}>
-                          <span className="category">{item.categoryName}</span>
+                          <span className="category">
+                            Truyện {item.categoryName}
+                          </span>
                         </div>
                       );
                     })}
@@ -64,7 +56,9 @@ const Footer: FC<IProps> = (props: IProps) => {
                     categories.slice(9, 17).map((item, index) => {
                       return (
                         <div key={`footer-category-${item.categoryId}`}>
-                          <span className="category">{item.categoryName}</span>
+                          <span className="category">
+                            Truyện {item.categoryName}
+                          </span>
                         </div>
                       );
                     })}
@@ -75,7 +69,9 @@ const Footer: FC<IProps> = (props: IProps) => {
                     categories.slice(18, 25).map((item, index) => {
                       return (
                         <div key={`footer-category-${item.categoryId}`}>
-                          <span className="category">{item.categoryName}</span>
+                          <span className="category">
+                            Truyện {item.categoryName}
+                          </span>
                         </div>
                       );
                     })}

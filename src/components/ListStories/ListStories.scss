@@ -23,17 +23,17 @@
 
     .story-item {
         .rank {
-            display        : flex;
-            justify-content: center;
-            align-items    : center;
-            width          : 25px;
-            height         : 25px;
+            display         : flex;
+            justify-content : center;
+            align-items     : center;
+            width           : 25px;
+            height          : 25px;
+            background-color: #f0e9e9;
+            border-radius   : 50%;
         }
 
         .top {
-            border-radius: 50%;
-            text-align   : center;
-            color        : white;
+            color: white;
 
             &.top-1 {
                 background-color: #4497f8;

@@ -1,0 +1,35 @@
+.row-story-container {
+    .row-story-content {
+
+        .name,
+        .author,
+        .category {
+            width: fit-content
+        }
+
+        .name,
+        .author {
+            cursor: pointer;
+        }
+
+        .name {
+            font-size: 24px;
+
+            &:hover {
+                color: #4497f8;
+            }
+        }
+
+        .author {
+            &:hover {
+                color: #f50;
+            }
+        }
+
+        .chapters {
+            text-transform: uppercase;
+            border        : 1px solid #ddd;
+            border-radius : 5px;
+        }
+    }
+}

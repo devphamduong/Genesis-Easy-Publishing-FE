@@ -6,20 +6,27 @@
         }
 
         .content-top-item-left {
-            background-color: #f4f4f4 !important;
+            background-color: #343a40 !important;
 
             .category {
+                color : white;
                 cursor: pointer;
 
-                &:hover {
-                    color: #4497f8;
+                &:hover,
+                &:hover .amount {
+                    color           : #007bff;
+                    background-color: rgba(10, 141, 223, .1);
                 }
             }
 
-            .name {}
+            .name {
+                font-size: 13px;
+            }
 
             .amount {
-                font-size: 12px;
+                font-size       : 12px;
+                color           : #888;
+                background-color: unset !important;
             }
         }
     }
@@ -62,25 +69,6 @@
 
         .text-small {
             font-size: 10px;
-        }
-
-        .image {
-            height       : 120px;
-            overflow     : hidden;
-            border-radius: 10px;
-
-            .image-hover {
-                height             : 100%;
-                background-size    : cover;
-                background-repeat  : no-repeat;
-                background-position: center;
-                transform          : scale(1);
-                transition         : .25s ease-in-out;
-
-                &:hover {
-                    transform: scale(1.1);
-                }
-            }
         }
 
         .description {

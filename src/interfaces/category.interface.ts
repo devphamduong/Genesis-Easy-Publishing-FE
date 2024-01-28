@@ -1,7 +1,7 @@
 import { IStory } from "./home/home.interface";
 
 export interface ICategory {
-  categoryId: number;
+  categoryId: string;
   categoryName: string;
   icon?: string;
   stories: IStory[];

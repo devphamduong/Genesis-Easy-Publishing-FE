@@ -4,7 +4,6 @@ import { useState } from "react";
 import "./Home.scss";
 import { RiDoubleQuotesL } from "react-icons/ri";
 import { kFormatter } from "../../shared/function";
-import { getAllCategories } from "../../services/category-api.service";
 import { ICategory } from "../../interfaces/category.interface";
 import {
   getTop6Purchase,
@@ -20,65 +19,6 @@ const HomePage: FC = (props) => {
   const categories: ICategory[] = useOutletContext();
   const [stories, setStories] = useState<IStory[]>([]);
   const [famousStories, setFamousStories] = useState<IStory[]>([]);
-  const [threeCategories, setThreeCategories] = useState({
-    top: {
-      books: [
-        {
-          name: "Cẩu Tại Yêu Võ Loạn Thế Tu Tiên (Bản Dịch)",
-          chapters: 1670,
-          author: "Văn Sao Công",
-        },
-        {
-          name: "Cẩu Tại Yêu Võ Loạn Thế Tu Tiên (Bản Dịch)",
-          chapters: 1670,
-          author: "Văn Sao Công",
-        },
-        {
-          name: "Cẩu Tại Yêu Võ Loạn Thế Tu Tiên (Bản Dịch)",
-          chapters: 1670,
-          author: "Văn Sao Công",
-        },
-      ],
-    },
-    free: {
-      books: [
-        {
-          name: "Khai Cuộc Nữ Đế Làm Chính Cung (Dịch)",
-          chapters: 71,
-          author: "Kình Bạo Tiểu Long Hà",
-        },
-        {
-          name: "Khai Cuộc Nữ Đế Làm Chính Cung (Dịch)",
-          chapters: 71,
-          author: "Kình Bạo Tiểu Long Hà",
-        },
-        {
-          name: "Khai Cuộc Nữ Đế Làm Chính Cung (Dịch)",
-          chapters: 71,
-          author: "Kình Bạo Tiểu Long Hà",
-        },
-      ],
-    },
-    new: {
-      books: [
-        {
-          name: "Hổ Khen Tôi Vuốt Lông Giỏi",
-          chapters: 522,
-          author: "Huyền Tam Thiên",
-        },
-        {
-          name: "Hổ Khen Tôi Vuốt Lông Giỏi",
-          chapters: 522,
-          author: "Huyền Tam Thiên",
-        },
-        {
-          name: "Hổ Khen Tôi Vuốt Lông Giỏi",
-          chapters: 522,
-          author: "Huyền Tam Thiên",
-        },
-      ],
-    },
-  });
 
   useEffect(() => {
     fetchTop6Purchase();
@@ -179,14 +119,14 @@ const HomePage: FC = (props) => {
                 <ListStories
                   displayCategory
                   title="Truyện Mới Cập Nhật"
-                  books={[...threeCategories.top.books]}
+                  stories={[...stories]}
                 />
               </Col>
               <Col className="w-100">
                 <ListStories
                   displayCategory
                   title="Sáng Tác Nhiều Người Đọc"
-                  books={[...threeCategories.top.books]}
+                  stories={[...stories]}
                 />
               </Col>
             </Row>
@@ -263,7 +203,7 @@ const HomePage: FC = (props) => {
                   urlToNavigate="rank-stories"
                   showDetailFirstStory
                   title="Truyện Dịch Miễn Phí"
-                  books={[...threeCategories.free.books]}
+                  stories={[...stories]}
                 />
               </Col>
               <Col span={8}>
@@ -271,7 +211,7 @@ const HomePage: FC = (props) => {
                   urlToNavigate="rank-stories"
                   showDetailFirstStory
                   title="Truyện Mới Trình Làng"
-                  books={[...threeCategories.new.books]}
+                  stories={[...stories]}
                 />
               </Col>
             </Row>
@@ -286,7 +226,6 @@ const HomePage: FC = (props) => {
                 <Col span={6} key={`category-item-${item.categoryId}`}>
                   <ListStories
                     title={item.categoryName}
-                    category={item.categoryName}
                     stories={[...item.stories]}
                   />
                 </Col>

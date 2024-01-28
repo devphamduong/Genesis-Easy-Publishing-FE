@@ -11,7 +11,7 @@ interface IProps {
   displayRank?: true;
   displayCategory?: true;
   title: string;
-  urlToNavigate: string;
+  urlToNavigate?: string;
   stories: IStory[];
 }
 
@@ -101,12 +101,12 @@ const ListStories: FC<IProps> = (props: IProps) => {
             {displayRank === true ||
             showDetailFirstStory === !showDetailFirstStory ? (
               <Tooltip title="Danh sách đầy đủ">
-                <NavLink to={urlToNavigate} className="d-none icon-go-to">
+                <NavLink to={urlToNavigate!} className="d-none icon-go-to">
                   <FaArrowRightLong />
                 </NavLink>
               </Tooltip>
             ) : (
-              <NavLink to={urlToNavigate} className="d-none icon-go-to">
+              <NavLink to={urlToNavigate!} className="d-none icon-go-to">
                 <FaArrowRightLong />
               </NavLink>
             )}

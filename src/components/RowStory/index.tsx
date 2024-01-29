@@ -31,7 +31,7 @@ const RowStory: FC<IProps> = (props: IProps) => {
               <strong>{story.storyAuthor.userFullname}</strong>
             </div>
             <Button size="small" className="category">
-              {story.storyCategories[0].categoryName}
+              {/* {story.storyCategories[0].categoryName} */}
             </Button>
           </Col>
           <Col span={3}>

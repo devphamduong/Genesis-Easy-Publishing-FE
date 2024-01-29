@@ -203,7 +203,7 @@ const HomePage: FC = (props) => {
                   urlToNavigate="rank-stories"
                   showDetailFirstStory
                   title="Truyện Dịch Miễn Phí"
-                  stories={[...stories]}
+                  stories={[...famousStories.slice(0, 10)]}
                 />
               </Col>
               <Col span={8}>
@@ -211,7 +211,7 @@ const HomePage: FC = (props) => {
                   urlToNavigate="rank-stories"
                   showDetailFirstStory
                   title="Truyện Mới Trình Làng"
-                  stories={[...stories]}
+                  stories={[...famousStories.slice(0, 10)]}
                 />
               </Col>
             </Row>

@@ -38,7 +38,7 @@ const RankStories: FC<IProps> = (props: IProps) => {
       label: "Tất cả thể loại",
       children: <></>,
     },
-    ...categories?.map((item, index) => {
+    ...categories.map((item, index) => {
       return {
         key: "" + item.categoryId,
         label: item.categoryName,

@@ -45,8 +45,7 @@ const ListStories: FC<IProps> = (props: IProps) => {
         {displayCategory ? (
           <Col span={2}>
             <div className="chapters">
-              {item.storyCategories.length > 0 &&
-                item.storyCategories[0].categoryName}
+              {item.storyCategories[0].categoryName}
             </div>
           </Col>
         ) : (
@@ -59,6 +58,7 @@ const ListStories: FC<IProps> = (props: IProps) => {
   };
 
   const renderItemWithDetailFirstStory = (item: IStory, index: number) => {
+    console.log(stories);
     return (
       <Row className="w-100" align={"top"} justify={"space-between"}>
         <Col span={2}>
@@ -74,8 +74,7 @@ const ListStories: FC<IProps> = (props: IProps) => {
           </div>
           <div className="category">
             <Button size={"small"}>
-              {item.storyCategories.length > 0 &&
-                item.storyCategories[0].categoryName}
+              {item.storyCategories[0].categoryName}
             </Button>
           </div>
         </Col>

@@ -4,7 +4,7 @@ import { Col, Row, Spin, Tabs, TabsProps } from "antd";
 import { useOutletContext } from "react-router-dom";
 import { ICategory } from "../../interfaces/category.interface";
 import { getTopFamous } from "../../services/story-api.service";
-import { IStory } from "../../interfaces/home/home.interface";
+import { IPaginationStory, IStory } from "../../interfaces/story.interface";
 import RowStory from "../../components/RowStory";
 
 interface IProps {}
@@ -12,7 +12,7 @@ interface IProps {}
 const RankStories: FC<IProps> = (props: IProps) => {
   const categories: ICategory[] = useOutletContext();
   const [currentCategoriesId, setCurrentCategoriesId] = useState<string>("all");
-  const [famousStories, setFamousStories] = useState<IStory[]>([]);
+  const [famousStories, setFamousStories] = useState<IPaginationStory>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
@@ -59,9 +59,9 @@ const RankStories: FC<IProps> = (props: IProps) => {
         </div>
         <div className="bottom">
           <Spin spinning={isLoading}>
-            {famousStories &&
-              famousStories.length > 0 &&
-              famousStories?.map((item, index) => (
+            {famousStories?.listStories &&
+              famousStories.listStories.length > 0 &&
+              famousStories.listStories?.map((item, index) => (
                 <RowStory
                   key={`famous-story-${item.storyId}`}
                   story={item}

@@ -1,7 +1,7 @@
 import { FC } from "react";
 import "./RowStory.scss";
 import VerticalImageHover from "../VerticalImageHover";
-import { IStory } from "../../interfaces/home/home.interface";
+import { IStory } from "../../interfaces/story.interface";
 import { Button, Col, Divider, Row, Typography } from "antd";
 import { FaPenFancy } from "react-icons/fa6";
 const { Text } = Typography;

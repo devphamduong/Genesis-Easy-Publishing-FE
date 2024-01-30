@@ -1,8 +1,9 @@
-import { IStory } from "./home/home.interface";
+import { IStory } from "./story.interface";
 
 export interface ICategory {
   categoryId: string;
   categoryName: string;
   icon?: string;
-  stories: IStory[];
+  stories?: [];
+  storiesNumber?: number;
 }

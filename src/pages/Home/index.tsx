@@ -12,7 +12,7 @@ import {
   getTopNewestStories,
   getTopReadStories,
 } from "../../services/story-api.service";
-import { IStory } from "../../interfaces/home/home.interface";
+import { IPaginationStory, IStory } from "../../interfaces/story.interface";
 import ListStories from "../../components/ListStories";
 import { useOutletContext } from "react-router-dom";
 import VerticalImageHover from "../../components/VerticalImageHover";
@@ -21,9 +21,9 @@ const { Paragraph } = Typography;
 const HomePage: FC = (props) => {
   const categories: ICategory[] = useOutletContext();
   const [stories, setStories] = useState<IStory[]>([]);
-  const [famousStories, setFamousStories] = useState<IStory[]>([]);
-  const [newestStories, setNewestStories] = useState<IStory[]>([]);
-  const [topReadStories, setTopReadStories] = useState<IStory[]>([]);
+  const [famousStories, setFamousStories] = useState<IPaginationStory>();
+  const [newestStories, setNewestStories] = useState<IPaginationStory>();
+  const [topReadStories, setTopReadStories] = useState<IPaginationStory>();
   const [storiesByCategory, setStoriesByCategory] = useState<ICategory[]>([]);
 
   useEffect(() => {
@@ -89,7 +89,7 @@ const HomePage: FC = (props) => {
               className="content-top-item content-top-item-left py-2"
             >
               {categories &&
-                categories?.map((item, index) => {
+                categories?.slice(0, 14).map((item, index) => {
                   return (
                     <Col
                       span={12}
@@ -100,7 +100,7 @@ const HomePage: FC = (props) => {
                         <div>
                           <strong className="name">{item.categoryName}</strong>
                           <div className="amount">
-                            {kFormatter(item.stories.length)}
+                            {kFormatter(item.storiesNumber!)}
                           </div>
                         </div>
                       </div>
@@ -144,14 +144,14 @@ const HomePage: FC = (props) => {
                 <ListStories
                   displayCategory
                   title="Truyện Mới Cập Nhật"
-                  stories={[...newestStories]}
+                  stories={[...(newestStories?.listStories ?? [])]}
                 />
               </Col>
               <Col className="w-100">
                 <ListStories
                   displayRead
                   title="Sáng Tác Nhiều Người Đọc"
-                  stories={[...topReadStories]}
+                  stories={[...(topReadStories?.listStories ?? [])]}
                 />
               </Col>
             </Row>
@@ -222,7 +222,7 @@ const HomePage: FC = (props) => {
                   displayRank
                   displayChapter
                   title="Kim Thánh Bảnh"
-                  stories={[...famousStories.slice(0, 10)]}
+                  stories={[...(famousStories?.listStories ?? [])]}
                 />
               </Col>
               <Col span={8}>
@@ -232,7 +232,7 @@ const HomePage: FC = (props) => {
                   displayRank
                   displayChapter
                   title="Truyện Dịch Miễn Phí"
-                  stories={[...famousStories.slice(0, 10)]}
+                  stories={[...(famousStories?.listStories ?? [])]}
                 />
               </Col>
               <Col span={8}>
@@ -242,7 +242,7 @@ const HomePage: FC = (props) => {
                   displayRank
                   displayChapter
                   title="Truyện Mới Trình Làng"
-                  stories={[...famousStories.slice(0, 10)]}
+                  stories={[...(famousStories?.listStories ?? [])]}
                 />
               </Col>
             </Row>
@@ -259,7 +259,7 @@ const HomePage: FC = (props) => {
                     displayRank
                     displayRead
                     title={item.categoryName}
-                    stories={[...item.stories]}
+                    stories={[...(item?.stories ?? [])]}
                   />
                 </Col>
               );

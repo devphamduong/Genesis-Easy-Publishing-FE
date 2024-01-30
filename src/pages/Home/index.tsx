@@ -6,8 +6,11 @@ import { RiDoubleQuotesL } from "react-icons/ri";
 import { kFormatter } from "../../shared/function";
 import { ICategory } from "../../interfaces/category.interface";
 import {
+  getStoriesByCategory,
   getTop6Purchase,
   getTopFamous,
+  getTopNewestStories,
+  getTopReadStories,
 } from "../../services/story-api.service";
 import { IStory } from "../../interfaces/home/home.interface";
 import ListStories from "../../components/ListStories";
@@ -19,13 +22,19 @@ const HomePage: FC = (props) => {
   const categories: ICategory[] = useOutletContext();
   const [stories, setStories] = useState<IStory[]>([]);
   const [famousStories, setFamousStories] = useState<IStory[]>([]);
+  const [newestStories, setNewestStories] = useState<IStory[]>([]);
+  const [topReadStories, setTopReadStories] = useState<IStory[]>([]);
+  const [storiesByCategory, setStoriesByCategory] = useState<ICategory[]>([]);
 
   useEffect(() => {
-    fetchTop6Purchase();
+    fetchTop6PurchaseStories();
     fetchTopFamous();
+    fetchStoriesByCategory();
+    fetchTopNewestStories();
+    fetchTopReadStories();
   }, []);
 
-  const fetchTop6Purchase = async () => {
+  const fetchTop6PurchaseStories = async () => {
     const res = await getTop6Purchase();
     if (res && res.ec === 0) {
       setStories(res.dt);
@@ -39,6 +48,27 @@ const HomePage: FC = (props) => {
     }
   };
 
+  const fetchStoriesByCategory = async () => {
+    const res = await getStoriesByCategory();
+    if (res && res.ec === 0) {
+      setStoriesByCategory(res.dt);
+    }
+  };
+
+  const fetchTopNewestStories = async () => {
+    const res = await getTopNewestStories();
+    if (res && res.ec === 0) {
+      setNewestStories(res.dt);
+    }
+  };
+
+  const fetchTopReadStories = async () => {
+    const res = await getTopReadStories();
+    if (res && res.ec === 0) {
+      setTopReadStories(res.dt);
+    }
+  };
+
   const contentStyle: React.CSSProperties = {
     margin: 0,
     height: "300px",
@@ -46,11 +76,6 @@ const HomePage: FC = (props) => {
     lineHeight: "160px",
     textAlign: "center",
     background: "#364d79",
-  };
-  const gridStyle: React.CSSProperties = {
-    width: "50%",
-    textAlign: "center",
-    padding: 2,
   };
 
   return (
@@ -119,14 +144,14 @@ const HomePage: FC = (props) => {
                 <ListStories
                   displayCategory
                   title="Truyện Mới Cập Nhật"
-                  stories={[...stories]}
+                  stories={[...newestStories]}
                 />
               </Col>
               <Col className="w-100">
                 <ListStories
-                  displayCategory
+                  displayRead
                   title="Sáng Tác Nhiều Người Đọc"
-                  stories={[...stories]}
+                  stories={[...topReadStories]}
                 />
               </Col>
             </Row>
@@ -135,7 +160,7 @@ const HomePage: FC = (props) => {
             <Row gutter={[16, 16]}>
               <Col>
                 <Card size="small" title="Lựa Chọn Của Biên Tập Viên">
-                  <Row gutter={[30, 30]} className="story-container">
+                  <Row gutter={[30, 16]} className="story-container w-100">
                     {stories &&
                       stories?.map((item, index) => {
                         return (
@@ -194,6 +219,8 @@ const HomePage: FC = (props) => {
                 <ListStories
                   urlToNavigate="rank-stories"
                   showDetailFirstStory
+                  displayRank
+                  displayChapter
                   title="Kim Thánh Bảnh"
                   stories={[...famousStories.slice(0, 10)]}
                 />
@@ -202,6 +229,8 @@ const HomePage: FC = (props) => {
                 <ListStories
                   urlToNavigate="rank-stories"
                   showDetailFirstStory
+                  displayRank
+                  displayChapter
                   title="Truyện Dịch Miễn Phí"
                   stories={[...famousStories.slice(0, 10)]}
                 />
@@ -210,6 +239,8 @@ const HomePage: FC = (props) => {
                 <ListStories
                   urlToNavigate="rank-stories"
                   showDetailFirstStory
+                  displayRank
+                  displayChapter
                   title="Truyện Mới Trình Làng"
                   stories={[...famousStories.slice(0, 10)]}
                 />
@@ -221,10 +252,12 @@ const HomePage: FC = (props) => {
           </Col>
           {categories &&
             categories.length > 0 &&
-            categories.slice(0, 8)?.map((item, index) => {
+            storiesByCategory.slice(0, 8)?.map((item, index) => {
               return (
                 <Col span={6} key={`category-item-${item.categoryId}`}>
                   <ListStories
+                    displayRank
+                    displayRead
                     title={item.categoryName}
                     stories={[...item.stories]}
                   />

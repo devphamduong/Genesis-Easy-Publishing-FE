@@ -4,12 +4,15 @@ import { Button, Col, List, Row, Tooltip, Typography } from "antd";
 import { IStory } from "../../interfaces/home/home.interface";
 import { FaArrowRightLong } from "react-icons/fa6";
 import { NavLink } from "react-router-dom";
+import { kFormatter } from "../../shared/function";
 const { Text } = Typography;
 
 interface IProps {
   showDetailFirstStory?: true;
-  displayRank?: true;
-  displayCategory?: true;
+  displayRank?: boolean | true;
+  displayCategory?: boolean | true;
+  displayRead?: boolean | true;
+  displayChapter?: boolean | true;
   title: string;
   urlToNavigate?: string;
   stories: IStory[];
@@ -23,12 +26,14 @@ const ListStories: FC<IProps> = (props: IProps) => {
     displayRank,
     displayCategory,
     urlToNavigate,
+    displayRead,
+    displayChapter,
   } = props;
 
   const renderItemStory = (item: IStory, index: number) => {
     return (
       <Row className="w-100" align={"middle"} justify={"space-between"}>
-        {!displayRank && (
+        {displayRank === true && (
           <Col span={2}>
             <div
               className={`rank ${index + 1 <= 3 ? `top top-${index + 1}` : ""}`}
@@ -38,19 +43,36 @@ const ListStories: FC<IProps> = (props: IProps) => {
           </Col>
         )}
         <Col span={19}>
-          <Text ellipsis={true} className="name w-100">
-            <span>{item.storyTitle}</span>
-          </Text>
+          <div className="d-flex flex-column">
+            <Text ellipsis={true} className="w-100">
+              <span className="name">{item.storyTitle}</span>
+            </Text>
+            {displayCategory && (
+              <span className="author" style={{ width: "fit-content" }}>
+                {item.storyAuthor.userFullname}
+              </span>
+            )}
+          </div>
         </Col>
-        {displayCategory ? (
-          <Col span={2}>
-            <div className="chapters">
+        {displayCategory && (
+          <Col span={5}>
+            <div className="chapters text-end">
               {item.storyCategories[0].categoryName}
             </div>
           </Col>
-        ) : (
+        )}
+        {displayRead && (
           <Col span={2}>
-            <div className="chapters">{item.storyChapterNumber}</div>
+            <div className="chapters read text-end">
+              {kFormatter(item.read)}
+            </div>
+          </Col>
+        )}
+        {displayChapter && (
+          <Col span={2}>
+            <div className="chapters read text-end">
+              {kFormatter(item.storyChapterNumber)}
+            </div>
           </Col>
         )}
       </Row>
@@ -58,7 +80,6 @@ const ListStories: FC<IProps> = (props: IProps) => {
   };
 
   const renderItemWithDetailFirstStory = (item: IStory, index: number) => {
-    console.log(stories);
     return (
       <Row className="w-100" align={"top"} justify={"space-between"}>
         <Col span={2}>
@@ -68,7 +89,9 @@ const ListStories: FC<IProps> = (props: IProps) => {
         </Col>
         <Col span={16} className="d-flex flex-column">
           <strong className="name">{item.storyTitle}</strong>
-          <div className="chapters">{item.storyChapterNumber} Chương</div>
+          <div className="chapters">
+            {kFormatter(item.storyChapterNumber)} Chương
+          </div>
           <div>
             <span className="author">{item.storyAuthor.userFullname}</span>
           </div>
@@ -99,7 +122,7 @@ const ListStories: FC<IProps> = (props: IProps) => {
         header={
           <div className="header d-flex justify-content-between align-items-center">
             <strong>{title}</strong>
-            {displayRank === true ||
+            {displayCategory ||
             showDetailFirstStory === !showDetailFirstStory ? (
               <Tooltip title="Danh sách đầy đủ">
                 <NavLink to={urlToNavigate!} className="d-none icon-go-to">

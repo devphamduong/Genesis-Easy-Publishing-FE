@@ -1,4 +1,4 @@
-import { ICategory } from "../category.interface";
+import { ICategory } from "./category.interface";
 
 export interface IStory {
   storyId: number;
@@ -20,4 +20,12 @@ export interface IStory {
   follow?: number;
   userPurchaseStory?: number;
   userPurchaseChapter?: number;
+}
+
+export interface IPaginationStory {
+  totalStories: number;
+  totalPage: number;
+  current: number;
+  pageSize: number;
+  listStories: IStory[];
 }

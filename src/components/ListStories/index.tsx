@@ -1,7 +1,7 @@
 import { FC } from "react";
 import "./ListStories.scss";
 import { Button, Col, List, Row, Tooltip, Typography } from "antd";
-import { IStory } from "../../interfaces/home/home.interface";
+import { IStory } from "../../interfaces/story.interface";
 import { FaArrowRightLong } from "react-icons/fa6";
 import { NavLink } from "react-router-dom";
 import { kFormatter } from "../../shared/function";
@@ -56,21 +56,19 @@ const ListStories: FC<IProps> = (props: IProps) => {
         </Col>
         {displayCategory && (
           <Col span={5}>
-            <div className="chapters text-end">
+            <div className="category text-end">
               {item.storyCategories[0].categoryName}
             </div>
           </Col>
         )}
         {displayRead && (
           <Col span={2}>
-            <div className="chapters read text-end">
-              {kFormatter(item.read)}
-            </div>
+            <div className="read text-end">{kFormatter(item.read)}</div>
           </Col>
         )}
         {displayChapter && (
           <Col span={2}>
-            <div className="chapters read text-end">
+            <div className="chapters text-end">
               {kFormatter(item.storyChapterNumber)}
             </div>
           </Col>
@@ -95,7 +93,7 @@ const ListStories: FC<IProps> = (props: IProps) => {
           <div>
             <span className="author">{item.storyAuthor.userFullname}</span>
           </div>
-          <div className="category">
+          <div>
             <Button size={"small"}>
               {item.storyCategories[0].categoryName}
             </Button>

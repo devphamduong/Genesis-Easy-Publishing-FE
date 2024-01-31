@@ -3,7 +3,7 @@ import { Button, Card, Carousel, Col, List, Row, Typography } from "antd";
 import { useState } from "react";
 import "./Home.scss";
 import { RiDoubleQuotesL } from "react-icons/ri";
-import { kFormatter } from "../../shared/function";
+import { kFormatter, slugify } from "../../shared/function";
 import { ICategory } from "../../interfaces/category.interface";
 import {
   getStoriesByCategory,
@@ -14,11 +14,12 @@ import {
 } from "../../services/story-api.service";
 import { IPaginationStory, IStory } from "../../interfaces/story.interface";
 import ListStories from "../../components/ListStories";
-import { useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import VerticalImageHover from "../../components/VerticalImageHover";
 const { Paragraph } = Typography;
 
 const HomePage: FC = (props) => {
+  const navigate = useNavigate();
   const categories: ICategory[] = useOutletContext();
   const [stories, setStories] = useState<IStory[]>([]);
   const [famousStories, setFamousStories] = useState<IPaginationStory>();
@@ -178,7 +179,16 @@ const HomePage: FC = (props) => {
                               <Col span={20}>
                                 <div className="px-2">
                                   <div>
-                                    <strong className="name-text">
+                                    <strong
+                                      className="name-text"
+                                      onClick={() =>
+                                        navigate(
+                                          `story/${item.storyId}/${slugify(
+                                            item.storyTitle
+                                          )}`
+                                        )
+                                      }
+                                    >
                                       {item.storyTitle}
                                     </strong>
                                   </div>
@@ -189,7 +199,7 @@ const HomePage: FC = (props) => {
                                   </div>
                                   <div className="d-flex gap-1">
                                     <span className="chapters">
-                                      {item.storyChapterNumber}
+                                      {kFormatter(item.storyChapterNumber)}
                                       <span className="text-small">
                                         {" "}
                                         Chương

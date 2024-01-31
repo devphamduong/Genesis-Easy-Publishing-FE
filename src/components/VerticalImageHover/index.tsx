@@ -5,13 +5,14 @@ import { FaCrown } from "react-icons/fa6";
 interface IProps {
   imageUrl: string;
   rank?: number;
+  height?: number;
 }
 
 const VerticalImageHover: FC<IProps> = (props: IProps) => {
-  const { imageUrl, rank } = props;
+  const { imageUrl, rank, height } = props;
 
   return (
-    <div className="image">
+    <div className="image" style={{ height: `${height ?? 120}px` }}>
       <div
         className="image-hover"
         style={{

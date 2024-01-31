@@ -11,6 +11,7 @@ import MostVIPStoriesRead from "../pages/RankStories/MostVIPStoriesRead";
 import RankStoriesLayout from "../layouts/RankStories";
 import { ICategory } from "../interfaces/category.interface";
 import { getAllCategories } from "../services/category-api.service";
+import DetailStory from "../pages/DetailStory";
 
 interface IProps {}
 
@@ -55,6 +56,7 @@ const AppRoutes: FC<IProps> = (props: IProps) => {
               element={<StoriesWithMostFan />}
             />
           </Route>
+          <Route path={"story/:id/:slug"} element={<DetailStory />}></Route>
         </Route>
         {/* <Route path='/login' element={<Login />}></Route>
                 <Route path='/register' element={<Register />}></Route> */}

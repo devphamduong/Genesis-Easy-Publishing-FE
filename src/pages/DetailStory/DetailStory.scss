@@ -1,0 +1,26 @@
+.detail-story-container {
+    .detail-story-content {
+        .detail-story {
+            border       : 1px solid #ddd;
+            border-radius: 10px;
+            padding      : 10px;
+
+            .title {
+                font-size: 32px;
+            }
+
+            .author {
+                cursor: pointer;
+
+                &:hover {
+                    color: #4497f8;
+                }
+            }
+
+            .text-small {
+                font-size: 10px;
+                color    : #aaa;
+            }
+        }
+    }
+}

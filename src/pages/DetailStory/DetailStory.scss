@@ -1,6 +1,6 @@
 .detail-story-container {
     .detail-story-content {
-        .detail-story {
+        .top {
             border       : 1px solid #ddd;
             border-radius: 10px;
             padding      : 10px;
@@ -20,6 +20,21 @@
             .text-small {
                 font-size: 10px;
                 color    : #aaa;
+            }
+        }
+
+        .bottom {
+            .author-info {
+                border-radius   : 10px;
+                background-color: #f2f4f5;
+            }
+
+            .icon-info {
+                font-size: 25px;
+            }
+
+            .text-small {
+                font-size: 12px;
             }
         }
     }

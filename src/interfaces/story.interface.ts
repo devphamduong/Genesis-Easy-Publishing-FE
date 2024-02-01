@@ -8,7 +8,7 @@ export interface IStory {
   storyCategories: ICategory[];
   storyAuthor: {
     userId: number;
-    userFullname: number;
+    userFullname: string;
   };
   storyChapterNumber: number;
   storyLatestChapter?: {
@@ -18,6 +18,7 @@ export interface IStory {
   read: number;
   like?: number;
   follow?: number;
+  userCount?: number;
   userPurchaseStory?: number;
   userPurchaseChapter?: number;
 }

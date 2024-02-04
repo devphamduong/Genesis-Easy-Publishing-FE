@@ -58,7 +58,10 @@ const AppRoutes: FC<IProps> = (props: IProps) => {
             />
           </Route>
           <Route path={"story/:id/:slug"} element={<DetailStory />}></Route>
-          <Route path={"story/read/:id/:slug"} element={<ReadStory />}></Route>
+          <Route
+            path={"story/read/:id/:chapter"}
+            element={<ReadStory />}
+          ></Route>
         </Route>
         {/* <Route path='/login' element={<Login />}></Route>
                 <Route path='/register' element={<Register />}></Route> */}

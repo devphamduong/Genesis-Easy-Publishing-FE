@@ -16,7 +16,7 @@ import {
   Tooltip,
 } from "antd";
 import VerticalImageHover from "../../components/VerticalImageHover";
-import EPTag from "../../components/EP/Tag";
+import EPTag from "../../components/EP-UI/Tag";
 import { kFormatter } from "../../shared/function";
 import {
   CommentOutlined,
@@ -33,7 +33,7 @@ import { BsReverseLayoutTextWindowReverse } from "react-icons/bs";
 import { GiBlackBook, GiSelfLove } from "react-icons/gi";
 import { LuBookCopy } from "react-icons/lu";
 import { BiBook } from "react-icons/bi";
-import EPModalReport from "../../components/EP/Modal/Report";
+import EPModalReport from "../../components/EP-UI/Modal/Report";
 
 interface IProps {}
 

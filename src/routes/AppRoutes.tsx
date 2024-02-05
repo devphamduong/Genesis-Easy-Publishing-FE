@@ -13,6 +13,7 @@ import { ICategory } from "../interfaces/category.interface";
 import { getAllCategories } from "../services/category-api.service";
 import DetailStory from "../pages/DetailStory";
 import ReadStory from "../pages/ReadStory";
+import WriteChapter from "../pages/WriteStory/WriteChapter";
 
 interface IProps {}
 
@@ -62,6 +63,7 @@ const AppRoutes: FC<IProps> = (props: IProps) => {
             path={"story/read/:id/:chapter"}
             element={<ReadStory />}
           ></Route>
+          <Route path={"vl"} element={<WriteChapter />}></Route>
         </Route>
         {/* <Route path='/login' element={<Login />}></Route>
                 <Route path='/register' element={<Register />}></Route> */}

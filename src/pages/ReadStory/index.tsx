@@ -10,8 +10,8 @@ import {
 import { useParams } from "react-router-dom";
 import { getChapterNumber } from "./shared/function";
 import { kFormatter } from "../../shared/function";
-import EPModalReport from "../../components/EP/Modal/Report";
-import EPButton from "../../components/EP/Button";
+import EPModalReport from "../../components/EP-UI/Modal/Report";
+import EPButton from "../../components/EP-UI/Button";
 
 interface IProps {}
 

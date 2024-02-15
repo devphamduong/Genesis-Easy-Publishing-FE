@@ -21,6 +21,26 @@ export interface IStory {
   userCount?: number;
   userPurchaseStory?: number;
   userPurchaseChapter?: number;
+  storyInteraction?: {
+    follow: number;
+    like: number;
+    read: number;
+    storyId: number;
+    view: number;
+  };
+}
+
+export interface IAuthor {
+  authorId: number;
+  authorName: string;
+  authorImage: string;
+  authorStories: number;
+  authorNewestStory: {
+    storyId: number;
+    storyTitle: string;
+    storyImage: string;
+    storyDescription: string;
+  };
 }
 
 export interface IPaginationStory {

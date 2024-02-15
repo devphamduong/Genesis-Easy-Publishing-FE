@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import "./DetailStory.scss";
 import { useNavigate, useParams } from "react-router-dom";
 import {
@@ -19,29 +19,65 @@ import VerticalImageHover from "../../components/VerticalImageHover";
 import EPTag from "../../components/EP-UI/Tag";
 import { kFormatter } from "../../shared/function";
 import {
-  CommentOutlined,
   HeartOutlined,
   LikeOutlined,
-  ShareAltOutlined,
-  StarOutlined,
   UserOutlined,
   WarningOutlined,
 } from "@ant-design/icons";
 import RowStory from "../../components/RowStory";
-import { PiBook, PiBookThin } from "react-icons/pi";
+import { PiBook } from "react-icons/pi";
 import { BsReverseLayoutTextWindowReverse } from "react-icons/bs";
-import { GiBlackBook, GiSelfLove } from "react-icons/gi";
-import { LuBookCopy } from "react-icons/lu";
-import { BiBook } from "react-icons/bi";
+import { GiSelfLove } from "react-icons/gi";
 import EPModalReport from "../../components/EP-UI/Modal/Report";
+import { IAuthor, IStory } from "../../interfaces/story.interface";
+import {
+  getRelatedStoriesById,
+  getStoryDetailById,
+} from "../../services/story-api.service";
+import { getAuthorById } from "../../services/author-api.service";
+import { Typography } from "antd";
+
+const { Paragraph } = Typography;
 
 interface IProps {}
 
 const DetailStory: FC<IProps> = (props: IProps) => {
   const { id, slug } = useParams();
   const navigate = useNavigate();
+  const [story, setStory] = useState<IStory>();
+  const [author, setAuthor] = useState<IAuthor>();
+  const [relatedStories, setRelatedStories] = useState<IStory[]>([]);
   const [currentTab, setCurrentTab] = useState<string>("introduce");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (id) {
+      fetchStoryById(id);
+      fetchRelatedStoriesById(id);
+      fetchAuthorById(id);
+    }
+  }, [id]);
+
+  const fetchStoryById = async (id: number | string) => {
+    const res = await getStoryDetailById(id);
+    if (res && res.ec === 0) {
+      setStory(res.dt);
+    }
+  };
+
+  const fetchAuthorById = async (id: number | string) => {
+    const res = await getAuthorById(id);
+    if (res && res.ec === 0) {
+      setAuthor(res.dt);
+    }
+  };
+
+  const fetchRelatedStoriesById = async (id: number | string) => {
+    const res = await getRelatedStoriesById(id);
+    if (res && res.ec === 0) {
+      setRelatedStories(res.dt);
+    }
+  };
 
   const itemTabs: TabsProps["items"] = [
     {
@@ -80,56 +116,47 @@ const DetailStory: FC<IProps> = (props: IProps) => {
                 <Col span={4}>
                   <VerticalImageHover
                     height={240}
-                    imageUrl="https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1554086139l/19288043.jpg"
+                    imageUrl={story?.storyImage ?? ""}
                   ></VerticalImageHover>
                 </Col>
                 <Col className="d-flex flex-column justify-content-between">
                   <div className="d-flex flex-column gap-2">
                     <div className="title">
-                      <strong>Trạm Thu Nhận Tai Ách (Dịch)</strong>
+                      <strong>{story?.storyTitle}</strong>
                     </div>
-                    <div className="author">Huyễn Mộng Liệp Nhân</div>
+                    <span className="author">
+                      {story?.storyAuthor.userFullname}
+                    </span>
                     <div className="category">
                       <Space size={[0, 8]} wrap>
-                        <EPTag
-                          color="magenta"
-                          shape="round"
-                          size="large"
-                          content="Dị năng"
-                        ></EPTag>
-                        <EPTag
-                          color="red"
-                          shape="round"
-                          size="large"
-                          content="Hoàn thành"
-                        ></EPTag>
-                        <EPTag
-                          color="volcano"
-                          shape="round"
-                          size="large"
-                          content="Free"
-                        ></EPTag>
-                        <EPTag
-                          color="orange"
-                          shape="round"
-                          size="large"
-                          content="VLXX"
-                        ></EPTag>
+                        {story?.storyCategories &&
+                          story.storyCategories.length > 0 &&
+                          story.storyCategories.map((item, index) => {
+                            return (
+                              <EPTag
+                                key={`category-${item.categoryId}`}
+                                color="magenta"
+                                shape="round"
+                                size="large"
+                                content={item.categoryName}
+                              ></EPTag>
+                            );
+                          })}
                       </Space>
                     </div>
                   </div>
                   <div className="d-flex flex-column gap-2">
                     <Space split={<Divider type="vertical" />}>
                       <div>
-                        {kFormatter(1159000)}{" "}
+                        {kFormatter(story?.storyChapterNumber ?? 0)}{" "}
                         <span className="text-small"> Chương</span>
                       </div>
                       <div>
-                        {kFormatter(1159000)}
+                        {kFormatter(story?.storyInteraction?.read ?? 0)}
                         <span className="text-small"> Lượt đọc</span>
                       </div>
                       <div>
-                        {kFormatter(1159000)}
+                        {kFormatter(story?.storyInteraction?.like ?? 0)}
                         <span className="text-small"> Lượt thích</span>
                       </div>
                     </Space>
@@ -169,32 +196,20 @@ const DetailStory: FC<IProps> = (props: IProps) => {
             <Tabs defaultActiveKey={currentTab} type="card" items={itemTabs} />
             <Row gutter={[16, 10]}>
               <Col span={19}>
-                <div>
-                  Thám tử 'bình thường' Ôn Văn tự cảm thấy đầu óc mình có bệnh,
-                  sau khi từ bệnh viện tâm thần tỉnh lại thì phát hiện tay phải
-                  của mình liên kết với một không gian thần bí tên là 'Trạm Thu
-                  Nhận Tai Ách', anh có thể bỏ quái vật mình bắt được vào không
-                  gian này, đồng thời cũng có được năng lực của chúng! Bắt
-                  vampire, có được cảm quan siêu mạnh và năng lực thôi miên; Bắt
-                  oan hồn, có thể tàng hình và xuyên tường; Bắt hồ ly tinh, có
-                  thể quyến rũ người khác giới; Bắt tinh tinh lông quăn, chỉ số
-                  IQ lập tức logout... Vì thu hoạch được càng nhiều năng lực
-                  mạnh hơn, Ôn Văn bắt đầu thử bắt quái vật, cũng vì thế mà bước
-                  chân vào thế giới siêu năng kỳ ảo, thấy được hiện thực ẩn sau
-                  tấm màn che giấu... ... PS: Linh cảm bộ truyện này tới từ thần
-                  thoại Cthulhu và SCP Cơ Kim Hội, phong cách hài hước thú vị,
-                  hoan nghênh mọi người ghé xem. Chúc bạn có những giây phút vui
-                  vẻ khi đọc truyện Trạm Thu Nhận Tai Ách (Dịch)!
-                </div>
+                <div>{story?.storyDescription}</div>
               </Col>
               <Col
                 span={5}
-                className="author-info d-flex flex-column align-items-center gap-3 py-4"
+                className="author-info d-flex flex-column align-items-center gap-3 py-4 text-center"
               >
                 <div>
-                  <Avatar size={120} icon={<UserOutlined />} />
+                  <Avatar
+                    size={120}
+                    src={author?.authorImage}
+                    icon={<UserOutlined />}
+                  />
                 </div>
-                <strong>Huyễn Mộng Liệp Nhân</strong>
+                <strong>{author?.authorName}</strong>
                 <div>
                   <Space split={<Divider type="vertical" />}>
                     <div className="d-flex flex-column align-items-center gap-1">
@@ -212,56 +227,33 @@ const DetailStory: FC<IProps> = (props: IProps) => {
                   </Space>
                 </div>
                 <Divider />
+                <div className="d-flex flex-column align-items-center gap-2">
+                  <span>Tác phẩm mới nhất</span>
+                  <VerticalImageHover
+                    height={120}
+                    width={80}
+                    imageUrl={author?.authorNewestStory.storyImage ?? ""}
+                  ></VerticalImageHover>
+                  <h6>{author?.authorNewestStory.storyTitle}</h6>
+                  <Paragraph ellipsis={{ rows: 3 }}>
+                    {author?.authorNewestStory.storyDescription}
+                  </Paragraph>
+                  <Button type="primary">Xem ngay</Button>
+                </div>
               </Col>
               <Col span={19}>
                 <strong>Có Thể Bạn Cũng Muốn Đọc</strong>
                 <Divider />
-                <RowStory
-                  story={{
-                    storyId: 17,
-                    storyTitle: "D\u1ECB Th\u1EBF T\u00E0 Qu\u00E2n",
-                    storyImage:
-                      "https://st.nhattruyento.com/data/comics/227/di-the-ta-quan.jpg",
-                    storyDescription: "vcl",
-                    storyCategories: [
-                      {
-                        categoryId: "1",
-                        categoryName: "vcl",
-                      },
-                    ],
-                    storyAuthor: {
-                      userId: 1,
-                      userFullname: "Duy Pham",
-                    },
-                    storyChapterNumber: 7,
-                    read: 208,
-                    userCount: 6,
-                    userPurchaseChapter: 15,
-                  }}
-                />
-                <RowStory
-                  story={{
-                    storyId: 17,
-                    storyTitle: "D\u1ECB Th\u1EBF T\u00E0 Qu\u00E2n",
-                    storyImage:
-                      "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1554086139l/19288043.jpg",
-                    storyDescription: "vcl",
-                    storyCategories: [
-                      {
-                        categoryId: "1",
-                        categoryName: "vcl",
-                      },
-                    ],
-                    storyAuthor: {
-                      userId: 1,
-                      userFullname: "Duy Pham",
-                    },
-                    storyChapterNumber: 7,
-                    read: 208,
-                    userCount: 6,
-                    userPurchaseChapter: 15,
-                  }}
-                />
+                {relatedStories &&
+                  relatedStories.length > 0 &&
+                  relatedStories.map((item, index) => {
+                    return (
+                      <RowStory
+                        key={`related-story-${item.storyId}`}
+                        story={item}
+                      />
+                    );
+                  })}
               </Col>
             </Row>
           </div>

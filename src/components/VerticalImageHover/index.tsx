@@ -6,13 +6,17 @@ interface IProps {
   imageUrl: string;
   rank?: number;
   height?: number;
+  width?: number;
 }
 
 const VerticalImageHover: FC<IProps> = (props: IProps) => {
-  const { imageUrl, rank, height } = props;
+  const { imageUrl, rank, height, width } = props;
 
   return (
-    <div className="image" style={{ height: `${height ?? 120}px` }}>
+    <div
+      className="image"
+      style={{ height: `${height ?? 120}px`, width: `${width}px` }}
+    >
       <div
         className="image-hover"
         style={{

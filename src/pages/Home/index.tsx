@@ -95,6 +95,13 @@ const HomePage: FC = (props) => {
                     <Col
                       span={12}
                       key={`cate-${item.categoryId}-${item.categoryName}`}
+                      onClick={() =>
+                        navigate(
+                          `/category/${item.categoryId}/${slugify(
+                            item.categoryName
+                          )}`
+                        )
+                      }
                     >
                       <div className="d-flex align-items-center px-2 category gap-2">
                         <div className="icon">{item.icon ?? "O"}</div>
@@ -183,7 +190,7 @@ const HomePage: FC = (props) => {
                                       className="name-text"
                                       onClick={() =>
                                         navigate(
-                                          `story/${item.storyId}/${slugify(
+                                          `/story/${item.storyId}/${slugify(
                                             item.storyTitle
                                           )}`
                                         )
@@ -231,7 +238,7 @@ const HomePage: FC = (props) => {
                   showDetailFirstStory
                   displayRank
                   displayChapter
-                  title="Kim Thánh Bảnh"
+                  title="Kim Thánh Bảng"
                   stories={[...(famousStories?.listStories ?? [])]}
                 />
               </Col>

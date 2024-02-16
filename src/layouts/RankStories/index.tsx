@@ -17,6 +17,7 @@ import { NavLink, Outlet } from "react-router-dom";
 import "./RankStoriesLayout.scss";
 import { ICategory } from "../../interfaces/category.interface";
 import { SearchOutlined } from "@ant-design/icons";
+import Cover from "../../components/Cover";
 
 type MenuItem = Required<MenuProps>["items"][number];
 function getItem(
@@ -115,14 +116,14 @@ const RankStoriesLayout: FC<IProps> = (props: IProps) => {
 
   return (
     <div className="rank-stories-layout-container">
-      <div className="banner d-flex flex-column align-items-center justify-content-center">
-        <div className="title">
-          <strong>Kim Thánh Bảng</strong>
-        </div>
-        <div className="sub-title">
-          <strong>Bảng Xếp Hạng Truyện Chữ Toàn Diện Của The Genesis</strong>
-        </div>
-      </div>
+      <Cover
+        imgUrl="https://yystatic.codeprime.net/desktop/img/tables/table-bg-14.jpg"
+        title="Kim Thánh Bảng"
+        subTitle="Bảng Xếp Hạng Truyện Chữ Toàn Diện Của The Genesis"
+        style={{
+          backgroundPositionY: "bottom",
+        }}
+      />
       <div className="rank-stories-layout-content container py-3">
         <Row gutter={[16, 10]}>
           <Col span={5} className="left">

@@ -50,7 +50,7 @@ const items: DescriptionsProps["items"] = [
   },
 ];
 
-const ReadStory: FC<IProps> = (props: IProps) => {
+const ReadStoryPage: FC<IProps> = (props: IProps) => {
   const { id, chapter } = useParams();
   const [currentChapter, setCurrentChapter] = useState<number>(
     getChapterNumber(chapter!)
@@ -154,4 +154,4 @@ const ReadStory: FC<IProps> = (props: IProps) => {
   );
 };
 
-export default ReadStory;
+export default ReadStoryPage;

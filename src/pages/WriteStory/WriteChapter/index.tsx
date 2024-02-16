@@ -8,7 +8,7 @@ interface IProps {}
 
 const mdParser = new MarkdownIt(/* Markdown-it options */);
 
-const WriteChapter: FC<IProps> = (props: IProps) => {
+const WriteChapterPage: FC<IProps> = (props: IProps) => {
   const [contentMarkdown, setContentMarkdown] = useState<string>("");
   const [contentHTML, setContentHTML] = useState<string>("");
 
@@ -33,4 +33,4 @@ const WriteChapter: FC<IProps> = (props: IProps) => {
   );
 };
 
-export default WriteChapter;
+export default WriteChapterPage;

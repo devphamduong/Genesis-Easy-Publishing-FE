@@ -41,7 +41,7 @@ const { Paragraph } = Typography;
 
 interface IProps {}
 
-const DetailStory: FC<IProps> = (props: IProps) => {
+const DetailStoryPage: FC<IProps> = (props: IProps) => {
   const { id, slug } = useParams();
   const navigate = useNavigate();
   const [story, setStory] = useState<IStory>();
@@ -267,4 +267,4 @@ const DetailStory: FC<IProps> = (props: IProps) => {
   );
 };
 
-export default DetailStory;
+export default DetailStoryPage;

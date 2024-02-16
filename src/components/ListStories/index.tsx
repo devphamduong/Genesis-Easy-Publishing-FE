@@ -3,8 +3,8 @@ import "./ListStories.scss";
 import { Button, Col, List, Row, Tooltip, Typography } from "antd";
 import { IStory } from "../../interfaces/story.interface";
 import { FaArrowRightLong } from "react-icons/fa6";
-import { NavLink } from "react-router-dom";
-import { kFormatter } from "../../shared/function";
+import { NavLink, useNavigate } from "react-router-dom";
+import { kFormatter, slugify } from "../../shared/function";
 const { Text } = Typography;
 
 interface IProps {
@@ -29,6 +29,7 @@ const ListStories: FC<IProps> = (props: IProps) => {
     displayRead,
     displayChapter,
   } = props;
+  const navigate = useNavigate();
 
   const renderItemStory = (item: IStory, index: number) => {
     return (
@@ -45,7 +46,14 @@ const ListStories: FC<IProps> = (props: IProps) => {
         <Col span={19}>
           <div className="d-flex flex-column">
             <Text ellipsis={true} className="w-100">
-              <span className="name">{item.storyTitle}</span>
+              <span
+                onClick={() =>
+                  navigate(`story/${item.storyId}/${slugify(item.storyTitle)}`)
+                }
+                className="name"
+              >
+                {item.storyTitle}
+              </span>
             </Text>
             {displayCategory && (
               <span className="author" style={{ width: "fit-content" }}>
@@ -86,7 +94,14 @@ const ListStories: FC<IProps> = (props: IProps) => {
           </div>
         </Col>
         <Col span={16} className="d-flex flex-column">
-          <strong className="name">{item.storyTitle}</strong>
+          <strong
+            onClick={() =>
+              navigate(`/story/${item.storyId}/${slugify(item.storyTitle)}`)
+            }
+            className="name"
+          >
+            {item.storyTitle}
+          </strong>
           <div className="chapters">
             {kFormatter(item.storyChapterNumber)} Chương
           </div>

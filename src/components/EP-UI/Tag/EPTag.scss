@@ -1,0 +1,15 @@
+.ep-tag {
+
+    &.ant-tag,
+    &.rectangle {
+        border-radius: 4px;
+    }
+
+    &.round {
+        border-radius: 20px;
+    }
+
+    &.large {
+        padding: 3px 10px;
+    }
+}

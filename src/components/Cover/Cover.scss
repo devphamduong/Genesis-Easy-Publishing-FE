@@ -1,0 +1,19 @@
+.cover {
+    height             : 200px;
+    background-position: center;
+    background-repeat  : no-repeat;
+    background-size    : cover;
+
+    .title,
+    .sub-title {
+        color: white;
+    }
+
+    .title {
+        font-size: 3.5rem;
+    }
+
+    .sub-title {
+        font-size: 2rem;
+    }
+}

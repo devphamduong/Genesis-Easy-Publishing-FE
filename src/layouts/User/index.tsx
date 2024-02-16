@@ -13,15 +13,13 @@ const UserLayout: FC<IProps> = (props: IProps) => {
   const { categories } = props;
 
   return (
-    <div>
-      <Affix>
-        <Headers />
-      </Affix>
+    <>
+      <Headers />
       <div>
         <Outlet context={categories} />
       </div>
       <Footer categories={categories} />
-    </div>
+    </>
   );
 };
 

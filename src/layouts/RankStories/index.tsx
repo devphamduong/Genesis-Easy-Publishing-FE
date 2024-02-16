@@ -1,9 +1,23 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import { RouteEndPointForUser } from "../../constants/route-end-point.constant";
-import { Affix, Col, Menu, MenuProps, Row } from "antd";
+import {
+  Affix,
+  Button,
+  Checkbox,
+  Col,
+  GetProp,
+  Input,
+  Menu,
+  MenuProps,
+  Row,
+  Select,
+  Slider,
+} from "antd";
 import { NavLink, Outlet } from "react-router-dom";
 import "./RankStoriesLayout.scss";
 import { ICategory } from "../../interfaces/category.interface";
+import { SearchOutlined } from "@ant-design/icons";
+import Cover from "../../components/Cover";
 
 type MenuItem = Required<MenuProps>["items"][number];
 function getItem(
@@ -62,23 +76,54 @@ const items: MenuProps["items"] = [
   ),
 ];
 
+const options = [
+  { label: "Apple", value: "Apple" },
+  { label: "Pear", value: "Pear" },
+  { label: "Orange", value: "Orange" },
+];
+
 interface IProps {
   categories: ICategory[];
 }
 
 const RankStoriesLayout: FC<IProps> = (props: IProps) => {
   const { categories } = props;
+  const [priceRange, setPriceRange] = useState<number[]>([0, 100]);
+
+  const onChange: GetProp<typeof Checkbox.Group, "onChange"> = (
+    checkedValues
+  ) => {
+    console.log("checked = ", checkedValues);
+  };
+
+  const onChangePriceRange = (value: number[]) => {
+    setPriceRange(value);
+  };
+
+  const onChangeSearch = (value: string) => {
+    console.log(`selected ${value}`);
+  };
+
+  const onSearch = (value: string) => {
+    console.log("search:", value);
+  };
+
+  // Filter `option.label` match the user type `input`
+  const filterOption = (
+    input: string,
+    option?: { label: string; value: string }
+  ) => (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
 
   return (
     <div className="rank-stories-layout-container">
-      <div className="banner d-flex flex-column align-items-center justify-content-center">
-        <div className="title">
-          <strong>Kim Thánh Bảng</strong>
-        </div>
-        <div className="sub-title">
-          <strong>Bảng Xếp Hạng Truyện Chữ Toàn Diện Của The Genesis</strong>
-        </div>
-      </div>
+      <Cover
+        imgUrl="https://yystatic.codeprime.net/desktop/img/tables/table-bg-14.jpg"
+        title="Kim Thánh Bảng"
+        subTitle="Bảng Xếp Hạng Truyện Chữ Toàn Diện Của The Genesis"
+        style={{
+          backgroundPositionY: "bottom",
+        }}
+      />
       <div className="rank-stories-layout-content container py-3">
         <Row gutter={[16, 10]}>
           <Col span={5} className="left">
@@ -88,6 +133,49 @@ const RankStoriesLayout: FC<IProps> = (props: IProps) => {
                 mode="inline"
                 items={items}
               />
+              <Input
+                size="large"
+                placeholder="Tìm tên truyện, tác giả"
+                prefix={<SearchOutlined />}
+              />
+              <Checkbox.Group
+                options={options}
+                defaultValue={["Pear"]}
+                onChange={onChange}
+              />
+              <div>
+                From: {priceRange[0]} To: {priceRange[1]}
+              </div>
+              <Slider
+                range
+                defaultValue={priceRange}
+                max={100}
+                onChange={onChange}
+                onChangeComplete={onChangePriceRange}
+              />
+              <Select
+                showSearch
+                placeholder="Select a person"
+                optionFilterProp="children"
+                onChange={onChangeSearch}
+                onSearch={onSearch}
+                filterOption={filterOption}
+                options={[
+                  {
+                    value: "jack",
+                    label: "Jack",
+                  },
+                  {
+                    value: "lucy",
+                    label: "Lucy",
+                  },
+                  {
+                    value: "tom",
+                    label: "Tom",
+                  },
+                ]}
+              />
+              <Button icon={<SearchOutlined />}>Seach</Button>
             </Affix>
           </Col>
           <Col span={19} className="right">

@@ -4,6 +4,8 @@ import VerticalImageHover from "../VerticalImageHover";
 import { IStory } from "../../interfaces/story.interface";
 import { Button, Col, Divider, Row, Typography } from "antd";
 import { FaPenFancy } from "react-icons/fa6";
+import { useNavigate } from "react-router-dom";
+import { slugify } from "../../shared/function";
 const { Text } = Typography;
 
 interface IProps {
@@ -13,6 +15,7 @@ interface IProps {
 
 const RowStory: FC<IProps> = (props: IProps) => {
   const { story, rank } = props;
+  const navigate = useNavigate();
 
   return (
     <div className="row-story-container">
@@ -22,7 +25,14 @@ const RowStory: FC<IProps> = (props: IProps) => {
             <VerticalImageHover rank={rank} imageUrl={story.storyImage} />
           </Col>
           <Col span={18} className="d-flex flex-column justify-content-between">
-            <strong className="name">{story.storyTitle}</strong>
+            <strong
+              onClick={() =>
+                navigate(`/story/${story.storyId}/${slugify(story.storyTitle)}`)
+              }
+              className="name"
+            >
+              {story.storyTitle}
+            </strong>
             <Text ellipsis={true} className="description">
               <span>{story.storyDescription}</span>
             </Text>

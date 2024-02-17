@@ -3,7 +3,7 @@ import "./ListStories.scss";
 import { Button, Col, List, Row, Tooltip, Typography } from "antd";
 import { IStory } from "../../interfaces/story.interface";
 import { FaArrowRightLong } from "react-icons/fa6";
-import { NavLink, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { kFormatter, slugify } from "../../shared/function";
 const { Text } = Typography;
 
@@ -138,14 +138,14 @@ const ListStories: FC<IProps> = (props: IProps) => {
             {displayCategory ||
             showDetailFirstStory === !showDetailFirstStory ? (
               <Tooltip title="Danh sách đầy đủ">
-                <NavLink to={urlToNavigate!} className="d-none icon-go-to">
+                <Link to={urlToNavigate!} className="d-none icon-go-to">
                   <FaArrowRightLong />
-                </NavLink>
+                </Link>
               </Tooltip>
             ) : (
-              <NavLink to={urlToNavigate!} className="d-none icon-go-to">
+              <Link to={urlToNavigate!} className="d-none icon-go-to">
                 <FaArrowRightLong />
-              </NavLink>
+              </Link>
             )}
           </div>
         }

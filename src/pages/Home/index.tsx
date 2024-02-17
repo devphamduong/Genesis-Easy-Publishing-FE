@@ -87,7 +87,7 @@ const HomePage: FC = (props) => {
             <Row
               justify={"start"}
               align={"middle"}
-              className="content-top-item content-top-item-left py-2"
+              className="content-top-item rounded-3 content-top-item-left py-2"
             >
               {categories &&
                 categories?.slice(0, 14).map((item, index) => {

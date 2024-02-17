@@ -7,6 +7,10 @@
             width: fit-content
         }
 
+        .author-chapters {
+            width: unset;
+        }
+
         .name,
         .author {
             cursor: pointer;
@@ -30,6 +34,10 @@
             text-transform: uppercase;
             border        : 1px solid #ddd;
             border-radius : 5px;
+
+            &.chapters-small {
+                font-size: 10px;
+            }
         }
     }
 }

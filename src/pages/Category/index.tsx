@@ -2,7 +2,7 @@ import { FC } from "react";
 import "./Category.scss";
 import { useParams } from "react-router-dom";
 import Cover from "../../components/Cover";
-import { Col, Row } from "antd";
+import { Col, Divider, Pagination, Row } from "antd";
 import EPBook3D from "../../components/EP-UI/Book3D";
 import ListStories from "../../components/ListStories";
 import RowStory from "../../components/RowStory";
@@ -11,6 +11,14 @@ interface IProps {}
 
 const CategoryPage: FC<IProps> = (props: IProps) => {
   const { id, slug } = useParams();
+
+  const handleChangePageNewest = (page: number, pageSize: number) => {
+    console.log(page);
+  };
+
+  const handleChangePageCompleted = (page: number, pageSize: number) => {
+    console.log(page);
+  };
 
   return (
     <div className="category-container">
@@ -29,16 +37,22 @@ const CategoryPage: FC<IProps> = (props: IProps) => {
                 imgUrl="https://yymedia.codeprime.net/media/novels/2019-06/ef2d9a2625.jpg"
                 title="Võ Hiệp Nội Ứng, Theo Max Cấp Thần"
                 description="Lý Tùy Phong xuyên qua võ hiệp thế giới, trở"
+                width={80}
+                height={120}
               />
               <EPBook3D
                 imgUrl="https://yymedia.codeprime.net/media/novels/2019-06/ef2d9a2625.jpg"
                 title="Võ Hiệp Nội Ứng, Theo Max Cấp Thần"
                 description="Lý Tùy Phong xuyên qua võ hiệp thế giới, trở"
+                width={80}
+                height={120}
               />
               <EPBook3D
                 imgUrl="https://yymedia.codeprime.net/media/novels/2019-06/ef2d9a2625.jpg"
                 title="Võ Hiệp Nội Ứng, Theo Max Cấp Thần"
                 description="Lý Tùy Phong xuyên qua võ hiệp thế giới, trở"
+                width={80}
+                height={120}
               />
             </div>
           </Col>
@@ -51,6 +65,8 @@ const CategoryPage: FC<IProps> = (props: IProps) => {
             </div>
           </Col>
           <Col span={19}>
+            <div className="fs-5">Truyện Kiếm Hiệp Mới Cập Nhật</div>
+            <Divider />
             <Row gutter={[16, 16]}>
               <Col span={12}>
                 <RowStory
@@ -85,12 +101,67 @@ const CategoryPage: FC<IProps> = (props: IProps) => {
                 />
               </Col>
             </Row>
+            <Col className="text-center mt-2">
+              <Pagination
+                defaultCurrent={1}
+                total={50}
+                onChange={handleChangePageNewest}
+              />
+            </Col>
           </Col>
           <Col span={5}>
             <ListStories
               stories={[]}
               title="Truyện Kiếm Hiệp Đọc Nhiều Trong Tuần"
             />
+          </Col>
+          <Col span={19}>
+            <div className="fs-5">Truyện Kiếm Hiệp Hoàn Thành</div>
+            <Divider />
+            <Row gutter={[16, 16]}>
+              <Col span={12}>
+                <RowStory
+                  size={"small"}
+                  displayUpdatedAt
+                  story={{
+                    storyId: 1,
+                    storyImage:
+                      "https://yymedia.codeprime.net/media/novels/2019-06/ef2d9a2625.jpg",
+                    storyTitle: "abc",
+                    storyDescription: "abc",
+                    storyCategories: [],
+                    storyAuthor: { userId: 1, userFullname: "abc" },
+                    storyChapterNumber: 10,
+                  }}
+                />
+              </Col>
+              <Col span={12}>
+                <RowStory
+                  size={"small"}
+                  displayUpdatedAt
+                  story={{
+                    storyId: 1,
+                    storyImage:
+                      "https://yymedia.codeprime.net/media/novels/2019-06/ef2d9a2625.jpg",
+                    storyTitle: "abc",
+                    storyDescription: "abc",
+                    storyCategories: [],
+                    storyAuthor: { userId: 1, userFullname: "abc" },
+                    storyChapterNumber: 10,
+                  }}
+                />
+              </Col>
+            </Row>
+            <Col className="text-center mt-2">
+              <Pagination
+                defaultCurrent={1}
+                total={50}
+                onChange={handleChangePageCompleted}
+              />
+            </Col>
+          </Col>
+          <Col span={5}>
+            <ListStories stories={[]} title="Top Truyện Kiếm Hiệp Hoàn Thành" />
           </Col>
         </Row>
       </div>

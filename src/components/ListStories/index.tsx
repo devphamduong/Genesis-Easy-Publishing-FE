@@ -5,6 +5,7 @@ import { IStory } from "../../interfaces/story.interface";
 import { FaArrowRightLong } from "react-icons/fa6";
 import { Link, useNavigate } from "react-router-dom";
 import { kFormatter, slugify } from "../../shared/function";
+import EPBook3D from "../EP-UI/Book3D";
 const { Text } = Typography;
 
 interface IProps {
@@ -71,7 +72,7 @@ const ListStories: FC<IProps> = (props: IProps) => {
         )}
         {displayRead && (
           <Col span={2}>
-            <div className="read text-end">{kFormatter(item.read)}</div>
+            <div className="read text-end">{kFormatter(item.read ?? NaN)}</div>
           </Col>
         )}
         {displayChapter && (
@@ -116,12 +117,7 @@ const ListStories: FC<IProps> = (props: IProps) => {
         </Col>
         <Col span={5}>
           <div className="image-hover">
-            <img
-              src={`${item.storyImage}`}
-              alt={item.storyTitle}
-              width={60}
-              height={90}
-            />
+            <EPBook3D imgUrl={item.storyImage} width={60} height={90} />
           </div>
         </Col>
       </Row>

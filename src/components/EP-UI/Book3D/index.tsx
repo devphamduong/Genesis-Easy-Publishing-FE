@@ -6,34 +6,59 @@ interface IProps {
   imgUrl: string;
   title?: string;
   description?: string;
+  width?: number;
+  height?: number;
+}
+
+interface ICustomCSSProperties extends React.CSSProperties {
+  "--height"?: string | number;
+  "--width"?: string | number;
+  "--height-before"?: string | number;
+  "--translate-x"?: string | number;
+}
+
+enum EImageBeforeDefaultConfig {
+  HEIGHT_BEFORE = -2,
+  TRANSLATE_X = -16,
+}
+
+enum EImageDefaultSize {
+  HEIGHT = 140,
+  WIDTH = 90,
 }
 
 const EPBook3D: FC<IProps> = (props: IProps) => {
-  const { imgUrl, title, description } = props;
+  const { imgUrl, title, description, width, height } = props;
+
+  const calcHeightBefore = () => {
+    return (
+      EImageBeforeDefaultConfig.HEIGHT_BEFORE +
+      (height ? height : EImageDefaultSize.HEIGHT)
+    );
+  };
+
+  const calcTranslateXBefore = () => {
+    return (
+      EImageBeforeDefaultConfig.TRANSLATE_X +
+      (width ? width : EImageDefaultSize.WIDTH)
+    );
+  };
+
+  const someStyle: ICustomCSSProperties = {
+    "--height": (height ? height : EImageDefaultSize.HEIGHT) + "px",
+    "--width": (width ? width : EImageDefaultSize.WIDTH) + "px",
+    "--height-before": `${calcHeightBefore()}px`,
+    "--translate-x": `${calcTranslateXBefore()}px`,
+  };
 
   return (
     <div className="ep-book-3d-container">
       <div className="ep-book-3d-content">
-        <div className="wrapper mb-3">
-          <div className="book">
-            <div className="inner-book">
-              <div
-                className="imgFront"
-                style={{ paddingTop: "calc(1.07 * 100%)" }}
-              >
-                <img src={imgUrl} />
-              </div>
-              <div className="page"></div>
-              <div className="page page-2"></div>
-              <div
-                className="imgBack final-page"
-                style={{ paddingTop: "calc(1.07 * 100%)" }}
-              >
-                <img src={imgUrl} />
-              </div>
-            </div>
+        <Link to={""} className={`book-container ${title && "mb-3"}`}>
+          <div className="book" style={someStyle}>
+            <img src={imgUrl} />
           </div>
-        </div>
+        </Link>
         <strong className="title">
           <Link to={""}>{title}</Link>
         </strong>

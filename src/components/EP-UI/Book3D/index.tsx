@@ -36,20 +36,19 @@ const EPBook3D: FC<IProps> = (props: IProps) => {
   const calcHeightBefore = () => {
     return (
       EImageBeforeDefaultConfig.HEIGHT_BEFORE +
-      (height ? height : EImageDefaultSize.HEIGHT)
+      (height ?? EImageDefaultSize.HEIGHT)
     );
   };
 
   const calcTranslateXBefore = () => {
     return (
-      EImageBeforeDefaultConfig.TRANSLATE_X +
-      (width ? width : EImageDefaultSize.WIDTH)
+      EImageBeforeDefaultConfig.TRANSLATE_X + (width ?? EImageDefaultSize.WIDTH)
     );
   };
 
   const customStyleBook3D: ICustomCSSProperties = {
-    "--height": (height ? height : EImageDefaultSize.HEIGHT) + "px",
-    "--width": (width ? width : EImageDefaultSize.WIDTH) + "px",
+    "--height": (height ?? EImageDefaultSize.HEIGHT) + "px",
+    "--width": (width ?? EImageDefaultSize.WIDTH) + "px",
     "--height-before": `${calcHeightBefore()}px`,
     "--translate-x": `${calcTranslateXBefore()}px`,
   };

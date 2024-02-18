@@ -7,6 +7,11 @@ interface IProps {
   imgHight?: number;
 }
 
+enum EImageDefaultSize {
+  HEIGHT = 120,
+  WIDTH = 80,
+}
+
 const RowStorySkeleton: FC<IProps> = (props: IProps) => {
   const { imgWidth, imgHight } = props;
 
@@ -16,8 +21,8 @@ const RowStorySkeleton: FC<IProps> = (props: IProps) => {
         <Skeleton.Image
           active
           style={{
-            width: imgWidth ? imgWidth : 80,
-            height: imgHight ? imgHight : 120,
+            width: imgWidth ?? EImageDefaultSize.WIDTH,
+            height: imgHight ?? EImageDefaultSize.HEIGHT,
           }}
         />
       </Col>

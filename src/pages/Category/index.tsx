@@ -48,52 +48,20 @@ const CategoryPage: FC<IProps> = (props: IProps) => {
               justify={"space-around"}
               className="px-3 py-4"
             >
-              <Col span={4}>
-                <EPBook3D
-                  //pass story instead
-                  imgUrl="https://yymedia.codeprime.net/media/novels/2019-06/ef2d9a2625.jpg"
-                  title="Võ Hiệp Nội Ứng, Theo Max Cấp Thần"
-                  description="Lý Tùy Phong xuyên qua võ hiệp thế giới, trở"
-                  width={80}
-                  height={120}
-                />
-              </Col>
-              <Col span={4}>
-                <EPBook3D
-                  imgUrl="https://yymedia.codeprime.net/media/novels/2019-06/ef2d9a2625.jpg"
-                  title="Võ Hiệp Nội Ứng, Theo Max Cấp Thần"
-                  description="Lý Tùy Phong xuyên qua võ hiệp thế giới, trở"
-                  width={80}
-                  height={120}
-                />
-              </Col>
-              <Col span={4}>
-                <EPBook3D
-                  imgUrl="https://yymedia.codeprime.net/media/novels/2019-06/ef2d9a2625.jpg"
-                  title="Võ Hiệp Nội Ứng, Theo Max Cấp Thần"
-                  description="Lý Tùy Phong xuyên qua võ hiệp thế giới, trở"
-                  width={80}
-                  height={120}
-                />
-              </Col>
-              <Col span={4}>
-                <EPBook3D
-                  imgUrl="https://yymedia.codeprime.net/media/novels/2019-06/ef2d9a2625.jpg"
-                  title="Võ Hiệp Nội Ứng, Theo Max Cấp Thần"
-                  description="Lý Tùy Phong xuyên qua võ hiệp thế giới, trở"
-                  width={80}
-                  height={120}
-                />
-              </Col>
-              <Col span={4}>
-                <EPBook3D
-                  imgUrl="https://yymedia.codeprime.net/media/novels/2019-06/ef2d9a2625.jpg"
-                  title="Võ Hiệp Nội Ứng, Theo Max Cấp Thần"
-                  description="Lý Tùy Phong xuyên qua võ hiệp thế giới, trở"
-                  width={80}
-                  height={120}
-                />
-              </Col>
+              {Array.from({ length: 5 }).map((item, index) => {
+                return (
+                  <Col span={4} key={index}>
+                    <EPBook3D
+                      //pass story instead
+                      imgUrl="https://yymedia.codeprime.net/media/novels/2019-06/ef2d9a2625.jpg"
+                      title="Võ Hiệp Nội Ứng, Theo Max Cấp Thần"
+                      description="Lý Tùy Phong xuyên qua võ hiệp thế giới, trở"
+                      width={80}
+                      height={120}
+                    />
+                  </Col>
+                );
+              })}
             </Row>
           </Col>
           <Col span={5}>

@@ -1,5 +1,5 @@
 import { FC, useEffect } from "react";
-import { Button, Card, Carousel, Col, Row, Typography } from "antd";
+import { Button, Card, Carousel, Col, Row, Skeleton, Typography } from "antd";
 import { useState } from "react";
 import "./Home.scss";
 import { RiDoubleQuotesL } from "react-icons/ri";
@@ -21,6 +21,7 @@ import {
   getStoryDetailURL,
 } from "../../shared/generate-navigate-url";
 import ListStoriesSkeleton from "../../components/ListStories/ListStoriesSkeleton";
+import Loading from "../../components/Loading";
 const { Paragraph } = Typography;
 
 const HomePage: FC = (props) => {
@@ -94,7 +95,7 @@ const HomePage: FC = (props) => {
               align={"middle"}
               className="content-top-item rounded-3 content-top-item-left py-2"
             >
-              {categories &&
+              {categories && categories.length > 0 ? (
                 categories?.slice(0, 14).map((item, index) => {
                   return (
                     <Col
@@ -120,7 +121,12 @@ const HomePage: FC = (props) => {
                       </div>
                     </Col>
                   );
-                })}
+                })
+              ) : (
+                <Col span={24} className="d-flex justify-content-center">
+                  <Loading />
+                </Col>
+              )}
             </Row>
           </Col>
           <Col span={14} className="content-top-item content-top-item-middle">
@@ -182,122 +188,163 @@ const HomePage: FC = (props) => {
           </Col>
           <Col span={19}>
             <Row gutter={[16, 16]}>
-              <Col>
+              <Col span={24}>
                 <Card size="small" title="Lựa Chọn Của Biên Tập Viên">
                   <Row gutter={[30, 16]} className="story-container w-100">
-                    {stories &&
-                      stories?.map((item, index) => {
-                        return (
-                          <Col
-                            span={12}
-                            className="d-flex story-item"
-                            key={`story-${item.storyId}-${item.storyTitle}`}
-                          >
-                            <Row>
-                              <Col span={4}>
-                                <VerticalImageHover
-                                  imageUrl={item.storyImage}
-                                />
-                              </Col>
-                              <Col span={20}>
-                                <div className="px-2">
-                                  <div>
-                                    <strong
-                                      className="name-text"
-                                      onClick={() =>
-                                        navigate(
-                                          getStoryDetailURL(
-                                            item.storyId,
-                                            item.storyTitle
+                    {stories && stories.length > 0
+                      ? stories?.map((item, index) => {
+                          return (
+                            <Col
+                              span={12}
+                              className="d-flex story-item"
+                              key={`story-${item.storyId}-${item.storyTitle}`}
+                            >
+                              <Row>
+                                <Col span={4}>
+                                  <VerticalImageHover
+                                    imageUrl={item.storyImage}
+                                  />
+                                </Col>
+                                <Col span={20}>
+                                  <div className="px-2">
+                                    <div>
+                                      <strong
+                                        className="name-text"
+                                        onClick={() =>
+                                          navigate(
+                                            getStoryDetailURL(
+                                              item.storyId,
+                                              item.storyTitle
+                                            )
                                           )
-                                        )
-                                      }
-                                    >
-                                      {item.storyTitle}
-                                    </strong>
-                                  </div>
-                                  <div>
-                                    <span className="author-text">
-                                      {item.storyAuthor.userFullname}
-                                    </span>
-                                  </div>
-                                  <div className="d-flex gap-1">
-                                    <span className="chapters">
-                                      {kFormatter(item.storyChapterNumber)}
-                                      <span className="text-small">
-                                        {" "}
-                                        Chương
+                                        }
+                                      >
+                                        {item.storyTitle}
+                                      </strong>
+                                    </div>
+                                    <div>
+                                      <span className="author-text">
+                                        {item.storyAuthor.userFullname}
                                       </span>
-                                    </span>
-                                    <span className="read">
-                                      {item.read}
-                                      <span className="text-small"> Đọc</span>
-                                    </span>
+                                    </div>
+                                    <div className="d-flex gap-1">
+                                      <span className="chapters">
+                                        {kFormatter(item.storyChapterNumber)}
+                                        <span className="text-small">
+                                          {" "}
+                                          Chương
+                                        </span>
+                                      </span>
+                                      <span className="read">
+                                        {item.storyInteraction?.read}
+                                        <span className="text-small"> Đọc</span>
+                                      </span>
+                                    </div>
+                                    <div className="description">
+                                      <Paragraph ellipsis={{ rows: 8 }}>
+                                        <RiDoubleQuotesL />{" "}
+                                        <span>{item.storyDescription}</span>
+                                      </Paragraph>
+                                    </div>
                                   </div>
-                                  <div className="description">
-                                    <Paragraph ellipsis={{ rows: 8 }}>
-                                      <RiDoubleQuotesL />{" "}
-                                      <span>{item.storyDescription}</span>
-                                    </Paragraph>
+                                </Col>
+                              </Row>
+                            </Col>
+                          );
+                        })
+                      : Array.from({ length: 4 }).map((item, index) => {
+                          return (
+                            <Col span={12} className="d-flex" key={index}>
+                              <Row className="w-100">
+                                <Col span={4}>
+                                  <Skeleton.Image
+                                    active
+                                    style={{
+                                      width: 80,
+                                      height: 120,
+                                    }}
+                                  />
+                                </Col>
+                                <Col span={20}>
+                                  <div className="px-2">
+                                    <Skeleton paragraph={{ rows: 6 }} active />
                                   </div>
-                                </div>
-                              </Col>
-                            </Row>
-                          </Col>
-                        );
-                      })}
+                                </Col>
+                              </Row>
+                            </Col>
+                          );
+                        })}
                   </Row>
                 </Card>
               </Col>
               <Col span={8}>
-                <ListStories
-                  urlToNavigate="rank-stories"
-                  showDetailFirstStory
-                  displayRank
-                  displayChapter
-                  title="Kim Thánh Bảng"
-                  stories={[...(famousStories?.listStories ?? [])]}
-                />
+                {famousStories?.listStories &&
+                famousStories?.listStories?.length > 0 ? (
+                  <ListStories
+                    urlToNavigate="rank-stories"
+                    showDetailFirstStory
+                    displayRank
+                    displayChapter
+                    title="Kim Thánh Bảng"
+                    stories={[...(famousStories?.listStories ?? [])]}
+                  />
+                ) : (
+                  <ListStoriesSkeleton />
+                )}
               </Col>
               <Col span={8}>
-                <ListStories
-                  urlToNavigate="rank-stories"
-                  showDetailFirstStory
-                  displayRank
-                  displayChapter
-                  title="Truyện Dịch Miễn Phí"
-                  stories={[...(famousStories?.listStories ?? [])]}
-                />
+                {famousStories?.listStories &&
+                famousStories?.listStories?.length > 0 ? (
+                  <ListStories
+                    urlToNavigate="rank-stories"
+                    showDetailFirstStory
+                    displayRank
+                    displayChapter
+                    title="Kim Thánh Bảng"
+                    stories={[...(famousStories?.listStories ?? [])]}
+                  />
+                ) : (
+                  <ListStoriesSkeleton />
+                )}
               </Col>
               <Col span={8}>
-                <ListStories
-                  urlToNavigate="rank-stories"
-                  showDetailFirstStory
-                  displayRank
-                  displayChapter
-                  title="Truyện Mới Trình Làng"
-                  stories={[...(famousStories?.listStories ?? [])]}
-                />
+                {famousStories?.listStories &&
+                famousStories?.listStories?.length > 0 ? (
+                  <ListStories
+                    urlToNavigate="rank-stories"
+                    showDetailFirstStory
+                    displayRank
+                    displayChapter
+                    title="Kim Thánh Bảng"
+                    stories={[...(famousStories?.listStories ?? [])]}
+                  />
+                ) : (
+                  <ListStoriesSkeleton />
+                )}
               </Col>
             </Row>
           </Col>
           <Col span={24}>
             <div className="premium-cover text-center p-3">PREMIUM MEMBER</div>
           </Col>
-          {categories &&
-            categories.length > 0 &&
-            storiesByCategory.slice(0, 8)?.map((item, index) => {
-              return (
-                <Col span={6} key={`category-item-${item.categoryId}`}>
-                  <ListStories
-                    displayRank
-                    displayRead
-                    title={item.categoryName}
-                    stories={[...(item?.stories ?? [])]}
-                  />
+          {storiesByCategory && storiesByCategory.length > 0
+            ? storiesByCategory.slice(0, 8)?.map((item, index) => {
+                return (
+                  <Col span={6} key={`category-item-${item.categoryId}`}>
+                    <ListStories
+                      displayRank
+                      displayRead
+                      title={item.categoryName}
+                      stories={[...(item?.stories ?? [])]}
+                    />
+                  </Col>
+                );
+              })
+            : Array.from({ length: 4 }).map((item, index) => (
+                <Col span={6} key={index}>
+                  <ListStoriesSkeleton />
                 </Col>
-              );
-            })}
+              ))}
           <Col span={24}>
             <div className="premium-cover text-center p-3">
               HƯỚNG DẪN ĐĂNG TRUYỆN

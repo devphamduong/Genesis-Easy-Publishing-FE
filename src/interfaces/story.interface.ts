@@ -15,9 +15,6 @@ export interface IStory {
     chapterId: number | string;
     chapterTitle: string;
   };
-  read?: number;
-  like?: number;
-  follow?: number;
   userCount?: number;
   userPurchaseStory?: number;
   userPurchaseChapter?: number;

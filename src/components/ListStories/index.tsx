@@ -75,7 +75,9 @@ const ListStories: FC<IProps> = (props: IProps) => {
         )}
         {displayRead && (
           <Col span={2}>
-            <div className="read text-end">{kFormatter(item.read ?? NaN)}</div>
+            <div className="read text-end">
+              {kFormatter(item.storyInteraction?.read ?? NaN)}
+            </div>
           </Col>
         )}
         {displayChapter && (

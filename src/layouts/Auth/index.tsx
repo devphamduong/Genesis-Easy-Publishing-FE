@@ -15,7 +15,7 @@ const AuthLayout: FC<IProps> = (props: IProps) => {
           <Col span={8}>
             <Outlet />
             <div className="text-center">
-              <Tooltip title="Back to home page">
+              <Tooltip title="Back home">
                 <Button
                   shape="circle"
                   size="large"

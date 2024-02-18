@@ -17,14 +17,15 @@ import {
   Row,
 } from "antd";
 import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import "./Header.scss";
 import { FC } from "react";
 
 interface IProps {}
 
 const Header: FC<IProps> = (props: IProps) => {
-  const [current, setCurrent] = useState("mail");
+  const navigate = useNavigate();
+  const [current, setCurrent] = useState<string>("mail");
   const items: MenuProps["items"] = [
     {
       label: <NavLink to={"/"}>Truyện chất lượng cao</NavLink>,
@@ -84,7 +85,7 @@ const Header: FC<IProps> = (props: IProps) => {
               </Row>
             </Col>
             <Col span={11}>
-              <Row justify={"space-between"}>
+              <Row align={"middle"} justify={"space-between"}>
                 <Col span={12}>
                   <Input
                     variant="borderless"
@@ -92,6 +93,14 @@ const Header: FC<IProps> = (props: IProps) => {
                     placeholder="Tìm tên truyện, tác giả"
                     prefix={<SearchOutlined />}
                   />
+                </Col>
+                <Col>
+                  <Button
+                    type="primary"
+                    onClick={() => navigate("/auth/login")}
+                  >
+                    Login
+                  </Button>
                 </Col>
                 <Col>
                   <Popover

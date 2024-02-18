@@ -12,7 +12,8 @@
         }
 
         .name,
-        .author {
+        .author,
+        .author-chapters {
             cursor: pointer;
         }
 
@@ -24,7 +25,8 @@
             }
         }
 
-        .author {
+        .author,
+        .author-chapters {
             &:hover {
                 color: #f50;
             }

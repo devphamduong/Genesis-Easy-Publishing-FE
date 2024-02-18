@@ -36,6 +36,7 @@ import {
 } from "../../services/story-api.service";
 import { getAuthorById } from "../../services/author-api.service";
 import { Typography } from "antd";
+import { getStoryReadURL } from "../../shared/generate-navigate-url";
 
 const { Paragraph } = Typography;
 
@@ -103,7 +104,7 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
   ];
 
   const handleReadStory = () => {
-    navigate(`/story/read/${id}/${slug}.chapter-1`);
+    navigate(getStoryReadURL(id!, slug!, 1));
   };
 
   return (

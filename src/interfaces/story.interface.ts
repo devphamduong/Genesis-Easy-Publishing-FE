@@ -1,18 +1,18 @@
 import { ICategory } from "./category.interface";
 
 export interface IStory {
-  storyId: number;
+  storyId: number | string;
   storyTitle: string;
   storyImage: string;
   storyDescription: string;
   storyCategories: ICategory[];
   storyAuthor: {
-    userId: number;
+    userId: number | string;
     userFullname: string;
   };
   storyChapterNumber: number;
   storyLatestChapter?: {
-    chapterId: number;
+    chapterId: number | string;
     chapterTitle: string;
   };
   read?: number;

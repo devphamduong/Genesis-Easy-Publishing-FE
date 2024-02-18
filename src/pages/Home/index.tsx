@@ -1,9 +1,9 @@
 import { FC, useEffect } from "react";
-import { Button, Card, Carousel, Col, List, Row, Typography } from "antd";
+import { Button, Card, Carousel, Col, Row, Typography } from "antd";
 import { useState } from "react";
 import "./Home.scss";
 import { RiDoubleQuotesL } from "react-icons/ri";
-import { kFormatter, slugify } from "../../shared/function";
+import { kFormatter } from "../../shared/function";
 import { ICategory } from "../../interfaces/category.interface";
 import {
   getStoriesByCategory,
@@ -16,6 +16,11 @@ import { IPaginationStory, IStory } from "../../interfaces/story.interface";
 import ListStories from "../../components/ListStories";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import VerticalImageHover from "../../components/VerticalImageHover";
+import {
+  getStoryCategoryURL,
+  getStoryDetailURL,
+} from "../../shared/generate-navigate-url";
+import ListStoriesSkeleton from "../../components/ListStories/ListStoriesSkeleton";
 const { Paragraph } = Typography;
 
 const HomePage: FC = (props) => {
@@ -97,9 +102,10 @@ const HomePage: FC = (props) => {
                       key={`cate-${item.categoryId}-${item.categoryName}`}
                       onClick={() =>
                         navigate(
-                          `/category/${item.categoryId}/${slugify(
+                          getStoryCategoryURL(
+                            item.categoryId,
                             item.categoryName
-                          )}`
+                          )
                         )
                       }
                     >
@@ -149,18 +155,28 @@ const HomePage: FC = (props) => {
           <Col span={5}>
             <Row gutter={[16, 16]}>
               <Col className="w-100">
-                <ListStories
-                  displayCategory
-                  title="Truyện Mới Cập Nhật"
-                  stories={[...(newestStories?.listStories ?? [])]}
-                />
+                {newestStories?.listStories &&
+                newestStories?.listStories?.length > 0 ? (
+                  <ListStories
+                    displayCategory
+                    title="Truyện Mới Cập Nhật"
+                    stories={[...(newestStories?.listStories ?? [])]}
+                  />
+                ) : (
+                  <ListStoriesSkeleton />
+                )}
               </Col>
               <Col className="w-100">
-                <ListStories
-                  displayRead
-                  title="Sáng Tác Nhiều Người Đọc"
-                  stories={[...(topReadStories?.listStories ?? [])]}
-                />
+                {topReadStories?.listStories &&
+                topReadStories?.listStories?.length > 0 ? (
+                  <ListStories
+                    displayRead
+                    title="Sáng Tác Nhiều Người Đọc"
+                    stories={[...(topReadStories?.listStories ?? [])]}
+                  />
+                ) : (
+                  <ListStoriesSkeleton />
+                )}
               </Col>
             </Row>
           </Col>
@@ -190,9 +206,10 @@ const HomePage: FC = (props) => {
                                       className="name-text"
                                       onClick={() =>
                                         navigate(
-                                          `/story/${item.storyId}/${slugify(
+                                          getStoryDetailURL(
+                                            item.storyId,
                                             item.storyTitle
-                                          )}`
+                                          )
                                         )
                                       }
                                     >

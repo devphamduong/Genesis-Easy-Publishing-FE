@@ -1,6 +1,9 @@
 import { FC } from "react";
 import "./EPBook3D.scss";
 import { Link } from "react-router-dom";
+import { Typography } from "antd";
+
+const { Paragraph } = Typography;
 
 interface IProps {
   imgUrl: string;
@@ -44,7 +47,7 @@ const EPBook3D: FC<IProps> = (props: IProps) => {
     );
   };
 
-  const someStyle: ICustomCSSProperties = {
+  const customStyleBook3D: ICustomCSSProperties = {
     "--height": (height ? height : EImageDefaultSize.HEIGHT) + "px",
     "--width": (width ? width : EImageDefaultSize.WIDTH) + "px",
     "--height-before": `${calcHeightBefore()}px`,
@@ -55,14 +58,16 @@ const EPBook3D: FC<IProps> = (props: IProps) => {
     <div className="ep-book-3d-container">
       <div className="ep-book-3d-content">
         <Link to={""} className={`book-container ${title && "mb-3"}`}>
-          <div className="book" style={someStyle}>
+          <div className="book" style={customStyleBook3D}>
             <img src={imgUrl} />
           </div>
         </Link>
-        <strong className="title">
+        <strong className="title text-center">
           <Link to={""}>{title}</Link>
         </strong>
-        <div className="description">{description}</div>
+        <div className="description text-center">
+          <Paragraph ellipsis={{ rows: 2 }}>{description}</Paragraph>
+        </div>
       </div>
     </div>
   );

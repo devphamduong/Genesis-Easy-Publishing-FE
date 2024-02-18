@@ -2,13 +2,13 @@ import { FC } from "react";
 import "./RowStory.scss";
 import VerticalImageHover from "../VerticalImageHover";
 import { IStory } from "../../interfaces/story.interface";
-import { Button, Col, Divider, Row, Typography } from "antd";
+import { Button, Col, Divider, Row, Skeleton, Typography } from "antd";
 import { FaPenFancy } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
-import { slugify } from "../../shared/function";
 import { ClockCircleOutlined } from "@ant-design/icons";
 import relativeTime from "dayjs/plugin/relativeTime";
 import dayjs from "dayjs";
+import { getStoryDetailURL } from "../../shared/generate-navigate-url";
 dayjs.extend(relativeTime);
 const { Text } = Typography;
 
@@ -39,7 +39,7 @@ const RowStory: FC<IProps> = (props: IProps) => {
         <Col span={19} className="d-flex flex-column justify-content-between">
           <strong
             onClick={() =>
-              navigate(`/story/${story.storyId}/${slugify(story.storyTitle)}`)
+              navigate(getStoryDetailURL(story.storyId, story.storyTitle))
             }
             className="name"
           >
@@ -70,7 +70,7 @@ const RowStory: FC<IProps> = (props: IProps) => {
 
   const renderRowSmall = () => {
     return (
-      <Row gutter={[16, 16]}>
+      <Row gutter={[50, 16]}>
         <Col span={4}>
           <VerticalImageHover
             rank={rank}
@@ -82,7 +82,7 @@ const RowStory: FC<IProps> = (props: IProps) => {
         <Col span={20} className="d-flex flex-column justify-content-between">
           <strong
             onClick={() =>
-              navigate(`/story/${story.storyId}/${slugify(story.storyTitle)}`)
+              navigate(getStoryDetailURL(story.storyId, story.storyTitle))
             }
             className="name"
           >

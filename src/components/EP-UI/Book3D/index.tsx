@@ -2,12 +2,14 @@ import { FC } from "react";
 import "./EPBook3D.scss";
 import { Link } from "react-router-dom";
 import { Typography } from "antd";
+import { getStoryDetailURL } from "../../../shared/generate-navigate-url";
 
 const { Paragraph } = Typography;
 
 interface IProps {
-  imgUrl: string;
-  title?: string;
+  storyId: string | number;
+  imgUrl?: string;
+  title: string;
   description?: string;
   width?: number;
   height?: number;
@@ -31,7 +33,7 @@ enum EImageDefaultSize {
 }
 
 const EPBook3D: FC<IProps> = (props: IProps) => {
-  const { imgUrl, title, description, width, height } = props;
+  const { storyId, imgUrl, title, description, width, height } = props;
 
   const calcHeightBefore = () => {
     return (
@@ -56,13 +58,18 @@ const EPBook3D: FC<IProps> = (props: IProps) => {
   return (
     <div className="ep-book-3d-container">
       <div className="ep-book-3d-content">
-        <Link to={""} className={`book-container ${title && "mb-3"}`}>
+        <Link
+          to={getStoryDetailURL(storyId, title)}
+          className={`book-container ${title && "mb-3"}`}
+        >
           <div className="book" style={customStyleBook3D}>
             <img src={imgUrl} />
           </div>
         </Link>
         <strong className="title text-center">
-          <Link to={""}>{title}</Link>
+          <Paragraph ellipsis={{ rows: 2 }}>
+            <Link to={getStoryDetailURL(storyId, title)}>{title}</Link>
+          </Paragraph>
         </strong>
         <div className="description text-center">
           <Paragraph ellipsis={{ rows: 2 }}>{description}</Paragraph>

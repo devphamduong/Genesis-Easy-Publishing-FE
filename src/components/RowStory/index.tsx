@@ -91,8 +91,8 @@ const RowStory: FC<IProps> = (props: IProps) => {
           <Text ellipsis={true} className="description">
             <span>{story.storyDescription}</span>
           </Text>
-          <div className="d-flex align-items-center justify-content-between gap-1 author-chapters">
-            <div>
+          <div className="d-flex align-items-center justify-content-between">
+            <div className="d-flex align-items-center justify-content-between gap-1 author-chapters">
               <FaPenFancy />
               <strong>{story.storyAuthor.userFullname}</strong>
             </div>

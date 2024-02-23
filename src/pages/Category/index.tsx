@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import "./Category.scss";
 import { useParams } from "react-router-dom";
 import Cover from "../../components/Cover";
@@ -7,18 +7,85 @@ import EPBook3D from "../../components/EP-UI/Book3D";
 import ListStories from "../../components/ListStories";
 import RowStory from "../../components/RowStory";
 import RowStorySkeleton from "../../components/RowStory/RowStorySkeleton";
+import {
+  getPaginationStoriesByCategoryId,
+  getStoriesByCategoryId,
+} from "../../services/category-api.service";
+import { IStory } from "../../interfaces/story.interface";
 
 interface IProps {}
 
+const PAGE_SIZE_STORIES_UPDATE = 10;
+const PAGE_SIZE_STORIES_COMPLETE = 10;
+
+enum ECategory {}
+
 const CategoryPage: FC<IProps> = (props: IProps) => {
   const { id, slug } = useParams();
+  const [stories, setStories] = useState<IStory[]>([]);
+  const [storiesUpdate, setStoriesUpdate] = useState<IStory[]>([]);
+  const [currentPageStoriesUpdate, setCurrentPageStoriesUpdate] =
+    useState<number>(1);
+  const [totalPageStoriesUpdate, setTotalPageStoriesUpdate] =
+    useState<number>(0);
+  const [pageSizeStoriesUpdate, setPageSizeStoriesUpdate] = useState<number>(
+    PAGE_SIZE_STORIES_UPDATE
+  );
+  const [currentPageStoriesCompleted, setCurrentPageStoriesCompleted] =
+    useState<number>(1);
+  const [totalPageStoriesCompleted, setTotalPageStoriesCompleted] =
+    useState<number>(0);
+  const [pageSizeStoriesCompleted, setPageSizeStoriesCompleted] =
+    useState<number>(PAGE_SIZE_STORIES_COMPLETE);
 
-  const handleChangePageNewest = (page: number, pageSize: number) => {
-    console.log(page);
+  useEffect(() => {
+    if (id) fetchStoriesByCategoriesId(id);
+  }, [id]);
+
+  useEffect(() => {
+    if (id)
+      fetchPaginationStoriesUpdateByCategoryId(
+        id,
+        currentPageStoriesUpdate,
+        pageSizeStoriesUpdate
+      );
+  }, [id, currentPageStoriesUpdate, pageSizeStoriesUpdate]);
+
+  useEffect(() => {
+    if (id)
+      fetchPaginationStoriesUpdateByCategoryId(
+        id,
+        currentPageStoriesCompleted,
+        pageSizeStoriesCompleted
+      );
+  }, [id, currentPageStoriesCompleted, pageSizeStoriesCompleted]);
+
+  const fetchStoriesByCategoriesId = async (id: string) => {
+    const res = await getStoriesByCategoryId(id);
+    if (res && res.ec === 0) {
+      setStories(res.dt);
+    }
+  };
+
+  const fetchPaginationStoriesUpdateByCategoryId = async (
+    id: string,
+    page: number,
+    pageSize: number
+  ) => {
+    const res = await getPaginationStoriesByCategoryId(id, page, pageSize);
+    if (res && res.ec === 0) {
+      setStoriesUpdate(res.dt.listStories);
+      // setCurrentPage(res.dt.current);
+      // setTotalPage(totalPage);
+    }
+  };
+
+  const handleChangePageUpdate = (page: number, pageSize: number) => {
+    setCurrentPageStoriesUpdate(page);
   };
 
   const handleChangePageCompleted = (page: number, pageSize: number) => {
-    console.log(page);
+    setCurrentPageStoriesCompleted(page);
   };
 
   const amountRowStorySkeleton = (amount: number) => {
@@ -48,20 +115,22 @@ const CategoryPage: FC<IProps> = (props: IProps) => {
               justify={"space-around"}
               className="px-3 py-4"
             >
-              {Array.from({ length: 5 }).map((item, index) => {
-                return (
-                  <Col span={4} key={index}>
-                    <EPBook3D
-                      //pass story instead
-                      imgUrl="https://yymedia.codeprime.net/media/novels/2019-06/ef2d9a2625.jpg"
-                      title="Võ Hiệp Nội Ứng, Theo Max Cấp Thần"
-                      description="Lý Tùy Phong xuyên qua võ hiệp thế giới, trở"
-                      width={80}
-                      height={120}
-                    />
-                  </Col>
-                );
-              })}
+              {stories &&
+                stories.length > 0 &&
+                stories.map((item, index) => {
+                  return (
+                    <Col span={4} key={`category-${id}-story-${item.storyId}`}>
+                      <EPBook3D
+                        storyId={item.storyId}
+                        imgUrl={item.storyImage}
+                        title={item.storyTitle}
+                        description={item.storyDescription}
+                        width={80}
+                        height={120}
+                      />
+                    </Col>
+                  );
+                })}
             </Row>
           </Col>
           <Col span={5}>
@@ -76,27 +145,26 @@ const CategoryPage: FC<IProps> = (props: IProps) => {
             <div className="fs-5">Truyện Kiếm Hiệp Mới Cập Nhật</div>
             <Divider />
             <Row gutter={[16, 16]}>
-              {amountRowStorySkeleton(4)}
-              {/* <RowStory
-                  size={"small"}
-                  displayUpdatedAt
-                  story={{
-                    storyId: 1,
-                    storyImage:
-                      "https://yymedia.codeprime.net/media/novels/2019-06/ef2d9a2625.jpg",
-                    storyTitle: "abc",
-                    storyDescription: "abc",
-                    storyCategories: [],
-                    storyAuthor: { userId: 1, userFullname: "abc" },
-                    storyChapterNumber: 10,
-                  }}
-                /> */}
+              {storiesUpdate && storiesUpdate.length > 0
+                ? storiesUpdate.map((item, index) => {
+                    return (
+                      <Col span={12} key={index}>
+                        <RowStory
+                          key={`category-${id}-story-update-${item.storyId}`}
+                          size={"small"}
+                          displayUpdatedAt
+                          story={item}
+                        />
+                      </Col>
+                    );
+                  })
+                : amountRowStorySkeleton(4)}
             </Row>
             <Col className="text-center mt-2">
               <Pagination
-                defaultCurrent={1}
-                total={50}
-                onChange={handleChangePageNewest}
+                defaultCurrent={currentPageStoriesUpdate}
+                total={totalPageStoriesUpdate}
+                onChange={handleChangePageUpdate}
               />
             </Col>
           </Col>

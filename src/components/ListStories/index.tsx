@@ -153,7 +153,7 @@ const ListStories: FC<IProps> = (props: IProps) => {
           </div>
         }
         bordered
-        dataSource={stories}
+        dataSource={stories.slice(0, 10)}
         renderItem={(item, index) => (
           <List.Item
             key={`story-item-${item.storyId}-${item.storyTitle}`}

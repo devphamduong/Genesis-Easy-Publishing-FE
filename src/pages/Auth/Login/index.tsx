@@ -1,21 +1,51 @@
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import "./Login.scss";
 import { Button, Checkbox, Form, Input } from "antd";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { login } from "../../../services/auth-api.service";
+import { ILoginForm } from "../../../interfaces/auth.interface";
+import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import { loginAction } from "../../../redux/account/accountSlice";
+import { IRootState } from "../../../redux/store";
 
 interface IProps {}
 
-type FieldType = {
-  email?: string;
-  password?: string;
-  remember?: boolean;
-};
-
 const LoginPage: FC<IProps> = (props: IProps) => {
-  const [form] = Form.useForm();
+  const [form] = Form.useForm<ILoginForm>();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const dispatch = useDispatch();
+  const isAuthenticated = useSelector(
+    (state: IRootState) => state.account.isAuthenticated
+  );
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const onFinish = (values: FieldType) => {
-    console.log("Received values of form: ", values);
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/");
+    } else {
+      if (location.state) {
+        form.setFieldValue("emailOrUsername", location.state.emailOrUsername);
+        form.setFieldValue("password", location.state.password);
+        window.history.replaceState({}, "");
+      }
+    }
+  }, []);
+
+  const onFinish = async (values: ILoginForm) => {
+    setIsLoading(true);
+    const res = await login(values);
+    if (res && res.ec === 0) {
+      localStorage.setItem("access_token", res.dt.access_token);
+      dispatch(loginAction(res.dt.user));
+      toast.success(res.em);
+      navigate("/");
+      form.resetFields();
+    } else {
+      toast.error(res.em);
+    }
+    setIsLoading(false);
   };
 
   return (
@@ -24,7 +54,9 @@ const LoginPage: FC<IProps> = (props: IProps) => {
         <div className="d-flex flex-column gap-5">
           <div className="top">
             <h1>Log In</h1>
-            <p className="fs-4">Please enter your email and password</p>
+            <p className="fs-4">
+              Please enter your email or username and password
+            </p>
           </div>
           <div className="bottom">
             <Form
@@ -33,20 +65,22 @@ const LoginPage: FC<IProps> = (props: IProps) => {
               initialValues={{ remember: false }}
               onFinish={onFinish}
             >
-              <Form.Item<FieldType>
-                label="Email"
-                name="email"
+              <Form.Item<ILoginForm>
+                label="Email or Username"
+                name="emailOrUsername"
                 rules={[
                   {
-                    type: "email",
-                    message: "The input is not valid Email!",
+                    required: true,
+                    message: "Please input your Email or Username!",
                   },
-                  { required: true, message: "Please input your Email!" },
                 ]}
               >
-                <Input size="large" placeholder="Enter your email" />
+                <Input
+                  size="large"
+                  placeholder="Enter your email or username"
+                />
               </Form.Item>
-              <Form.Item<FieldType>
+              <Form.Item<ILoginForm>
                 label="Password"
                 name="password"
                 rules={[
@@ -64,7 +98,7 @@ const LoginPage: FC<IProps> = (props: IProps) => {
               </Form.Item>
               <Form.Item>
                 <div className="d-flex justify-content-between">
-                  <Form.Item<FieldType>
+                  <Form.Item<ILoginForm>
                     name="remember"
                     valuePropName="checked"
                     noStyle
@@ -75,9 +109,15 @@ const LoginPage: FC<IProps> = (props: IProps) => {
                   <Link to={"/auth/forgot-password"}>Forgot password</Link>
                 </div>
               </Form.Item>
-
               <Form.Item>
-                <Button size="large" type="primary" htmlType="submit" block>
+                <Button
+                  size="large"
+                  type="primary"
+                  htmlType="submit"
+                  block
+                  loading={isLoading}
+                  disabled={isLoading}
+                >
                   Log in
                 </Button>
                 Don't have an account?

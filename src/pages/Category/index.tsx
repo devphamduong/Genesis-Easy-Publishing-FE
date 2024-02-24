@@ -75,8 +75,6 @@ const CategoryPage: FC<IProps> = (props: IProps) => {
     const res = await getPaginationStoriesByCategoryId(id, page, pageSize);
     if (res && res.ec === 0) {
       setStoriesUpdate(res.dt.listStories);
-      // setCurrentPage(res.dt.current);
-      // setTotalPage(totalPage);
     }
   };
 

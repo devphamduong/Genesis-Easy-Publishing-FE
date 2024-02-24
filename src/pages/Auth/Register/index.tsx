@@ -1,23 +1,34 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import "./Register.scss";
 import { Button, Checkbox, Form, Input } from "antd";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { IRegisterForm } from "../../../interfaces/auth.interface";
+import { toast } from "react-toastify";
+import { register } from "../../../services/auth-api.service";
 
 interface IProps {}
 
-type FieldType = {
-  email?: string;
-  password?: string;
-  confirm?: string;
-  username?: string;
-  agreement?: boolean;
-};
-
 const RegisterPage: FC<IProps> = (props: IProps) => {
   const [form] = Form.useForm();
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const onFinish = (values: FieldType) => {
-    console.log("Received values of form: ", values);
+  const onFinish = async (values: IRegisterForm) => {
+    setIsLoading(true);
+    const res = await register(values);
+    if (res && res.ec === 0) {
+      toast.success(res.em);
+      navigate("/auth/login", {
+        state: {
+          emailOrUsername: values.email,
+          password: values.password,
+        },
+      });
+      form.resetFields();
+    } else {
+      toast.error(res.em);
+    }
+    setIsLoading(false);
   };
 
   return (
@@ -37,7 +48,7 @@ const RegisterPage: FC<IProps> = (props: IProps) => {
               initialValues={{ agreement: true }}
               onFinish={onFinish}
             >
-              <Form.Item<FieldType>
+              <Form.Item<IRegisterForm>
                 label="Email"
                 name="email"
                 rules={[
@@ -50,7 +61,16 @@ const RegisterPage: FC<IProps> = (props: IProps) => {
               >
                 <Input size="large" placeholder="Enter your email" />
               </Form.Item>
-              <Form.Item<FieldType>
+              <Form.Item<IRegisterForm>
+                label="Username"
+                name="username"
+                rules={[
+                  { required: true, message: "Please input your Username!" },
+                ]}
+              >
+                <Input size="large" placeholder="Enter your username" />
+              </Form.Item>
+              <Form.Item<IRegisterForm>
                 label="Password"
                 name="password"
                 rules={[
@@ -66,8 +86,8 @@ const RegisterPage: FC<IProps> = (props: IProps) => {
                   placeholder="Enter your password"
                 />
               </Form.Item>
-              <Form.Item<FieldType>
-                name="confirm"
+              <Form.Item<IRegisterForm>
+                name="confirmPassword"
                 label="Confirm Password"
                 dependencies={["password"]}
                 hasFeedback
@@ -95,18 +115,9 @@ const RegisterPage: FC<IProps> = (props: IProps) => {
                   placeholder="Enter your confirm password"
                 />
               </Form.Item>
-              <Form.Item<FieldType>
-                label="Username"
-                name="username"
-                rules={[
-                  { required: true, message: "Please input your Username!" },
-                ]}
-              >
-                <Input size="large" placeholder="Enter your username" />
-              </Form.Item>
               <Form.Item>
                 <div className="d-flex justify-content-between">
-                  <Form.Item<FieldType>
+                  <Form.Item<IRegisterForm>
                     name="agreement"
                     valuePropName="checked"
                     noStyle
@@ -119,7 +130,14 @@ const RegisterPage: FC<IProps> = (props: IProps) => {
               </Form.Item>
 
               <Form.Item>
-                <Button size="large" type="primary" htmlType="submit" block>
+                <Button
+                  size="large"
+                  type="primary"
+                  htmlType="submit"
+                  block
+                  loading={isLoading}
+                  disabled={isLoading}
+                >
                   Register
                 </Button>
                 Already have an account?

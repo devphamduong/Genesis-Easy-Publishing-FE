@@ -2,7 +2,6 @@ import {
   AppstoreOutlined,
   MailOutlined,
   SearchOutlined,
-  SettingOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 import {
@@ -20,11 +19,20 @@ import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import "./Header.scss";
 import { FC } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { logoutAction } from "../../redux/account/accountSlice";
+import { logout } from "../../services/auth-api.service";
+import { IRootState } from "../../redux/store";
 
 interface IProps {}
 
 const Header: FC<IProps> = (props: IProps) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const username = useSelector(
+    (state: IRootState) => state.account.user.username
+  );
   const [current, setCurrent] = useState<string>("mail");
   const items: MenuProps["items"] = [
     {
@@ -47,7 +55,7 @@ const Header: FC<IProps> = (props: IProps) => {
     return (
       <div className="d-flex align-items-center gap-2">
         <Avatar size="large" icon={<UserOutlined />} />
-        <div>Phạm Dương</div>
+        <div>{username ?? "vcl"}</div>
       </div>
     );
   };
@@ -57,8 +65,18 @@ const Header: FC<IProps> = (props: IProps) => {
       <div>
         <Button>Profile</Button>
         <Button>Nạp</Button>
+        <Button onClick={() => handleLogout()}>Log out</Button>
       </div>
     );
+  };
+
+  const handleLogout = async () => {
+    // const res = await logout();
+    // if (res && res.dt) {
+    dispatch(logoutAction());
+    toast.success("Logout successfully");
+    navigate("/");
+    // }
   };
 
   return (

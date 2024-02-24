@@ -7,8 +7,13 @@
             width: fit-content
         }
 
+        .author-chapters {
+            width: unset;
+        }
+
         .name,
-        .author {
+        .author,
+        .author-chapters {
             cursor: pointer;
         }
 
@@ -20,7 +25,8 @@
             }
         }
 
-        .author {
+        .author,
+        .author-chapters {
             &:hover {
                 color: #f50;
             }
@@ -30,6 +36,10 @@
             text-transform: uppercase;
             border        : 1px solid #ddd;
             border-radius : 5px;
+
+            &.chapters-small {
+                font-size: 10px;
+            }
         }
     }
 }

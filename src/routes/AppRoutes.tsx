@@ -15,6 +15,11 @@ import DetailStoryPage from "../pages/DetailStory";
 import ReadStoryPage from "../pages/ReadStory";
 import WriteChapterPage from "../pages/WriteStory/WriteChapter";
 import CategoryPage from "../pages/Category";
+import AuthLayout from "../layouts/Auth";
+import LoginPage from "../pages/Auth/Login";
+import RegisterPage from "../pages/Auth/Register";
+import ForgotPasswordPage from "../pages/Auth/ForgotPassword";
+import NotFoundPage from "../pages/NotFound";
 
 interface IProps {}
 
@@ -67,8 +72,15 @@ const AppRoutes: FC<IProps> = (props: IProps) => {
           <Route path={"category/:id/:slug"} element={<CategoryPage />}></Route>
           <Route path={"vl"} element={<WriteChapterPage />}></Route>
         </Route>
-        {/* <Route path='/login' element={<Login />}></Route>
-                <Route path='/register' element={<Register />}></Route> */}
+        <Route path="/auth" element={<AuthLayout />}>
+          <Route path="login" element={<LoginPage />} />
+          <Route path={"register"} element={<RegisterPage />}></Route>
+          <Route
+            path={"forgot-password"}
+            element={<ForgotPasswordPage />}
+          ></Route>
+        </Route>
+        <Route path="*" element={<NotFoundPage />}></Route>
       </Routes>
       {/* <PrivateRoutes path='/users' component={User} />
              <PrivateRoutes path='/roles' component={Role} />

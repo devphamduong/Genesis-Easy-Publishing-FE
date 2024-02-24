@@ -9,13 +9,21 @@ interface IProps {
   width?: number;
 }
 
+enum EImageDefaultSize {
+  HEIGHT = 120,
+  WIDTH = 80,
+}
+
 const VerticalImageHover: FC<IProps> = (props: IProps) => {
   const { imageUrl, rank, height, width } = props;
 
   return (
     <div
       className="image"
-      style={{ height: `${height ?? 120}px`, width: `${width}px` }}
+      style={{
+        height: `${height ?? EImageDefaultSize.HEIGHT}px`,
+        width: `${width}px`,
+      }}
     >
       <div
         className="image-hover"

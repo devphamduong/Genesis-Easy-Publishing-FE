@@ -3,16 +3,19 @@ import "./ListStories.scss";
 import { Button, Col, List, Row, Tooltip, Typography } from "antd";
 import { IStory } from "../../interfaces/story.interface";
 import { FaArrowRightLong } from "react-icons/fa6";
-import { NavLink, useNavigate } from "react-router-dom";
-import { kFormatter, slugify } from "../../shared/function";
+import { Link, useNavigate } from "react-router-dom";
+import { kFormatter } from "../../shared/function";
+import EPBook3D from "../EP-UI/Book3D";
+import { getStoryDetailURL } from "../../shared/generate-navigate-url";
 const { Text } = Typography;
 
 interface IProps {
-  showDetailFirstStory?: true;
-  displayRank?: boolean | true;
-  displayCategory?: boolean | true;
-  displayRead?: boolean | true;
-  displayChapter?: boolean | true;
+  showDetailFirstStory?: boolean;
+  showMore?: boolean;
+  displayRank?: boolean;
+  displayCategory?: boolean;
+  displayRead?: boolean;
+  displayChapter?: boolean;
   title: string;
   urlToNavigate?: string;
   stories: IStory[];
@@ -28,6 +31,7 @@ const ListStories: FC<IProps> = (props: IProps) => {
     urlToNavigate,
     displayRead,
     displayChapter,
+    showMore,
   } = props;
   const navigate = useNavigate();
 
@@ -48,7 +52,7 @@ const ListStories: FC<IProps> = (props: IProps) => {
             <Text ellipsis={true} className="w-100">
               <span
                 onClick={() =>
-                  navigate(`story/${item.storyId}/${slugify(item.storyTitle)}`)
+                  navigate(getStoryDetailURL(item.storyId, item.storyTitle))
                 }
                 className="name"
               >
@@ -71,7 +75,9 @@ const ListStories: FC<IProps> = (props: IProps) => {
         )}
         {displayRead && (
           <Col span={2}>
-            <div className="read text-end">{kFormatter(item.read)}</div>
+            <div className="read text-end">
+              {kFormatter(item.storyInteraction?.read ?? NaN)}
+            </div>
           </Col>
         )}
         {displayChapter && (
@@ -96,7 +102,7 @@ const ListStories: FC<IProps> = (props: IProps) => {
         <Col span={16} className="d-flex flex-column">
           <strong
             onClick={() =>
-              navigate(`/story/${item.storyId}/${slugify(item.storyTitle)}`)
+              navigate(getStoryDetailURL(item.storyId, item.storyTitle))
             }
             className="name"
           >
@@ -110,15 +116,16 @@ const ListStories: FC<IProps> = (props: IProps) => {
           </div>
           <div>
             <Button size={"small"}>
-              {item.storyCategories[0].categoryName}
+              {item.storyCategories[0]?.categoryName}
             </Button>
           </div>
         </Col>
         <Col span={5}>
           <div className="image-hover">
-            <img
-              src={`${item.storyImage}`}
-              alt={item.storyTitle}
+            <EPBook3D
+              storyId={item.storyId}
+              title={item.storyTitle}
+              imgUrl={item.storyImage}
               width={60}
               height={90}
             />
@@ -138,19 +145,21 @@ const ListStories: FC<IProps> = (props: IProps) => {
             {displayCategory ||
             showDetailFirstStory === !showDetailFirstStory ? (
               <Tooltip title="Danh sách đầy đủ">
-                <NavLink to={urlToNavigate!} className="d-none icon-go-to">
+                <Link to={urlToNavigate!} className="d-none icon-go-to">
                   <FaArrowRightLong />
-                </NavLink>
+                </Link>
               </Tooltip>
             ) : (
-              <NavLink to={urlToNavigate!} className="d-none icon-go-to">
-                <FaArrowRightLong />
-              </NavLink>
+              (showMore === undefined || showMore) && (
+                <Link to={urlToNavigate!} className="d-none icon-go-to">
+                  <FaArrowRightLong />
+                </Link>
+              )
             )}
           </div>
         }
         bordered
-        dataSource={stories}
+        dataSource={stories.slice(0, 10)}
         renderItem={(item, index) => (
           <List.Item
             key={`story-item-${item.storyId}-${item.storyTitle}`}

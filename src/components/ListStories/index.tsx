@@ -122,7 +122,13 @@ const ListStories: FC<IProps> = (props: IProps) => {
         </Col>
         <Col span={5}>
           <div className="image-hover">
-            <EPBook3D imgUrl={item.storyImage} width={60} height={90} />
+            <EPBook3D
+              storyId={item.storyId}
+              title={item.storyTitle}
+              imgUrl={item.storyImage}
+              width={60}
+              height={90}
+            />
           </div>
         </Col>
       </Row>

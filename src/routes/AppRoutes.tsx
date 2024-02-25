@@ -20,6 +20,7 @@ import LoginPage from "../pages/Auth/Login";
 import RegisterPage from "../pages/Auth/Register";
 import ForgotPasswordPage from "../pages/Auth/ForgotPassword";
 import NotFoundPage from "../pages/NotFound";
+import AuthorPage from "../pages/Author";
 
 interface IProps {}
 
@@ -70,6 +71,7 @@ const AppRoutes: FC<IProps> = (props: IProps) => {
             element={<ReadStoryPage />}
           ></Route>
           <Route path={"category/:id/:slug"} element={<CategoryPage />}></Route>
+          <Route path={"author/:id/:slug"} element={<AuthorPage />}></Route>
           <Route path={"vl"} element={<WriteChapterPage />}></Route>
         </Route>
         <Route path="/auth" element={<AuthLayout />}>

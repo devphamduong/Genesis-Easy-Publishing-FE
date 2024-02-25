@@ -29,3 +29,14 @@ export interface IRegisterForm {
   username?: string;
   agreement?: boolean;
 }
+
+export interface IEditProfileForm {
+  email?: string;
+  userFullName?: string;
+  address?: string;
+  dob?: string;
+  gender?: boolean;
+  userImage?: string;
+  descriptionMarkdown?: string;
+  descriptionHTML?: string;
+}

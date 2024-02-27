@@ -1,6 +1,10 @@
 import { ICategory } from "../interfaces/category.interface";
 import { IApiResponse } from "../interfaces/global.interface";
-import { IPaginationStory, IStory } from "../interfaces/story.interface";
+import {
+  IPaginationChapter,
+  IPaginationStory,
+  IStory,
+} from "../interfaces/story.interface";
 import axios from "../utils/axios-customize";
 
 export const getTop6Purchase = (): Promise<IApiResponse<IStory[]>> => {
@@ -41,4 +45,14 @@ export const getRelatedStoriesById = (
   id: number | string
 ): Promise<IApiResponse<IStory[]>> => {
   return axios.get(`story/story_detail/related?storyid=${id}`);
+};
+
+export const getPaginationChaptersByStoryId = (
+  id: string | number,
+  page: number,
+  pageSize: number
+): Promise<IApiResponse<IPaginationChapter>> => {
+  return axios.get(
+    `chapters/story_detail?storyid=${id}&page=${page}&pageSize=${pageSize}`
+  );
 };

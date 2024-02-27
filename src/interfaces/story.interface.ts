@@ -11,6 +11,7 @@ export interface IStory {
     userFullname: string;
   };
   storyChapterNumber: number;
+  storyChapters?: IChapter[];
   storyLatestChapter?: {
     chapterId: number | string;
     chapterTitle: string;
@@ -25,6 +26,7 @@ export interface IStory {
     storyId: number;
     view: number;
   };
+  userOwned: boolean;
 }
 
 export interface IAuthor {
@@ -45,5 +47,23 @@ export interface IPaginationStory {
   totalPage: number;
   current: number;
   pageSize: number;
-  listStories: IStory[];
+  list: IStory[];
+}
+
+export interface IChapter {
+  chapterId: number;
+  chapterNumber: number;
+  chapterTitle: string;
+  chapterPrice: number;
+  createTime: string;
+  comment: number;
+  userPurchaseChapter: number;
+}
+
+export interface IPaginationChapter {
+  total: number;
+  totalPage: number;
+  current: number;
+  pageSize: number;
+  list: IChapter[];
 }

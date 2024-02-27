@@ -68,7 +68,9 @@ const EPBook3D: FC<IProps> = (props: IProps) => {
         </Link>
         <strong className="title text-center">
           <Paragraph ellipsis={{ rows: 2 }}>
-            <Link to={getStoryDetailURL(storyId, title)}>{title}</Link>
+            <Link className="link-hover" to={getStoryDetailURL(storyId, title)}>
+              {title}
+            </Link>
           </Paragraph>
         </strong>
         <div className="description text-center">

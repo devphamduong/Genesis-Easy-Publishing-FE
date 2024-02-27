@@ -27,4 +27,16 @@ body {
   .ant-divider {
     margin: 10px 0;
   }
+
+  .link-hover {
+    color: unset;
+
+    &:hover {
+      color: #69b1ff;
+    }
+  }
+
+  .time {
+    color: #bba1a1;
+  }
 }

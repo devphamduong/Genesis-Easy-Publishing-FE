@@ -1,15 +1,18 @@
 import { FC, useEffect, useState } from "react";
 import "./DetailStory.scss";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   Avatar,
   Badge,
   Button,
   Col,
   Divider,
+  List,
   Rate,
   Row,
   Space,
+  Table,
+  TableProps,
   Tabs,
   TabsProps,
   Tag,
@@ -19,6 +22,7 @@ import VerticalImageHover from "../../components/VerticalImageHover";
 import EPTag from "../../components/EP-UI/Tag";
 import { kFormatter } from "../../shared/function";
 import {
+  ClockCircleOutlined,
   HeartOutlined,
   LikeOutlined,
   UserOutlined,
@@ -29,18 +33,47 @@ import { PiBook } from "react-icons/pi";
 import { BsReverseLayoutTextWindowReverse } from "react-icons/bs";
 import { GiSelfLove } from "react-icons/gi";
 import EPModalReport from "../../components/EP-UI/Modal/Report";
-import { IAuthor, IStory } from "../../interfaces/story.interface";
+import { IAuthor, IChapter, IStory } from "../../interfaces/story.interface";
 import {
+  getPaginationChaptersByStoryId,
   getRelatedStoriesById,
   getStoryDetailById,
 } from "../../services/story-api.service";
 import { getAuthorById } from "../../services/author-api.service";
 import { Typography } from "antd";
-import { getStoryReadURL } from "../../shared/generate-navigate-url";
+import {
+  getStoryDetailURL,
+  getStoryReadURL,
+} from "../../shared/generate-navigate-url";
+import relativeTime from "dayjs/plugin/relativeTime";
+import dayjs from "dayjs";
+dayjs.extend(relativeTime);
 
-const { Paragraph } = Typography;
+const { Paragraph, Text } = Typography;
 
 interface IProps {}
+
+enum ETabsName {
+  DESCRIPTION = "Giới thiệu",
+  CHAPTER = "Chương",
+  COMMENT = "Bình luận",
+}
+
+enum ETabsKey {
+  DESCRIPTION = "description",
+  CHAPTER = "chapter",
+  COMMENT = "comment",
+}
+
+interface DataType {
+  key: string;
+  chapterNumber: string;
+  chapterTitle: string;
+  createTime: string;
+}
+
+const PAGE_SIZE_CHAPTER = 10;
+const PAGE_SIZE_COMMENT = 10;
 
 const DetailStoryPage: FC<IProps> = (props: IProps) => {
   const { id, slug } = useParams();
@@ -48,8 +81,36 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
   const [story, setStory] = useState<IStory>();
   const [author, setAuthor] = useState<IAuthor>();
   const [relatedStories, setRelatedStories] = useState<IStory[]>([]);
-  const [currentTab, setCurrentTab] = useState<string>("introduce");
+  const [currentTab, setCurrentTab] = useState<string>(ETabsKey.DESCRIPTION);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [chapters, setChapters] = useState<IChapter[]>([]);
+  const [currentPageChapter, setCurrentPageChapter] = useState<number>(1);
+  const [totalPageChapter, setTotalPageChapter] = useState<number>(0);
+  const [pageSizeChapter, setPageSizeChapter] =
+    useState<number>(PAGE_SIZE_CHAPTER);
+
+  const itemTabs: TabsProps["items"] = [
+    {
+      key: ETabsKey.DESCRIPTION,
+      label: ETabsName.DESCRIPTION,
+      children: <></>,
+    },
+    {
+      key: ETabsKey.CHAPTER,
+      label: ETabsName.CHAPTER,
+      children: <></>,
+    },
+    {
+      key: ETabsKey.COMMENT,
+      label: (
+        <div className="d-flex align-items-center gap-1">
+          <span>{ETabsName.COMMENT}</span>
+          <Badge count={1000} overflowCount={999} color="#4497f8"></Badge>
+        </div>
+      ),
+      children: <></>,
+    },
+  ];
 
   useEffect(() => {
     if (id) {
@@ -58,6 +119,11 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
       fetchAuthorById(id);
     }
   }, [id]);
+
+  useEffect(() => {
+    if (id)
+      fetchPaginationChaptersByStoryId(id, currentPageChapter, pageSizeChapter);
+  }, [id, currentPageChapter, pageSizeChapter]);
 
   const fetchStoryById = async (id: number | string) => {
     const res = await getStoryDetailById(id);
@@ -80,28 +146,117 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
     }
   };
 
-  const itemTabs: TabsProps["items"] = [
-    {
-      key: "introduce",
-      label: "Giới Thiệu",
-      children: <></>,
-    },
-    {
-      key: "chapter",
-      label: "Chương",
-      children: <></>,
-    },
-    {
-      key: "comment",
-      label: (
-        <div className="d-flex align-items-center gap-1">
-          <span>Bình Luận</span>
-          <Badge count={1000} overflowCount={999} color="#4497f8"></Badge>
-        </div>
-      ),
-      children: <></>,
-    },
-  ];
+  const fetchPaginationChaptersByStoryId = async (
+    id: string | number,
+    page: number,
+    pageSize: number
+  ) => {
+    const res = await getPaginationChaptersByStoryId(id, page, pageSize);
+    if (res && res.ec === 0) {
+      setChapters(res.dt.list);
+    }
+  };
+
+  const handleChangePageChapter = (page: number, pageSize: number) => {
+    setCurrentPageChapter(page);
+  };
+
+  const renderTableChapter = () => {
+    const columns: TableProps["columns"] = [
+      {
+        title: "No.",
+        dataIndex: "key",
+        key: "key",
+        render(value, record, index) {
+          return (
+            <span>
+              {(currentPageChapter - 1) * pageSizeChapter + index + 1}
+            </span>
+          );
+        },
+      },
+      {
+        title: "Chương Số",
+        dataIndex: "chapterNumber",
+        key: "chapterNumber",
+        render(chapterNumber, record: IChapter, index) {
+          return (
+            <Link to={getStoryReadURL(id!, slug!, record.chapterNumber)}>
+              Chương số {chapterNumber}
+            </Link>
+          );
+        },
+      },
+      {
+        title: "Tựa Chương",
+        dataIndex: "chapterTitle",
+        key: "chapterTitle",
+        render(chapterTitle, record: IChapter, index) {
+          return (
+            <Link to={getStoryReadURL(id!, slug!, record.chapterNumber)}>
+              {chapterTitle}
+            </Link>
+          );
+        },
+      },
+      {
+        title: <ClockCircleOutlined />,
+        key: "createTime",
+        dataIndex: "createTime",
+        render: (createTime) => (
+          <>
+            <span>{dayjs(createTime).fromNow()}</span>
+          </>
+        ),
+      },
+    ];
+    return (
+      <Table
+        columns={columns}
+        dataSource={chapters}
+        rowKey={(record) => record.chapterId}
+        pagination={{
+          total: totalPageChapter,
+          onChange: handleChangePageChapter,
+        }}
+      />
+    );
+  };
+
+  const renderListComment = () => {
+    const data = [
+      {
+        title: "Ant Design Title 1",
+      },
+      {
+        title: "Ant Design Title 2",
+      },
+      {
+        title: "Ant Design Title 3",
+      },
+      {
+        title: "Ant Design Title 4",
+      },
+    ];
+    return (
+      <List
+        dataSource={data}
+        renderItem={(item, index) => (
+          <List.Item key={index}>
+            <List.Item.Meta
+              avatar={
+                <Avatar
+                  src={`https://api.dicebear.com/7.x/miniavs/svg?seed=${index}`}
+                />
+              }
+              title={<a href="https://ant.design">{item.title}</a>}
+              description="Ant Design, a design language for background applications, is refined by Ant UED Team"
+            />
+          </List.Item>
+        )}
+      />
+    );
+  };
 
   const handleReadStory = () => {
     navigate(getStoryReadURL(id!, slug!, 1));
@@ -112,7 +267,7 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
       <div className="detail-story-container">
         <div className="detail-story-content container py-3">
           <Row className="top mb-3">
-            <Col span={21}>
+            <Col span={19}>
               <Row gutter={[12, 10]}>
                 <Col span={4}>
                   <VerticalImageHover
@@ -169,7 +324,9 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
                       >
                         Đọc Từ Đầu
                       </Button>
-                      <Button size="large">Mua Trọn Bộ</Button>
+                      {!story?.userOwned && (
+                        <Button size="large">Mua Trọn Bộ</Button>
+                      )}
                       <Space.Compact block size="large">
                         <Tooltip title="Like">
                           <Button icon={<LikeOutlined />} />
@@ -189,16 +346,58 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
                 </Col>
               </Row>
             </Col>
-            <Col span={3}>
-              <Rate allowHalf defaultValue={2.5} />
+            <Col span={5} className="price">
+              <table>
+                <tbody>
+                  <tr>
+                    <td></td>
+                    <td>
+                      <Text delete>880,678</Text>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <Text type="danger">Special!:</Text>
+                    </td>
+                    <td>
+                      <Text type="danger">
+                        <strong>660,509</strong>
+                      </Text>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <Text>You Save:</Text>
+                    </td>
+                    <td>
+                      <p>
+                        220,169 (<strong>25%</strong>)
+                      </p>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div></div>
+              <div></div>
             </Col>
           </Row>
           <div className="bottom">
-            <Tabs defaultActiveKey={currentTab} type="card" items={itemTabs} />
+            <Tabs
+              defaultActiveKey={currentTab}
+              type="card"
+              items={itemTabs}
+              onChange={(key: string) => setCurrentTab(key)}
+            />
             <Row gutter={[16, 10]}>
-              <Col span={19}>
-                <div>{story?.storyDescription}</div>
-              </Col>
+              {currentTab === ETabsKey.DESCRIPTION ? (
+                <Col span={19}>
+                  <div>{story?.storyDescription}</div>
+                </Col>
+              ) : currentTab === ETabsKey.CHAPTER ? (
+                <Col span={19}>{renderTableChapter()}</Col>
+              ) : (
+                <Col span={19}>{renderListComment()}</Col>
+              )}
               <Col
                 span={5}
                 className="author-info d-flex flex-column align-items-center gap-3 py-4 text-center"
@@ -235,13 +434,56 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
                     width={80}
                     imageUrl={author?.authorNewestStory.storyImage ?? ""}
                   ></VerticalImageHover>
-                  <h6>{author?.authorNewestStory.storyTitle}</h6>
+                  <Link
+                    className="link-hover"
+                    to={
+                      id && author
+                        ? getStoryDetailURL(
+                            id,
+                            author?.authorNewestStory.storyTitle
+                          )
+                        : ""
+                    }
+                  >
+                    <h6>{author?.authorNewestStory.storyTitle}</h6>
+                  </Link>
                   <Paragraph ellipsis={{ rows: 3 }}>
                     {author?.authorNewestStory.storyDescription}
                   </Paragraph>
                   <Button type="primary">Xem ngay</Button>
                 </div>
               </Col>
+              {story?.storyChapters && story.storyChapters.length > 0 && (
+                <Col span={19}>
+                  <Divider />
+                  <div className="d-flex gap-5 ">
+                    <strong>Mới Cập Nhật</strong>
+                    <div className="d-flex flex-column gap-2 w-75">
+                      {story?.storyChapters.map((item, index) => {
+                        return (
+                          <div className="d-flex align-items-center justify-content-between">
+                            <Link
+                              className="link-hover fs-6"
+                              to={getStoryReadURL(
+                                id!,
+                                slug!,
+                                item.chapterNumber
+                              )}
+                            >
+                              <strong>Chương {item.chapterNumber}</strong>:{" "}
+                              {item.chapterTitle}{" "}
+                            </Link>
+                            <span className="time">
+                              {dayjs(item.createTime).fromNow()}
+                            </span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                  <Divider />
+                </Col>
+              )}
               <Col span={19}>
                 <strong>Có Thể Bạn Cũng Muốn Đọc</strong>
                 <Divider />

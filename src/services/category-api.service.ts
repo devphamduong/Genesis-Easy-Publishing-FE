@@ -14,11 +14,11 @@ export const getStoriesByCategoryId = (
 };
 
 export const getPaginationStoriesByCategoryId = (
-  id: string,
+  id: string | number,
   page: number,
   pageSize: number
 ): Promise<IApiResponse<IPaginationStory>> => {
   return axios.get(
-    `shelves/cate_shelves?cateid=${id}&page=${page}&pagesize=${pageSize}`
+    `shelves/cate_shelves?cateid=${id}&page=${page}&pageSize=${pageSize}`
   );
 };

@@ -161,24 +161,22 @@ const HomePage: FC = (props) => {
           <Col span={5}>
             <Row gutter={[16, 16]}>
               <Col className="w-100">
-                {newestStories?.listStories &&
-                newestStories?.listStories?.length > 0 ? (
+                {newestStories?.list && newestStories?.list?.length > 0 ? (
                   <ListStories
                     displayCategory
                     title="Truyện Mới Cập Nhật"
-                    stories={[...(newestStories?.listStories ?? [])]}
+                    stories={[...(newestStories?.list ?? [])]}
                   />
                 ) : (
                   <ListStoriesSkeleton />
                 )}
               </Col>
               <Col className="w-100">
-                {topReadStories?.listStories &&
-                topReadStories?.listStories?.length > 0 ? (
+                {topReadStories?.list && topReadStories?.list?.length > 0 ? (
                   <ListStories
                     displayRead
                     title="Sáng Tác Nhiều Người Đọc"
-                    stories={[...(topReadStories?.listStories ?? [])]}
+                    stories={[...(topReadStories?.list ?? [])]}
                   />
                 ) : (
                   <ListStoriesSkeleton />
@@ -278,45 +276,42 @@ const HomePage: FC = (props) => {
                 </Card>
               </Col>
               <Col span={8}>
-                {famousStories?.listStories &&
-                famousStories?.listStories?.length > 0 ? (
+                {famousStories?.list && famousStories?.list?.length > 0 ? (
                   <ListStories
                     urlToNavigate="rank-stories"
                     showDetailFirstStory
                     displayRank
                     displayChapter
                     title="Kim Thánh Bảng"
-                    stories={[...(famousStories?.listStories ?? [])]}
+                    stories={[...(famousStories?.list ?? [])]}
                   />
                 ) : (
                   <ListStoriesSkeleton />
                 )}
               </Col>
               <Col span={8}>
-                {famousStories?.listStories &&
-                famousStories?.listStories?.length > 0 ? (
+                {famousStories?.list && famousStories?.list?.length > 0 ? (
                   <ListStories
                     urlToNavigate="rank-stories"
                     showDetailFirstStory
                     displayRank
                     displayChapter
                     title="Kim Thánh Bảng"
-                    stories={[...(famousStories?.listStories ?? [])]}
+                    stories={[...(famousStories?.list ?? [])]}
                   />
                 ) : (
                   <ListStoriesSkeleton />
                 )}
               </Col>
               <Col span={8}>
-                {famousStories?.listStories &&
-                famousStories?.listStories?.length > 0 ? (
+                {famousStories?.list && famousStories?.list?.length > 0 ? (
                   <ListStories
                     urlToNavigate="rank-stories"
                     showDetailFirstStory
                     displayRank
                     displayChapter
                     title="Kim Thánh Bảng"
-                    stories={[...(famousStories?.listStories ?? [])]}
+                    stories={[...(famousStories?.list ?? [])]}
                   />
                 ) : (
                   <ListStoriesSkeleton />

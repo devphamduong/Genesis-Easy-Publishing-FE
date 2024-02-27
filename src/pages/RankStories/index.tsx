@@ -59,9 +59,9 @@ const RankStories: FC<IProps> = (props: IProps) => {
         </div>
         <div className="bottom">
           <Spin spinning={isLoading}>
-            {famousStories?.listStories &&
-              famousStories.listStories.length > 0 &&
-              famousStories.listStories?.map((item, index) => (
+            {famousStories?.list &&
+              famousStories.list.length > 0 &&
+              famousStories.list?.map((item, index) => (
                 <RowStory
                   key={`famous-story-${item.storyId}`}
                   story={item}

@@ -67,3 +67,12 @@ export interface IPaginationChapter {
   pageSize: number;
   list: IChapter[];
 }
+
+export interface IWriteStoryForm {
+  title?: string;
+  type?: string;
+  author?: string;
+  category?: string;
+  descriptionMarkdown?: string;
+  descriptionHTML?: string;
+}

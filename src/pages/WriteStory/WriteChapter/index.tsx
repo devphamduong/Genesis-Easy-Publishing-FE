@@ -24,12 +24,16 @@ const WriteChapterPage: FC<IProps> = (props: IProps) => {
   };
 
   return (
-    <MdEditor
-      style={{ height: "300px" }}
-      value={contentMarkdown}
-      renderHTML={(text) => mdParser.render(text)}
-      onChange={handleEditorChange}
-    />
+    <div className="write-chapter-container my-3">
+      <div className="write-chapter-content container">
+        <MdEditor
+          style={{ height: "300px" }}
+          value={contentMarkdown}
+          renderHTML={(text) => mdParser.render(text)}
+          onChange={handleEditorChange}
+        />
+      </div>
+    </div>
   );
 };
 

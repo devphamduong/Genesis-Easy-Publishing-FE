@@ -329,6 +329,10 @@ const HomePage: FC = (props) => {
                     <ListStories
                       displayRank
                       displayRead
+                      urlToNavigate={getStoryCategoryURL(
+                        item.categoryId,
+                        item.categoryName
+                      )}
                       title={item.categoryName}
                       stories={[...(item?.stories ?? [])]}
                     />

@@ -83,6 +83,7 @@ const Header: FC<IProps> = (props: IProps) => {
           Profile
         </Button>
         <Button>Nạp</Button>
+        <Button onClick={() => navigate("/author")}>Quản lý truyện</Button>
         <Button onClick={() => handleLogout()}>Log out</Button>
       </div>
     );

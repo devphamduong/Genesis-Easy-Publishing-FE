@@ -22,6 +22,7 @@ import ForgotPasswordPage from "../pages/Auth/ForgotPassword";
 import NotFoundPage from "../pages/NotFound";
 import AuthorPage from "../pages/Author";
 import WriteStoryPage from "../pages/WriteStory";
+import AuthorLayout from "../layouts/Author";
 
 interface IProps {}
 
@@ -85,6 +86,14 @@ const AppRoutes: FC<IProps> = (props: IProps) => {
           ></Route>
         </Route>
         <Route path="*" element={<NotFoundPage />}></Route>
+        <Route
+          path="/author"
+          element={<AuthorLayout categories={categories} />}
+        >
+          <Route index element={<HomePage />} />
+          <Route path={"write-story"} element={<WriteStoryPage />}></Route>
+          <Route path={"write-chapter"} element={<WriteChapterPage />}></Route>
+        </Route>
       </Routes>
       {/* <PrivateRoutes path='/users' component={User} />
              <PrivateRoutes path='/roles' component={Role} />

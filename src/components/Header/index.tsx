@@ -31,9 +31,7 @@ interface IProps {}
 const Header: FC<IProps> = (props: IProps) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const username = useSelector(
-    (state: IRootState) => state.account?.user?.username
-  );
+  const account = useSelector((state: IRootState) => state.account?.user);
   const [current, setCurrent] = useState<string>("mail");
   const items: MenuProps["items"] = [
     {
@@ -66,7 +64,7 @@ const Header: FC<IProps> = (props: IProps) => {
     return (
       <div className="d-flex align-items-center gap-2">
         <Avatar size="large" icon={<UserOutlined />} />
-        <div>{username ?? "vcl"}</div>
+        <div>{account.username ?? "vcl"}</div>
       </div>
     );
   };

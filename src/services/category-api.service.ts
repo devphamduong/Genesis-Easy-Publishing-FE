@@ -13,6 +13,12 @@ export const getStoriesByCategoryId = (
   return axios.get(`shelves/topcate_shelves?cateid=${id}`);
 };
 
+export const getStoriesMostReadByCategoryId = (
+  id: string
+): Promise<IApiResponse<IStory[]>> => {
+  return axios.get(`shelves/topcate_read?cateid=${id}`);
+};
+
 export const getPaginationStoriesByCategoryId = (
   id: string | number,
   page: number,

@@ -17,6 +17,8 @@ export interface IStory {
     chapterTitle: string;
   };
   userCount?: number;
+  storyPrice: number;
+  storySale: number;
   userPurchaseStory?: number;
   userPurchaseChapter?: number;
   storyInteraction?: {
@@ -27,6 +29,8 @@ export interface IStory {
     view: number;
   };
   userOwned: boolean;
+  userFollow: boolean;
+  userLike: boolean;
 }
 
 export interface IAuthor {

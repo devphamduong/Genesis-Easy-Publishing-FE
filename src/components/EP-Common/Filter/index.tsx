@@ -1,13 +1,31 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import "./EPFilter.scss";
 import { Button, Checkbox, Form, GetProp, Input, Select, Slider } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
+import { IFilterOptions } from "../../../interfaces/global.interface";
+import { getFilterOptions } from "../../../services/common-api.service";
 
 interface IProps {}
 
+let MAX_PRICE = 100;
+
 const EPFilter: FC<IProps> = (props: IProps) => {
   const [form] = Form.useForm();
-  const [priceRange, setPriceRange] = useState<number[]>([0, 100]);
+  const [priceRange, setPriceRange] = useState<number[]>([0, MAX_PRICE]);
+  const [filterOptions, setFilterOptions] = useState<IFilterOptions>();
+
+  useEffect(() => {
+    fetchFilterOptions();
+  }, []);
+
+  const fetchFilterOptions = async () => {
+    const res = await getFilterOptions();
+    if (res && res.ec === 0) {
+      setPriceRange([res.dt.from, res.dt.to]);
+      MAX_PRICE = res.dt.to;
+      setFilterOptions(res.dt);
+    }
+  };
 
   const options = [
     { label: "Apple", value: "Apple" },
@@ -70,7 +88,7 @@ const EPFilter: FC<IProps> = (props: IProps) => {
           <Slider
             range
             defaultValue={priceRange}
-            max={100}
+            max={MAX_PRICE}
             onChange={onChange}
             onChangeComplete={onChangePriceRange}
           />
@@ -78,39 +96,29 @@ const EPFilter: FC<IProps> = (props: IProps) => {
         <Form.Item name="multiple">
           <Select
             mode="multiple"
-            placeholder="Outlined"
-            options={[
-              { value: "jack", label: "Jack" },
-              { value: "lucy", label: "Lucy" },
-              { value: "Yiminghe", label: "yiminghe" },
-              { value: "1", label: "Jack" },
-              { value: "2", label: "Lucy" },
-              { value: "3", label: "yiminghe" },
-            ]}
+            placeholder="Thể loại"
+            options={
+              filterOptions &&
+              filterOptions?.cate?.map((item) => {
+                return { value: item.categoryId, label: item.categoryName };
+              })
+            }
           />
         </Form.Item>
         <Form.Item name="category">
           <Select
             showSearch
-            placeholder="Select a person"
+            placeholder="Trạng thái"
             optionFilterProp="children"
             onChange={onChangeSearch}
             onSearch={onSearch}
             filterOption={filterOption}
-            options={[
-              {
-                value: "jack",
-                label: "Jack",
-              },
-              {
-                value: "lucy",
-                label: "Lucy",
-              },
-              {
-                value: "tom",
-                label: "Tom",
-              },
-            ]}
+            options={
+              filterOptions &&
+              filterOptions.status.map((item) => {
+                return { value: item.value as string, label: item.name };
+              })
+            }
           />
         </Form.Item>
         <Button icon={<SearchOutlined />} onClick={() => form.submit()}>

@@ -44,29 +44,32 @@ const AuthorLayout: FC<IProps> = (props: IProps) => {
 
   const items: MenuItem[] = [
     getItem(
-      <span onClick={() => navigate("/author/write-story")}>
-        Tạo truyện mới
-      </span>,
+      <div onClick={() => navigate("/author/write-story")}>Thống kê</div>,
       "1",
-      <PieChartOutlined />
+      <PieChartOutlined onClick={() => navigate("/author/write-story")} />
     ),
     getItem(
-      <span onClick={() => navigate("/author/write-chapter")}>
-        Viết chương truyện
-      </span>,
+      <div onClick={() => navigate("/author/write-story")}>Tạo truyện mới</div>,
       "2",
-      <DesktopOutlined />
+      <PieChartOutlined onClick={() => navigate("/author/write-story")} />
     ),
-    getItem("User", "sub1", <UserOutlined />, [
-      getItem("Tom", "3"),
-      getItem("Bill", "4"),
-      getItem("Alex", "5"),
-    ]),
-    getItem("Team", "sub2", <TeamOutlined />, [
-      getItem("Team 1", "6"),
-      getItem("Team 2", "8"),
-    ]),
-    getItem("Files", "9", <FileOutlined />),
+    getItem(
+      <div onClick={() => navigate("/author/write-chapter")}>
+        Viết chương truyện
+      </div>,
+      "3",
+      <DesktopOutlined onClick={() => navigate("/author/write-chapter")} />
+    ),
+    // getItem("User", "sub1", <UserOutlined />, [
+    //   getItem("Tom", "3"),
+    //   getItem("Bill", "4"),
+    //   getItem("Alex", "5"),
+    // ]),
+    // getItem("Team", "sub2", <TeamOutlined />, [
+    //   getItem("Team 1", "6"),
+    //   getItem("Team 2", "8"),
+    // ]),
+    // getItem("Files", "9", <FileOutlined />),
   ];
 
   return (

@@ -1,6 +1,8 @@
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import "./EPModalReport.scss";
 import { Form, Input, InputNumber, Modal, Select } from "antd";
+import { IReportOption } from "../../../../interfaces/global.interface";
+import { getReportOptions } from "../../../../services/common-api.service";
 const { Option } = Select;
 const { TextArea } = Input;
 
@@ -30,10 +32,22 @@ const formItemLayout = {
 const EPModalReport: FC<IProps> = (props: IProps) => {
   const { isModalOpen, setIsModalOpen, inChapter } = props;
   const [form] = Form.useForm<IFormReport>();
+  const [reportOptions, setReportOptions] = useState<IReportOption[]>([]);
 
   const handleCancel = () => {
     setIsModalOpen(false);
     form.resetFields();
+  };
+
+  useEffect(() => {
+    fetchTop6PurchaseStories();
+  }, []);
+
+  const fetchTop6PurchaseStories = async () => {
+    const res = await getReportOptions();
+    if (res && res.ec === 0) {
+      setReportOptions(res.dt);
+    }
   };
 
   const onFinish = (values: IFormReport) => {
@@ -63,9 +77,13 @@ const EPModalReport: FC<IProps> = (props: IProps) => {
           rules={[{ required: true, message: "Bắt buộc!" }]}
         >
           <Select placeholder="Chọn vấn đề" allowClear>
-            <Option value="male">male</Option>
-            <Option value="female">female</Option>
-            <Option value="other">other</Option>
+            {reportOptions?.map((item, index) => {
+              return (
+                <Option key={`option-${index + 1}`} value={item.reportTypeId}>
+                  {item.reportTypeContent}
+                </Option>
+              );
+            })}
           </Select>
         </Form.Item>
         <Form.Item

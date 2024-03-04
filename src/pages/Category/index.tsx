@@ -10,6 +10,7 @@ import RowStorySkeleton from "../../components/RowStory/RowStorySkeleton";
 import {
   getPaginationStoriesByCategoryId,
   getStoriesByCategoryId,
+  getStoriesMostReadByCategoryId,
 } from "../../services/category-api.service";
 import { IStory } from "../../interfaces/story.interface";
 
@@ -24,6 +25,7 @@ const CategoryPage: FC<IProps> = (props: IProps) => {
   const { id, slug } = useParams();
   const [stories, setStories] = useState<IStory[]>([]);
   const [storiesUpdate, setStoriesUpdate] = useState<IStory[]>([]);
+  const [storiesMostRead, setStoriesMostRead] = useState<IStory[]>([]);
   const [currentPageStoriesUpdate, setCurrentPageStoriesUpdate] =
     useState<number>(1);
   const [totalPageStoriesUpdate, setTotalPageStoriesUpdate] =
@@ -39,7 +41,10 @@ const CategoryPage: FC<IProps> = (props: IProps) => {
     useState<number>(PAGE_SIZE_STORIES_COMPLETE);
 
   useEffect(() => {
-    if (id) fetchStoriesByCategoriesId(id);
+    if (id) {
+      fetchStoriesByCategoriesId(id);
+      fetchStoriesMostReadByCategoryId(id);
+    }
   }, [id]);
 
   useEffect(() => {
@@ -64,6 +69,13 @@ const CategoryPage: FC<IProps> = (props: IProps) => {
     const res = await getStoriesByCategoryId(id);
     if (res && res.ec === 0) {
       setStories(res.dt);
+    }
+  };
+
+  const fetchStoriesMostReadByCategoryId = async (id: string) => {
+    const res = await getStoriesMostReadByCategoryId(id);
+    if (res && res.ec === 0) {
+      setStoriesMostRead(res.dt);
     }
   };
 
@@ -121,6 +133,7 @@ const CategoryPage: FC<IProps> = (props: IProps) => {
                       <EPBook3D
                         storyId={item.storyId}
                         imgUrl={item.storyImage}
+                        isShowTitle
                         title={item.storyTitle}
                         description={item.storyDescription}
                         width={80}
@@ -168,58 +181,7 @@ const CategoryPage: FC<IProps> = (props: IProps) => {
           </Col>
           <Col span={6}>
             <ListStories
-              stories={[
-                {
-                  storyId: 1,
-                  storyImage:
-                    "https://yymedia.codeprime.net/media/novels/2019-06/ef2d9a2625.jpg",
-                  storyTitle: "abc",
-                  storyDescription: "abc",
-                  storyCategories: [],
-                  storyAuthor: { userId: 1, userFullname: "abc" },
-                  storyChapterNumber: 10,
-                },
-                {
-                  storyId: 1,
-                  storyImage:
-                    "https://yymedia.codeprime.net/media/novels/2019-06/ef2d9a2625.jpg",
-                  storyTitle: "abc",
-                  storyDescription: "abc",
-                  storyCategories: [],
-                  storyAuthor: { userId: 1, userFullname: "abc" },
-                  storyChapterNumber: 10,
-                },
-                {
-                  storyId: 1,
-                  storyImage:
-                    "https://yymedia.codeprime.net/media/novels/2019-06/ef2d9a2625.jpg",
-                  storyTitle: "abc",
-                  storyDescription: "abc",
-                  storyCategories: [],
-                  storyAuthor: { userId: 1, userFullname: "abc" },
-                  storyChapterNumber: 10,
-                },
-                {
-                  storyId: 1,
-                  storyImage:
-                    "https://yymedia.codeprime.net/media/novels/2019-06/ef2d9a2625.jpg",
-                  storyTitle: "abc",
-                  storyDescription: "abc",
-                  storyCategories: [],
-                  storyAuthor: { userId: 1, userFullname: "abc" },
-                  storyChapterNumber: 10,
-                },
-                {
-                  storyId: 1,
-                  storyImage:
-                    "https://yymedia.codeprime.net/media/novels/2019-06/ef2d9a2625.jpg",
-                  storyTitle: "abc",
-                  storyDescription: "abc",
-                  storyCategories: [],
-                  storyAuthor: { userId: 1, userFullname: "abc" },
-                  storyChapterNumber: 10,
-                },
-              ]}
+              stories={storiesMostRead}
               title="Truyện Kiếm Hiệp Đọc Nhiều Trong Tuần"
               displayRead
               displayRank

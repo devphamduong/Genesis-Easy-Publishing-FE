@@ -33,10 +33,15 @@ import ListStoriesSkeleton from "../../components/ListStories/ListStoriesSkeleto
 import Loading from "../../components/Loading";
 import { MdMoreVert } from "react-icons/md";
 import { PiDotsThreeCircleLight } from "react-icons/pi";
+import { useSelector } from "react-redux";
+import { IRootState } from "../../redux/store";
 const { Paragraph } = Typography;
 
 const HomePage: FC = (props) => {
   const navigate = useNavigate();
+  const isAuthenticated = useSelector(
+    (state: IRootState) => state.account.isAuthenticated
+  );
   const categories: ICategory[] = useOutletContext();
   const [isOpenDrawer, setIsOpenDrawer] = useState<boolean>(false);
   const [stories, setStories] = useState<IStory[]>([]);
@@ -134,9 +139,6 @@ const HomePage: FC = (props) => {
                             </div>
                           </div>
                         </div>
-                        <div>
-                          <MdMoreVert />
-                        </div>
                       </Col>
                     );
                   })
@@ -179,7 +181,7 @@ const HomePage: FC = (props) => {
                 <Button size="large" type="primary">
                   Trung tâm xuất bản
                 </Button>
-                <i>(Cần đăng nhập để xem thông tin)</i>
+                {!isAuthenticated && <i>(Cần đăng nhập để xem thông tin)</i>}
               </div>
             </Col>
             <Col span={5}>

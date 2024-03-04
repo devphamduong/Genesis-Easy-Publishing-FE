@@ -15,7 +15,6 @@ import {
   TableProps,
   Tabs,
   TabsProps,
-  Tag,
   Tooltip,
 } from "antd";
 import VerticalImageHover from "../../components/VerticalImageHover";
@@ -24,7 +23,6 @@ import { kFormatter } from "../../shared/function";
 import {
   ClockCircleOutlined,
   HeartOutlined,
-  LikeOutlined,
   UserOutlined,
   WarningOutlined,
 } from "@ant-design/icons";
@@ -47,6 +45,10 @@ import {
 } from "../../shared/generate-navigate-url";
 import relativeTime from "dayjs/plugin/relativeTime";
 import dayjs from "dayjs";
+import { useSelector } from "react-redux";
+import { IRootState } from "../../redux/store";
+import { AiFillLike, AiOutlineLike } from "react-icons/ai";
+import { FaHeart, FaRegHeart } from "react-icons/fa6";
 dayjs.extend(relativeTime);
 
 const { Paragraph, Text } = Typography;
@@ -74,9 +76,15 @@ interface DataType {
 
 const PAGE_SIZE_CHAPTER = 10;
 const PAGE_SIZE_COMMENT = 10;
+let PRICE: number = 0;
+let SALE_PERCENT: number = 0;
+let NEW_PRICE: number = 0;
 
 const DetailStoryPage: FC<IProps> = (props: IProps) => {
   const { id, slug } = useParams();
+  const isAuthenticated = useSelector(
+    (state: IRootState) => state.account.isAuthenticated
+  );
   const navigate = useNavigate();
   const [story, setStory] = useState<IStory>();
   const [author, setAuthor] = useState<IAuthor>();
@@ -129,6 +137,9 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
     const res = await getStoryDetailById(id);
     if (res && res.ec === 0) {
       setStory(res.dt);
+      PRICE = res.dt.storyPrice;
+      SALE_PERCENT = res.dt.storySale;
+      NEW_PRICE = (PRICE - (SALE_PERCENT / 100) * PRICE).toFixed(2) as number;
     }
   };
 
@@ -266,16 +277,19 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
     <>
       <div className="detail-story-container">
         <div className="detail-story-content container py-3">
-          <Row className="top mb-3">
-            <Col span={19}>
+          <Row align={"middle"} className="top mb-3">
+            <Col span={12}>
               <Row gutter={[12, 10]}>
-                <Col span={4}>
+                <Col span={6}>
                   <VerticalImageHover
                     height={240}
                     imageUrl={story?.storyImage ?? ""}
                   ></VerticalImageHover>
                 </Col>
-                <Col className="d-flex flex-column justify-content-between">
+                <Col
+                  span={18}
+                  className="d-flex flex-column justify-content-between"
+                >
                   <div className="d-flex flex-column gap-2">
                     <div className="title">
                       <strong>{story?.storyTitle}</strong>
@@ -327,20 +341,59 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
                       {!story?.userOwned && (
                         <Button size="large">Mua Trọn Bộ</Button>
                       )}
-                      <Space.Compact block size="large">
-                        <Tooltip title="Like">
-                          <Button icon={<LikeOutlined />} />
-                        </Tooltip>
-                        <Tooltip title="Heart">
-                          <Button icon={<HeartOutlined />} />
-                        </Tooltip>
-                        <Tooltip title="Report">
-                          <Button
-                            icon={<WarningOutlined />}
-                            onClick={() => setIsModalOpen(true)}
-                          />
-                        </Tooltip>
-                      </Space.Compact>
+                      {!isAuthenticated ? (
+                        <Space.Compact block size="large">
+                          <Tooltip title="Like">
+                            <Button
+                              className="fs-5 d-flex align-items-center justify-content-center icon-like"
+                              icon={
+                                story?.userLike ? (
+                                  <AiFillLike />
+                                ) : (
+                                  <AiOutlineLike />
+                                )
+                              }
+                            />
+                          </Tooltip>
+                          <Tooltip title="Follow">
+                            <Button
+                              className="fs-5 d-flex align-items-center justify-content-center icon-follow"
+                              icon={
+                                story?.userFollow ? <FaHeart /> : <FaRegHeart />
+                              }
+                            />
+                          </Tooltip>
+                          <Tooltip title="Report">
+                            <Button
+                              className="fs-5 d-flex align-items-center justify-content-center"
+                              icon={<WarningOutlined />}
+                              onClick={() => setIsModalOpen(true)}
+                            />
+                          </Tooltip>
+                        </Space.Compact>
+                      ) : (
+                        <Space.Compact block size="large">
+                          <Tooltip title="Like">
+                            <Button
+                              className="fs-5 d-flex align-items-center justify-content-center icon-like"
+                              icon={<AiOutlineLike />}
+                            />
+                          </Tooltip>
+                          <Tooltip title="Follow">
+                            <Button
+                              className="fs-5 d-flex align-items-center justify-content-center icon-follow"
+                              icon={<FaRegHeart />}
+                            />
+                          </Tooltip>
+                          <Tooltip title="Report">
+                            <Button
+                              className="fs-5 d-flex align-items-center justify-content-center"
+                              icon={<WarningOutlined />}
+                              onClick={() => setIsModalOpen(true)}
+                            />
+                          </Tooltip>
+                        </Space.Compact>
+                      )}
                     </Space>
                   </div>
                 </Col>
@@ -352,29 +405,36 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
                   <tr>
                     <td></td>
                     <td>
-                      <Text delete>880,678</Text>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <Text type="danger">Special!:</Text>
-                    </td>
-                    <td>
-                      <Text type="danger">
-                        <strong>660,509</strong>
+                      <Text strong delete={story && story?.storySale < 0}>
+                        {story?.storyPrice ?? 0}
                       </Text>
                     </td>
                   </tr>
-                  <tr>
-                    <td>
-                      <Text>You Save:</Text>
-                    </td>
-                    <td>
-                      <p>
-                        220,169 (<strong>25%</strong>)
-                      </p>
-                    </td>
-                  </tr>
+                  {story && story?.storySale > 0 && (
+                    <>
+                      <tr>
+                        <td>
+                          <Text type="danger">Special!:</Text>
+                        </td>
+                        <td>
+                          <Text type="danger">
+                            <strong>{NEW_PRICE}</strong>
+                          </Text>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <Text>Bạn tiết kiệm được:</Text>
+                        </td>
+                        <td>
+                          <p>
+                            {(PRICE - (NEW_PRICE as number)).toFixed(2)} (
+                            <strong>{story?.storySale}%</strong>)
+                          </p>
+                        </td>
+                      </tr>
+                    </>
+                  )}
                 </tbody>
               </table>
               <div></div>
@@ -461,7 +521,10 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
                     <div className="d-flex flex-column gap-2 w-75">
                       {story?.storyChapters.map((item, index) => {
                         return (
-                          <div className="d-flex align-items-center justify-content-between">
+                          <div
+                            key={`newest-chapter-${item.chapterId}`}
+                            className="d-flex align-items-center justify-content-between"
+                          >
                             <Link
                               className="link-hover fs-6"
                               to={getStoryReadURL(

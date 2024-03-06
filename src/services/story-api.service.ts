@@ -2,6 +2,7 @@ import { ICategory } from "../interfaces/category.interface";
 import { IApiResponse } from "../interfaces/global.interface";
 import {
   IPaginationChapter,
+  IPaginationComment,
   IPaginationStory,
   IStory,
 } from "../interfaces/story.interface";
@@ -55,4 +56,24 @@ export const getPaginationChaptersByStoryId = (
   return axios.get(
     `chapters/story_detail?storyid=${id}&page=${page}&pageSize=${pageSize}`
   );
+};
+
+export const getPaginationCommentsByStoryId = (
+  id: string | number,
+  page: number,
+  pageSize: number
+): Promise<IApiResponse<IPaginationComment>> => {
+  return axios.get(
+    `comments/story_detail?storyid=${id}&page=${page}&pageSize=${pageSize}`
+  );
+};
+
+export const likeStory = (id: string | number): Promise<IApiResponse<null>> => {
+  return axios.get(`interaction/story_like?storyid=${id}`);
+};
+
+export const followStory = (
+  id: string | number
+): Promise<IApiResponse<null>> => {
+  return axios.get(`interaction/story_follow?storyid=${id}`);
 };

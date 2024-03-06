@@ -12,13 +12,15 @@ const initialState: {
     userId: "",
     email: "",
     username: "",
-    userFullname: "",
+    userFullName: "",
     gender: "",
     dob: "",
     address: "",
     phone: "",
     status: "",
     userImage: "",
+    descriptionMarkdown: "",
+    descriptionHTML: "",
   },
 };
 
@@ -45,10 +47,22 @@ export const accountSlice = createSlice({
       // state.user.tempAvatar = action.payload;
     },
     updateUserInfo: (state, action) => {
-      // let { avatar, phone, fullName } = action.payload;
-      // state.user.avatar = avatar;
-      // state.user.phone = phone;
-      // state.user.fullName = fullName;
+      const {
+        userFullName,
+        gender,
+        phone,
+        dob,
+        address,
+        descriptionMarkdown,
+        descriptionHTML,
+      } = action.payload;
+      state.user.userFullName = userFullName;
+      state.user.gender = gender;
+      state.user.phone = phone;
+      state.user.dob = dob;
+      state.user.address = address;
+      state.user.descriptionMarkdown = descriptionMarkdown;
+      state.user.descriptionHTML = descriptionHTML;
     },
   },
   extraReducers: (builder) => {},

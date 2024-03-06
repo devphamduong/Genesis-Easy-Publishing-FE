@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import "./EditProfile.scss";
 import { MdOutlineMail } from "react-icons/md";
 import {
@@ -16,6 +16,11 @@ import dayjs from "dayjs";
 import MdEditor from "react-markdown-editor-lite";
 import MarkdownIt from "markdown-it";
 import "react-markdown-editor-lite/lib/index.css";
+import { useDispatch, useSelector } from "react-redux";
+import { IRootState } from "../../redux/store";
+import { updateProfile } from "../../services/auth-api.service";
+import { toast } from "react-toastify";
+import { updateUserInfo } from "../../redux/account/accountSlice";
 const mdParser = new MarkdownIt(/* Markdown-it options */);
 
 interface IProps {
@@ -25,10 +30,18 @@ interface IProps {
 
 const EditProfile: FC<IProps> = (props: IProps) => {
   const { isModalOpen, setIsModalOpen } = props;
+  const dispatch = useDispatch();
+  const account = useSelector((state: IRootState) => state.account?.user);
   const [form] = Form.useForm<IEditProfileForm>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [contentMarkdown, setContentMarkdown] = useState<string>("");
   const [contentHTML, setContentHTML] = useState<string>("");
+
+  useEffect(() => {
+    console.log(account);
+    account.descriptionMarkdown &&
+      setContentMarkdown(account.descriptionMarkdown);
+  }, []);
 
   const handleEditorChange = ({
     html,
@@ -39,21 +52,19 @@ const EditProfile: FC<IProps> = (props: IProps) => {
   }) => {
     setContentMarkdown(text);
     setContentHTML(html);
-    console.log(text, html);
   };
 
   const onFinish = async (values: IEditProfileForm) => {
-    console.log(values);
-    // const res = await login(values);
-    // if (res && res.ec === 0) {
-    //   localStorage.setItem("access_token", res.dt.access_token);
-    //   dispatch(loginAction(res.dt.user));
-    //   toast.success(res.em);
-    //   navigate("/");
-    // resetFields();
-    // } else {
-    //   toast.error(res.em);
-    // }
+    setIsLoading(true);
+    const res = await updateProfile(values);
+    if (res && res.ec === 0) {
+      dispatch(updateUserInfo(values));
+      toast.success(res.em);
+      resetFields();
+    } else {
+      toast.error(res.em);
+    }
+    setIsLoading(false);
   };
 
   const handleCancel = () => {
@@ -76,9 +87,13 @@ const EditProfile: FC<IProps> = (props: IProps) => {
       open={isModalOpen}
       onCancel={handleCancel}
       footer={[
-        <Button onClick={handleCancel}>Cancel</Button>,
+        <Button key={1} onClick={handleCancel}>
+          Cancel
+        </Button>,
         <Button
+          key={2}
           type="primary"
+          disabled={isLoading}
           loading={isLoading}
           onClick={() => form.submit()}
         >
@@ -93,12 +108,17 @@ const EditProfile: FC<IProps> = (props: IProps) => {
             thuận khi đăng ký tài khoản, các thông tin khác sẽ là công khai.
           </p>
           <div className="email d-flex align-items-center gap-2">
-            <MdOutlineMail />
-            <span>duongpche163153@fpt.edu.vn</span>
+            <MdOutlineMail className="fs-5" />
+            <span>{account.email}</span>
           </div>
           <Form
             form={form}
-            initialValues={{ remember: false }}
+            initialValues={{
+              userFullName: account?.userFullName,
+              address: account?.address,
+              dob: dayjs(account?.dob),
+              gender: account?.gender,
+            }}
             onFinish={onFinish}
           >
             <Form.Item<IEditProfileForm> label="Họ Tên" name="userFullName">
@@ -110,10 +130,10 @@ const EditProfile: FC<IProps> = (props: IProps) => {
             <Form.Item<IEditProfileForm> label="Ngày sinh" name="dob">
               <DatePicker onChange={onChangeDate} />
             </Form.Item>
-            <Form.Item<IEditProfileForm> name="gender" label="Giới tính">
+            <Form.Item<IEditProfileForm> label="Giới tính" name="gender">
               <Select placeholder="Select your gender">
-                <Option value={true}>Male</Option>
-                <Option value={false}>Female</Option>
+                <Option value={"Male"}>Male</Option>
+                <Option value={"Female"}>Female</Option>
               </Select>
             </Form.Item>
             <p>Giới thiệu thêm về bản thân:</p>

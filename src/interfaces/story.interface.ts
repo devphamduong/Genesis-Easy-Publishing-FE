@@ -64,12 +64,31 @@ export interface IChapter {
   userPurchaseChapter: number;
 }
 
+export interface IComment {
+  userComment: {
+    userId: number;
+    userFullname: string;
+    userImage?: string;
+  };
+  commentId: number;
+  commentContent: string;
+  commentDate: string;
+}
+
 export interface IPaginationChapter {
   total: number;
   totalPage: number;
   current: number;
   pageSize: number;
   list: IChapter[];
+}
+
+export interface IPaginationComment {
+  total: number;
+  totalPage: number;
+  current: number;
+  pageSize: number;
+  list: IComment[];
 }
 
 export interface IWriteStoryForm {

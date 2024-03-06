@@ -8,7 +8,7 @@ import {
   Col,
   Divider,
   List,
-  Rate,
+  Pagination,
   Row,
   Space,
   Table,
@@ -22,7 +22,6 @@ import EPTag from "../../components/EP-UI/Tag";
 import { kFormatter } from "../../shared/function";
 import {
   ClockCircleOutlined,
-  HeartOutlined,
   UserOutlined,
   WarningOutlined,
 } from "@ant-design/icons";
@@ -31,11 +30,19 @@ import { PiBook } from "react-icons/pi";
 import { BsReverseLayoutTextWindowReverse } from "react-icons/bs";
 import { GiSelfLove } from "react-icons/gi";
 import EPModalReport from "../../components/EP-UI/Modal/Report";
-import { IAuthor, IChapter, IStory } from "../../interfaces/story.interface";
 import {
+  IAuthor,
+  IChapter,
+  IComment,
+  IStory,
+} from "../../interfaces/story.interface";
+import {
+  followStory,
   getPaginationChaptersByStoryId,
+  getPaginationCommentsByStoryId,
   getRelatedStoriesById,
   getStoryDetailById,
+  likeStory,
 } from "../../services/story-api.service";
 import { getAuthorById } from "../../services/author-api.service";
 import { Typography } from "antd";
@@ -67,18 +74,17 @@ enum ETabsKey {
   COMMENT = "comment",
 }
 
-interface DataType {
-  key: string;
-  chapterNumber: string;
-  chapterTitle: string;
-  createTime: string;
+enum EInteractionKey {
+  LIKE = "like",
+  FOLLOW = "follow",
 }
 
 const PAGE_SIZE_CHAPTER = 10;
 const PAGE_SIZE_COMMENT = 10;
+
 let PRICE: number = 0;
 let SALE_PERCENT: number = 0;
-let NEW_PRICE: number = 0;
+let NEW_PRICE: number | string = 0;
 
 const DetailStoryPage: FC<IProps> = (props: IProps) => {
   const { id, slug } = useParams();
@@ -93,20 +99,25 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [chapters, setChapters] = useState<IChapter[]>([]);
   const [currentPageChapter, setCurrentPageChapter] = useState<number>(1);
-  const [totalPageChapter, setTotalPageChapter] = useState<number>(0);
+  const [totalChapter, setTotalChapter] = useState<number>(0);
   const [pageSizeChapter, setPageSizeChapter] =
     useState<number>(PAGE_SIZE_CHAPTER);
+  const [comments, setComments] = useState<IComment[]>([]);
+  const [currentPageComment, setCurrentPageComment] = useState<number>(1);
+  const [totalComment, setTotalComment] = useState<number>(0);
+  const [pageSizeComment, setPageSizeComment] =
+    useState<number>(PAGE_SIZE_COMMENT);
 
   const itemTabs: TabsProps["items"] = [
     {
       key: ETabsKey.DESCRIPTION,
       label: ETabsName.DESCRIPTION,
-      children: <></>,
+      children: <>{}</>,
     },
     {
       key: ETabsKey.CHAPTER,
       label: ETabsName.CHAPTER,
-      children: <></>,
+      children: <>{}</>,
     },
     {
       key: ETabsKey.COMMENT,
@@ -129,9 +140,12 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
   }, [id]);
 
   useEffect(() => {
-    if (id)
-      fetchPaginationChaptersByStoryId(id, currentPageChapter, pageSizeChapter);
-  }, [id, currentPageChapter, pageSizeChapter]);
+    fetchPaginationChapters();
+  }, [currentPageChapter, pageSizeChapter]);
+
+  useEffect(() => {
+    fetchPaginationComments();
+  }, [currentPageComment, pageSizeComment]);
 
   const fetchStoryById = async (id: number | string) => {
     const res = await getStoryDetailById(id);
@@ -139,7 +153,7 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
       setStory(res.dt);
       PRICE = res.dt.storyPrice;
       SALE_PERCENT = res.dt.storySale;
-      NEW_PRICE = (PRICE - (SALE_PERCENT / 100) * PRICE).toFixed(2) as number;
+      NEW_PRICE = (PRICE - (SALE_PERCENT / 100) * PRICE).toFixed(2);
     }
   };
 
@@ -157,19 +171,40 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
     }
   };
 
-  const fetchPaginationChaptersByStoryId = async (
-    id: string | number,
-    page: number,
-    pageSize: number
-  ) => {
-    const res = await getPaginationChaptersByStoryId(id, page, pageSize);
+  const fetchPaginationChapters = async () => {
+    const res = await getPaginationChaptersByStoryId(
+      id!,
+      currentPageChapter,
+      pageSizeChapter
+    );
     if (res && res.ec === 0) {
       setChapters(res.dt.list);
+      setTotalChapter(res.dt.total);
     }
   };
 
-  const handleChangePageChapter = (page: number, pageSize: number) => {
-    setCurrentPageChapter(page);
+  const fetchPaginationComments = async () => {
+    const res = await getPaginationCommentsByStoryId(
+      id!,
+      currentPageComment,
+      pageSizeComment
+    );
+    if (res && res.ec === 0) {
+      setComments(res.dt.list);
+      setTotalComment(res.dt.total);
+    }
+  };
+
+  const handleChangePageChapter = (
+    page: number,
+    pageSize: number,
+    type: ETabsKey
+  ) => {
+    if (type === ETabsKey.CHAPTER) {
+      setCurrentPageChapter(page);
+    } else {
+      setCurrentPageComment(page);
+    }
   };
 
   const renderTableChapter = () => {
@@ -227,50 +262,82 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
         dataSource={chapters}
         rowKey={(record) => record.chapterId}
         pagination={{
-          total: totalPageChapter,
-          onChange: handleChangePageChapter,
+          responsive: true,
+          current: currentPageChapter,
+          total: totalChapter,
+          pageSize: pageSizeChapter,
+          showSizeChanger: false,
+          onChange: (page: number, pageSize: number) =>
+            handleChangePageChapter(page, pageSize, ETabsKey.CHAPTER),
         }}
       />
     );
   };
 
   const renderListComment = () => {
-    const data = [
-      {
-        title: "Ant Design Title 1",
-      },
-      {
-        title: "Ant Design Title 2",
-      },
-      {
-        title: "Ant Design Title 3",
-      },
-      {
-        title: "Ant Design Title 4",
-      },
-    ];
     return (
-      <List
-        dataSource={data}
-        renderItem={(item, index) => (
-          <List.Item key={index}>
-            <List.Item.Meta
-              avatar={
-                <Avatar
-                  src={`https://api.dicebear.com/7.x/miniavs/svg?seed=${index}`}
-                />
-              }
-              title={<a href="https://ant.design">{item.title}</a>}
-              description="Ant Design, a design language for background applications, is refined by Ant UED Team"
-            />
-          </List.Item>
-        )}
-      />
+      <>
+        <List
+          dataSource={comments}
+          renderItem={(item, index) => (
+            <List.Item key={index}>
+              <List.Item.Meta
+                avatar={
+                  <Avatar
+                    src={`https://api.dicebear.com/7.x/miniavs/svg?seed=${index}`}
+                  />
+                }
+                title={
+                  <div className="d-flex align-items-center justify-content-between">
+                    <strong>{item.userComment.userFullname}</strong>
+                    <span className="time text-small">
+                      {dayjs(item.commentDate).fromNow()}
+                    </span>
+                  </div>
+                }
+                description={item.commentContent}
+              />
+            </List.Item>
+          )}
+        />
+        <Pagination
+          className="text-end"
+          responsive
+          current={currentPageComment}
+          total={totalComment}
+          pageSize={pageSizeComment}
+          showSizeChanger={false}
+          onChange={(page: number, pageSize: number) =>
+            handleChangePageChapter(page, pageSize, ETabsKey.COMMENT)
+          }
+        />
+      </>
     );
   };
 
   const handleReadStory = () => {
     navigate(getStoryReadURL(id!, slug!, 1));
+  };
+
+  const handleStoryInteraction = async (option: EInteractionKey) => {
+    let res;
+    if (option === EInteractionKey.LIKE) {
+      res = await likeStory(id!);
+    }
+    if (option === EInteractionKey.FOLLOW) {
+      res = await followStory(id!);
+    }
+    if (res && res.ec === 0) {
+      option === EInteractionKey.LIKE
+        ? setStory((prevState) => ({
+            ...prevState!,
+            userLike: !prevState!.userLike,
+          }))
+        : setStory((prevState) => ({
+            ...prevState!,
+            userFollow: !prevState!.userFollow,
+          }));
+    }
   };
 
   return (
@@ -341,59 +408,64 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
                       {!story?.userOwned && (
                         <Button size="large">Mua Trọn Bộ</Button>
                       )}
-                      {!isAuthenticated ? (
-                        <Space.Compact block size="large">
-                          <Tooltip title="Like">
-                            <Button
-                              className="fs-5 d-flex align-items-center justify-content-center icon-like"
-                              icon={
-                                story?.userLike ? (
-                                  <AiFillLike />
-                                ) : (
-                                  <AiOutlineLike />
-                                )
-                              }
-                            />
-                          </Tooltip>
-                          <Tooltip title="Follow">
-                            <Button
-                              className="fs-5 d-flex align-items-center justify-content-center icon-follow"
-                              icon={
-                                story?.userFollow ? <FaHeart /> : <FaRegHeart />
-                              }
-                            />
-                          </Tooltip>
-                          <Tooltip title="Report">
-                            <Button
-                              className="fs-5 d-flex align-items-center justify-content-center"
-                              icon={<WarningOutlined />}
-                              onClick={() => setIsModalOpen(true)}
-                            />
-                          </Tooltip>
-                        </Space.Compact>
-                      ) : (
-                        <Space.Compact block size="large">
-                          <Tooltip title="Like">
-                            <Button
-                              className="fs-5 d-flex align-items-center justify-content-center icon-like"
-                              icon={<AiOutlineLike />}
-                            />
-                          </Tooltip>
-                          <Tooltip title="Follow">
-                            <Button
-                              className="fs-5 d-flex align-items-center justify-content-center icon-follow"
-                              icon={<FaRegHeart />}
-                            />
-                          </Tooltip>
-                          <Tooltip title="Report">
-                            <Button
-                              className="fs-5 d-flex align-items-center justify-content-center"
-                              icon={<WarningOutlined />}
-                              onClick={() => setIsModalOpen(true)}
-                            />
-                          </Tooltip>
-                        </Space.Compact>
-                      )}
+                      <Space.Compact block size="large">
+                        {isAuthenticated ? (
+                          <>
+                            <Tooltip title="Like">
+                              <Button
+                                className="fs-5 d-flex align-items-center justify-content-center icon-like"
+                                onClick={() =>
+                                  handleStoryInteraction(EInteractionKey.LIKE)
+                                }
+                                icon={
+                                  story?.userLike ? (
+                                    <AiFillLike />
+                                  ) : (
+                                    <AiOutlineLike />
+                                  )
+                                }
+                              />
+                            </Tooltip>
+                            <Tooltip title="Follow">
+                              <Button
+                                className="fs-5 d-flex align-items-center justify-content-center icon-follow"
+                                onClick={() =>
+                                  handleStoryInteraction(EInteractionKey.FOLLOW)
+                                }
+                                icon={
+                                  story?.userFollow ? (
+                                    <FaHeart />
+                                  ) : (
+                                    <FaRegHeart />
+                                  )
+                                }
+                              />
+                            </Tooltip>
+                          </>
+                        ) : (
+                          <>
+                            <Tooltip title="Like">
+                              <Button
+                                className="fs-5 d-flex align-items-center justify-content-center icon-like"
+                                icon={<AiOutlineLike />}
+                              />
+                            </Tooltip>
+                            <Tooltip title="Follow">
+                              <Button
+                                className="fs-5 d-flex align-items-center justify-content-center icon-follow"
+                                icon={<FaRegHeart />}
+                              />
+                            </Tooltip>
+                          </>
+                        )}
+                        <Tooltip title="Report">
+                          <Button
+                            className="fs-5 d-flex align-items-center justify-content-center"
+                            icon={<WarningOutlined />}
+                            onClick={() => setIsModalOpen(true)}
+                          />
+                        </Tooltip>
+                      </Space.Compact>
                     </Space>
                   </div>
                 </Col>
@@ -449,15 +521,15 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
               onChange={(key: string) => setCurrentTab(key)}
             />
             <Row gutter={[16, 10]}>
-              {currentTab === ETabsKey.DESCRIPTION ? (
-                <Col span={19}>
+              <Col span={19}>
+                {currentTab === ETabsKey.DESCRIPTION ? (
                   <div>{story?.storyDescription}</div>
-                </Col>
-              ) : currentTab === ETabsKey.CHAPTER ? (
-                <Col span={19}>{renderTableChapter()}</Col>
-              ) : (
-                <Col span={19}>{renderListComment()}</Col>
-              )}
+                ) : currentTab === ETabsKey.CHAPTER ? (
+                  renderTableChapter()
+                ) : (
+                  renderListComment()
+                )}
+              </Col>
               <Col
                 span={5}
                 className="author-info d-flex flex-column align-items-center gap-3 py-4 text-center"
@@ -497,9 +569,9 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
                   <Link
                     className="link-hover"
                     to={
-                      id && author
+                      author
                         ? getStoryDetailURL(
-                            id,
+                            author?.authorNewestStory.storyId,
                             author?.authorNewestStory.storyTitle
                           )
                         : ""

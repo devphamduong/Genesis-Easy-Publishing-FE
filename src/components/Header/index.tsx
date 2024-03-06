@@ -88,12 +88,12 @@ const Header: FC<IProps> = (props: IProps) => {
   };
 
   const handleLogout = async () => {
-    // const res = await logout();
-    // if (res && res.dt) {
-    dispatch(logoutAction());
-    toast.success("Logout successfully");
-    navigate("/");
-    // }
+    const res = await logout();
+    if (res && res.ec === 0) {
+      dispatch(logoutAction());
+      toast.success("Logout successfully");
+      navigate("/");
+    }
     setIPopoverOpen(false);
   };
 

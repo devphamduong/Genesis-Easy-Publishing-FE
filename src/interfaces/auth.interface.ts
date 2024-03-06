@@ -2,13 +2,15 @@ export interface IUser {
   userId: string | number;
   email: string;
   username: string;
-  userFullname: string;
+  userFullName: string;
   gender: string;
   dob: string;
   address: string;
   phone: string;
   status: string | number;
   userImage: string;
+  descriptionMarkdown?: string;
+  descriptionHTML?: string;
 }
 
 export interface ILoginResponse {
@@ -33,9 +35,10 @@ export interface IRegisterForm {
 export interface IEditProfileForm {
   email?: string;
   userFullName?: string;
-  address?: string;
-  dob?: string;
   gender?: boolean;
+  dob?: string;
+  phone?: string;
+  address?: string;
   userImage?: string;
   descriptionMarkdown?: string;
   descriptionHTML?: string;

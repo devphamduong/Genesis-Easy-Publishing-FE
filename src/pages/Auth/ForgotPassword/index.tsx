@@ -2,17 +2,20 @@ import { FC, useEffect, useState } from "react";
 import "./ForgotPassword.scss";
 import { Button, Form, Input } from "antd";
 import { Link } from "react-router-dom";
+import { forgotPassword } from "../../../services/auth-api.service";
+import { toast } from "react-toastify";
 
 interface IProps {}
 
 type FieldType = {
-  email?: string;
+  email: string;
 };
 
 const ForgotPasswordPage: FC<IProps> = (props: IProps) => {
   const [form] = Form.useForm();
   const [submittable, setSubmittable] = useState<boolean>(false);
   const values = Form.useWatch([], form);
+  const [isDisableButton, setIsDisableButton] = useState<boolean>(false);
 
   useEffect(() => {
     form.validateFields({ validateOnly: true }).then(
@@ -25,8 +28,15 @@ const ForgotPasswordPage: FC<IProps> = (props: IProps) => {
     );
   }, [values]);
 
-  const onFinish = (values: FieldType) => {
-    console.log("Received values of form: ", values);
+  const onFinish = async (values: FieldType) => {
+    setIsDisableButton(true);
+    const res = await forgotPassword(values);
+    if (res && res.ec === 0) {
+      toast.success(res.em);
+    } else {
+      toast.error(res.em);
+      setIsDisableButton(true);
+    }
   };
 
   return (
@@ -41,12 +51,7 @@ const ForgotPasswordPage: FC<IProps> = (props: IProps) => {
             </p>
           </div>
           <div className="bottom">
-            <Form
-              form={form}
-              layout="vertical"
-              initialValues={{ remember: true }}
-              onFinish={onFinish}
-            >
+            <Form form={form} layout="vertical" onFinish={onFinish}>
               <Form.Item<FieldType>
                 name="email"
                 rules={[
@@ -67,7 +72,7 @@ const ForgotPasswordPage: FC<IProps> = (props: IProps) => {
 
               <Form.Item>
                 <Button
-                  disabled={!submittable}
+                  disabled={!submittable || isDisableButton}
                   size="large"
                   type="primary"
                   htmlType="submit"

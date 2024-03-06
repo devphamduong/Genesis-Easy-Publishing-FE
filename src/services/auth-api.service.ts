@@ -1,4 +1,5 @@
 import {
+  IEditProfileForm,
   ILoginForm,
   ILoginResponse,
   IRegisterForm,
@@ -10,7 +11,7 @@ export const login = (
   data: ILoginForm
 ): Promise<IApiResponse<ILoginResponse>> => {
   return axios.post(`auth/login`, {
-    username: data.emailOrUsername,
+    emailOrUsername: data.emailOrUsername,
     password: data.password,
   });
 };
@@ -21,9 +22,26 @@ export const register = (data: IRegisterForm): Promise<IApiResponse<null>> => {
   });
 };
 
+export const updateProfile = (
+  data: IEditProfileForm
+): Promise<IApiResponse<null>> => {
+  return axios.put(`auth/edit_profile`, {
+    ...data,
+  });
+};
+
 export const logout = (): Promise<IApiResponse<null>> => {
   return axios.post(`auth/logout`);
 };
+
 export const getAccount = (): Promise<IApiResponse<ILoginResponse>> => {
   return axios.get(`auth/account`);
+};
+
+export const forgotPassword = (data: {
+  email: string;
+}): Promise<IApiResponse<null>> => {
+  return axios.post(`auth/forgot_password`, {
+    ...data,
+  });
 };

@@ -99,3 +99,24 @@ export interface IWriteStoryForm {
   descriptionMarkdown?: string;
   descriptionHTML?: string;
 }
+
+export interface IChapterContent {
+  chapter: {
+    story: {
+      storyId: number;
+      storyTitle: string;
+      storyPrice: number;
+    };
+    content: string;
+    chapterId: number;
+    chapterNumber: number;
+    chapterTitle: string;
+    chapterPrice: number;
+    createTime: string;
+    updateTime: string;
+    comment: number;
+    userPurchaseChapter: number;
+    nextChapterNumber: number;
+  };
+  message: string;
+}

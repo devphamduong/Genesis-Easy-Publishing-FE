@@ -23,6 +23,7 @@ import NotFoundPage from "../pages/NotFound";
 import AuthorPage from "../pages/Author";
 import WriteStoryPage from "../pages/WriteStory";
 import AuthorLayout from "../layouts/Author";
+import ResetPasswordPage from "../pages/Auth/ResetPassword";
 
 interface IProps {}
 
@@ -83,6 +84,10 @@ const AppRoutes: FC<IProps> = (props: IProps) => {
           <Route
             path={"forgot-password"}
             element={<ForgotPasswordPage />}
+          ></Route>
+          <Route
+            path={"reset-password"}
+            element={<ResetPasswordPage />}
           ></Route>
         </Route>
         <Route path="*" element={<NotFoundPage />}></Route>

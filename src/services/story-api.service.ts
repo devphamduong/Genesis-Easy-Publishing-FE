@@ -1,6 +1,7 @@
 import { ICategory } from "../interfaces/category.interface";
 import { IApiResponse } from "../interfaces/global.interface";
 import {
+  IChapterContent,
   IPaginationChapter,
   IPaginationComment,
   IPaginationStory,
@@ -69,11 +70,18 @@ export const getPaginationCommentsByStoryId = (
 };
 
 export const likeStory = (id: string | number): Promise<IApiResponse<null>> => {
-  return axios.get(`interaction/story_like?storyid=${id}`);
+  return axios.put(`interaction/story_like?storyid=${id}`);
 };
 
 export const followStory = (
   id: string | number
 ): Promise<IApiResponse<null>> => {
-  return axios.get(`interaction/story_follow?storyid=${id}`);
+  return axios.put(`interaction/story_follow?storyid=${id}`);
+};
+
+export const getChapterContent = (
+  storyid: string | number,
+  chapterNumber: number
+): Promise<IApiResponse<IChapterContent>> => {
+  return axios.get(`chapters/chapter_content/${storyid}/${chapterNumber}`);
 };

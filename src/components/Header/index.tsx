@@ -31,6 +31,9 @@ interface IProps {}
 const Header: FC<IProps> = (props: IProps) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const isAuthenticated = useSelector(
+    (state: IRootState) => state.account.isAuthenticated
+  );
   const account = useSelector((state: IRootState) => state.account?.user);
   const [current, setCurrent] = useState<string>("mail");
   const items: MenuProps["items"] = [
@@ -131,14 +134,16 @@ const Header: FC<IProps> = (props: IProps) => {
                       prefix={<SearchOutlined />}
                     />
                   </Col>
-                  <Col>
-                    <Button
-                      type="primary"
-                      onClick={() => navigate("/auth/login")}
-                    >
-                      Login
-                    </Button>
-                  </Col>
+                  {!isAuthenticated && (
+                    <Col>
+                      <Button
+                        type="primary"
+                        onClick={() => navigate("/auth/login")}
+                      >
+                        Login
+                      </Button>
+                    </Col>
+                  )}
                   <Col>
                     <Popover
                       content={popoverMenu()}

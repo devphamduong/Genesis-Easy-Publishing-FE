@@ -38,7 +38,7 @@ const RegisterPage: FC<IProps> = (props: IProps) => {
           <div className="top">
             <h1>Register</h1>
             <p className="fs-4">
-              Please enter your information to create an account
+              Please enter your information to create an account.
             </p>
           </div>
           <div className="bottom">

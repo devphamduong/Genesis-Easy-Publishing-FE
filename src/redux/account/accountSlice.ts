@@ -12,7 +12,7 @@ const initialState: {
     userId: "",
     email: "",
     username: "",
-    userFullName: "",
+    userFullname: "",
     gender: "",
     dob: "",
     address: "",
@@ -48,7 +48,7 @@ export const accountSlice = createSlice({
     },
     updateUserInfo: (state, action) => {
       const {
-        userFullName,
+        userFullname,
         gender,
         phone,
         dob,
@@ -56,7 +56,7 @@ export const accountSlice = createSlice({
         descriptionMarkdown,
         descriptionHTML,
       } = action.payload;
-      state.user.userFullName = userFullName;
+      state.user.userFullname = userFullname;
       state.user.gender = gender;
       state.user.phone = phone;
       state.user.dob = dob;

@@ -2,7 +2,7 @@ export interface IUser {
   userId: string | number;
   email: string;
   username: string;
-  userFullName: string;
+  userFullname: string;
   gender: string;
   dob: string;
   address: string;
@@ -34,8 +34,8 @@ export interface IRegisterForm {
 
 export interface IEditProfileForm {
   email?: string;
-  userFullName?: string;
-  gender?: boolean;
+  userFullname?: string;
+  gender?: string;
   dob?: string;
   phone?: string;
   address?: string;

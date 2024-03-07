@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import "./ReadStory.scss";
 import { Button, Col, Descriptions, DescriptionsProps, Row } from "antd";
 import {
@@ -7,11 +7,16 @@ import {
   RightOutlined,
   WarningOutlined,
 } from "@ant-design/icons";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { getChapterNumber } from "./shared/function";
 import { kFormatter } from "../../shared/function";
 import EPModalReport from "../../components/EP-UI/Modal/Report";
 import EPButton from "../../components/EP-UI/Button";
+import { IChapterContent } from "../../interfaces/story.interface";
+import { getChapterContent } from "../../services/story-api.service";
+import { useSelector } from "react-redux";
+import { IRootState } from "../../redux/store";
+import { getStoryDetailURL } from "../../shared/generate-navigate-url";
 
 interface IProps {}
 
@@ -52,11 +57,24 @@ const items: DescriptionsProps["items"] = [
 
 const ReadStoryPage: FC<IProps> = (props: IProps) => {
   const { id, chapter } = useParams();
+  const user = useSelector((state: IRootState) => state.account.user);
   const [currentChapter, setCurrentChapter] = useState<number>(
     getChapterNumber(chapter!)
   );
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isSubmittedLike, setIsSubmittedLike] = useState<boolean>(false);
+  const [chapterContent, setChapterContent] = useState<IChapterContent>();
+
+  useEffect(() => {
+    fetchChapterContent();
+  }, [id, currentChapter]);
+
+  const fetchChapterContent = async () => {
+    const res = await getChapterContent(id!, currentChapter);
+    if (res && res.ec === 0) {
+      setChapterContent(res.dt);
+    }
+  };
 
   const handleLikeStory = () => {
     setIsSubmittedLike(true);
@@ -91,7 +109,7 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
               </Col>
             </Row>
           </div>
-          <div className="content">Content here</div>
+          <div className="content">{chapterContent?.chapter.content}</div>
           <div className="text-center">
             <Button
               type={isSubmittedLike ? "primary" : undefined}
@@ -104,8 +122,16 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
             </Button>
           </div>
           <div className="sort-description">
-            Bạn đang đọc<span className="name"> truyện </span>của
-            <span className="author"> tác giả</span>
+            Bạn đang đọc
+            <Link
+              to={getStoryDetailURL(id, chapter?.split(".")[0])}
+              className="name link-hover"
+            >
+              {" "}
+              {chapterContent?.chapter.story.storyTitle}{" "}
+            </Link>
+            của
+            <Link className="author link-hover"> {user.username}</Link>
           </div>
           <div className="buttons">
             <Row gutter={[10, 10]}>

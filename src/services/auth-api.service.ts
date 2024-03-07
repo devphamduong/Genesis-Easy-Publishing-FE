@@ -25,7 +25,7 @@ export const register = (data: IRegisterForm): Promise<IApiResponse<null>> => {
 export const updateProfile = (
   data: IEditProfileForm
 ): Promise<IApiResponse<null>> => {
-  return axios.put(`auth/edit_profile`, {
+  return axios.put(`auth/update_profile`, {
     ...data,
   });
 };

@@ -16,10 +16,23 @@ const LoginPage: FC<IProps> = (props: IProps) => {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
+  const [submittable, setSubmittable] = useState<boolean>(false);
+  const values = Form.useWatch([], form);
   const isAuthenticated = useSelector(
     (state: IRootState) => state.account.isAuthenticated
   );
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    form.validateFields({ validateOnly: true }).then(
+      () => {
+        setSubmittable(true);
+      },
+      () => {
+        setSubmittable(false);
+      }
+    );
+  }, [values]);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -55,14 +68,18 @@ const LoginPage: FC<IProps> = (props: IProps) => {
           <div className="top">
             <h1>Log In</h1>
             <p className="fs-4">
-              Please enter your email or username and password
+              Please enter your email or username and password.
             </p>
           </div>
           <div className="bottom">
             <Form
               form={form}
               layout="vertical"
-              initialValues={{ remember: false }}
+              initialValues={{
+                emailOrUsername: "pduong244@gmail.com",
+                password: "123456",
+                remember: false,
+              }}
               onFinish={onFinish}
             >
               <Form.Item<ILoginForm>
@@ -116,7 +133,7 @@ const LoginPage: FC<IProps> = (props: IProps) => {
                   htmlType="submit"
                   block
                   loading={isLoading}
-                  disabled={isLoading}
+                  disabled={!submittable || isLoading}
                 >
                   Log in
                 </Button>

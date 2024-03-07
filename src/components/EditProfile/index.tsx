@@ -38,7 +38,6 @@ const EditProfile: FC<IProps> = (props: IProps) => {
   const [contentHTML, setContentHTML] = useState<string>("");
 
   useEffect(() => {
-    console.log(account);
     account.descriptionMarkdown &&
       setContentMarkdown(account.descriptionMarkdown);
   }, []);
@@ -56,9 +55,14 @@ const EditProfile: FC<IProps> = (props: IProps) => {
 
   const onFinish = async (values: IEditProfileForm) => {
     setIsLoading(true);
-    const res = await updateProfile(values);
+    const payload = {
+      ...values,
+      descriptionMarkdown: contentMarkdown,
+      descriptionHTML: contentHTML,
+    };
+    const res = await updateProfile(payload);
     if (res && res.ec === 0) {
-      dispatch(updateUserInfo(values));
+      dispatch(updateUserInfo(payload));
       toast.success(res.em);
       resetFields();
     } else {
@@ -114,14 +118,14 @@ const EditProfile: FC<IProps> = (props: IProps) => {
           <Form
             form={form}
             initialValues={{
-              userFullName: account?.userFullName,
+              userFullname: account?.userFullname,
               address: account?.address,
               dob: dayjs(account?.dob),
               gender: account?.gender,
             }}
             onFinish={onFinish}
           >
-            <Form.Item<IEditProfileForm> label="Họ Tên" name="userFullName">
+            <Form.Item<IEditProfileForm> label="Họ Tên" name="userFullname">
               <Input placeholder="Enter your full name" />
             </Form.Item>
             <Form.Item<IEditProfileForm> label="Địa chỉ" name="address">

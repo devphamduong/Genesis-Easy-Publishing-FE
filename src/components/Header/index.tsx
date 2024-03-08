@@ -73,20 +73,44 @@ const Header: FC<IProps> = (props: IProps) => {
   };
 
   const popoverMenu = () => {
+    type MenuItem = Required<MenuProps>["items"][number];
+
+    function getItem(
+      label: React.ReactNode,
+      key: React.Key,
+      icon?: React.ReactNode,
+      children?: MenuItem[],
+      type?: "group"
+    ): MenuItem {
+      return {
+        key,
+        icon,
+        children,
+        label,
+        type,
+      } as MenuItem;
+    }
+
+    const items: MenuProps["items"] = [
+      getItem(<span>Trang cá nhân</span>, "profile", null),
+      getItem(<span>Ví</span>, "deposit", null),
+      getItem(<span>Quản lý truyện</span>, "manage", null),
+      getItem(
+        <Button block onClick={() => handleLogout()}>
+          Đăng xuất
+        </Button>,
+        "logout",
+        null
+      ),
+    ];
+
     return (
-      <div>
-        <Button
-          onClick={() => {
-            setIPopoverOpen(false);
-            setIsModalOpen(true);
-          }}
-        >
-          Profile
-        </Button>
-        <Button>Nạp</Button>
-        <Button onClick={() => navigate("/author")}>Quản lý truyện</Button>
-        <Button onClick={() => handleLogout()}>Log out</Button>
-      </div>
+      <Menu
+        className="custom-header-menu"
+        style={{ width: 256, border: "none" }}
+        mode="inline"
+        items={items}
+      />
     );
   };
 
@@ -134,7 +158,7 @@ const Header: FC<IProps> = (props: IProps) => {
                       prefix={<SearchOutlined />}
                     />
                   </Col>
-                  {!isAuthenticated && (
+                  {!isAuthenticated ? (
                     <Col>
                       <Button
                         type="primary"
@@ -143,23 +167,23 @@ const Header: FC<IProps> = (props: IProps) => {
                         Login
                       </Button>
                     </Col>
+                  ) : (
+                    <Col>
+                      <div>Hi {account.username}</div>
+                      <strong className="pointer">
+                        <Popover
+                          content={popoverMenu()}
+                          title={popoverTitle()}
+                          trigger={"click"}
+                          placement="bottomRight"
+                          open={isPopoverOpen}
+                          onOpenChange={(isOpen) => setIPopoverOpen(isOpen)}
+                        >
+                          My Account
+                        </Popover>
+                      </strong>
+                    </Col>
                   )}
-                  <Col>
-                    <Popover
-                      content={popoverMenu()}
-                      trigger="click"
-                      title={popoverTitle()}
-                      placement="bottomRight"
-                      open={isPopoverOpen}
-                      onOpenChange={(isOpen) => setIPopoverOpen(isOpen)}
-                    >
-                      <Avatar
-                        size="large"
-                        icon={<UserOutlined />}
-                        style={{ cursor: "pointer" }}
-                      />
-                    </Popover>
-                  </Col>
                 </Row>
               </Col>
             </Row>

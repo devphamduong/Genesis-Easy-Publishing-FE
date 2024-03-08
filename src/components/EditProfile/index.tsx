@@ -120,7 +120,7 @@ const EditProfile: FC<IProps> = (props: IProps) => {
             initialValues={{
               userFullname: account?.userFullname,
               address: account?.address,
-              dob: dayjs(account?.dob),
+              dob: account?.dob && dayjs(account?.dob),
               gender: account?.gender,
             }}
             onFinish={onFinish}

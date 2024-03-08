@@ -24,8 +24,6 @@ import { toast } from "react-toastify";
 import { logoutAction } from "../../redux/account/accountSlice";
 import { logout } from "../../services/auth-api.service";
 import { IRootState } from "../../redux/store";
-import EditProfile from "../EditProfile";
-
 interface IProps {}
 
 const Header: FC<IProps> = (props: IProps) => {
@@ -52,16 +50,7 @@ const Header: FC<IProps> = (props: IProps) => {
       key: "alipay",
     },
   ];
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isPopoverOpen, setIPopoverOpen] = useState<boolean>(false);
-
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
-
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
 
   const popoverTitle = () => {
     return (
@@ -92,9 +81,21 @@ const Header: FC<IProps> = (props: IProps) => {
     }
 
     const items: MenuProps["items"] = [
-      getItem(<span>Trang cá nhân</span>, "profile", null),
-      getItem(<span>Ví</span>, "deposit", null),
-      getItem(<span>Quản lý truyện</span>, "manage", null),
+      getItem(
+        <div onClick={() => navigate("/user/dashboard")}>Trang cá nhân</div>,
+        "profile",
+        null
+      ),
+      getItem(
+        <div onClick={() => navigate("/user/deposit")}>Ví</div>,
+        "deposit",
+        null
+      ),
+      getItem(
+        <div onClick={() => navigate("/profile")}>Quản lý truyện</div>,
+        "manage",
+        null
+      ),
       getItem(
         <Button block onClick={() => handleLogout()}>
           Đăng xuất
@@ -190,7 +191,6 @@ const Header: FC<IProps> = (props: IProps) => {
           </div>
         </div>
       </Affix>
-      <EditProfile isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
     </>
   );
 };

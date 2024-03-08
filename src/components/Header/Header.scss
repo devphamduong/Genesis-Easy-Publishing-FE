@@ -21,15 +21,21 @@
             padding-right : 12px !important;
             padding-inline: unset;
             margin-block  : unset;
-        }
 
-        .ant-menu-item:last-child {
-            span {
-                text-align: center;
+            &.ant-menu-item-selected {
+                background-color: unset;
             }
 
-            &:hover {
-                background-color: transparent !important;
+            &:last-child {
+                cursor: unset;
+
+                span {
+                    text-align: center;
+                }
+
+                &:hover {
+                    background-color: transparent !important;
+                }
             }
         }
     }

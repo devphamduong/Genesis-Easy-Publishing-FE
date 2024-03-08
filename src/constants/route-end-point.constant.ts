@@ -1,4 +1,6 @@
 export const RouteEndPointForUser = {
+  USER_DASHBOARD: "dashboard",
+  USER_DEPOSIT: "deposit",
   RANK_STORIES: "rank-stories",
   MOST_READ_IN_WEEK: "most-read-in-week",
   MOST_VIP_STORIES_READ: "most-vip-read-in-week",

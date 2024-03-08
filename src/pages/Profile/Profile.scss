@@ -1,0 +1,12 @@
+.dashboard-container {
+    .dashboard-content {
+        .info {
+            .ant-upload-wrapper {
+                .ant-upload-list {
+                    display       : flex;
+                    flex-direction: column;
+                }
+            }
+        }
+    }
+}

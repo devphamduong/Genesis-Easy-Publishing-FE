@@ -1,9 +1,8 @@
 import { Outlet } from "react-router-dom";
 import Footer from "../../components/Footer";
-import Headers from "../../components/Header";
+import Header from "../../components/Header";
 import { FC } from "react";
 import { ICategory } from "../../interfaces/category.interface";
-import { Affix } from "antd";
 
 interface IProps {
   categories: ICategory[];
@@ -14,7 +13,7 @@ const UserLayout: FC<IProps> = (props: IProps) => {
 
   return (
     <>
-      <Headers />
+      <Header />
       <div>
         <Outlet context={categories} />
       </div>

@@ -13,3 +13,30 @@
         }
     }
 }
+
+.ant-menu {
+    &.custom-header-menu {
+        .ant-menu-item {
+            padding-left  : 12px !important;
+            padding-right : 12px !important;
+            padding-inline: unset;
+            margin-block  : unset;
+
+            &.ant-menu-item-selected {
+                background-color: unset;
+            }
+
+            &:last-child {
+                cursor: unset;
+
+                span {
+                    text-align: center;
+                }
+
+                &:hover {
+                    background-color: transparent !important;
+                }
+            }
+        }
+    }
+}

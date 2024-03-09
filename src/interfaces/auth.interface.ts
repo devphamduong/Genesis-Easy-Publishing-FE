@@ -7,8 +7,10 @@ export interface IUser {
   dob: string;
   address: string;
   phone: string;
-  status: string | number;
+  status: string;
   userImage: string;
+  descriptionMarkdown?: string;
+  descriptionHTML?: string;
 }
 
 export interface ILoginResponse {
@@ -32,10 +34,11 @@ export interface IRegisterForm {
 
 export interface IEditProfileForm {
   email?: string;
-  userFullName?: string;
-  address?: string;
+  userFullname?: string;
+  gender?: string;
   dob?: string;
-  gender?: boolean;
+  phone?: string;
+  address?: string;
   userImage?: string;
   descriptionMarkdown?: string;
   descriptionHTML?: string;

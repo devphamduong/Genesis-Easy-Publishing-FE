@@ -27,4 +27,43 @@ body {
   .ant-divider {
     margin: 10px 0;
   }
+
+  .link-hover {
+    color: unset;
+
+    &:hover {
+      color: #69b1ff;
+    }
+  }
+
+  .time {
+    color: #bba1a1;
+  }
+
+  .pointer {
+    cursor: pointer;
+  }
+
+  .copy-right {
+    color    : #888;
+    font-size: 13px;
+  }
+
+  .icon-like {
+    color: #2679fa;
+
+    &:hover {
+      color       : #2679fa !important;
+      border-color: #2679fa !important;
+    }
+  }
+
+  .icon-follow {
+    color: #ec8e82;
+
+    &:hover {
+      color       : #ec8e82 !important;
+      border-color: #ec8e82 !important;
+    }
+  }
 }

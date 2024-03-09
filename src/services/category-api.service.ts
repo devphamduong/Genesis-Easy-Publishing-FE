@@ -13,12 +13,18 @@ export const getStoriesByCategoryId = (
   return axios.get(`shelves/topcate_shelves?cateid=${id}`);
 };
 
+export const getStoriesMostReadByCategoryId = (
+  id: string
+): Promise<IApiResponse<IStory[]>> => {
+  return axios.get(`shelves/topcate_read?cateid=${id}`);
+};
+
 export const getPaginationStoriesByCategoryId = (
-  id: string,
+  id: string | number,
   page: number,
   pageSize: number
 ): Promise<IApiResponse<IPaginationStory>> => {
   return axios.get(
-    `shelves/cate_shelves?cateid=${id}&page=${page}&pagesize=${pageSize}`
+    `shelves/cate_shelves?cateid=${id}&page=${page}&pageSize=${pageSize}`
   );
 };

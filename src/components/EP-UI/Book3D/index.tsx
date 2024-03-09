@@ -13,6 +13,7 @@ interface IProps {
   description?: string;
   width?: number;
   height?: number;
+  isShowTitle?: boolean;
 }
 
 interface ICustomCSSProperties extends React.CSSProperties {
@@ -33,7 +34,8 @@ enum EImageDefaultSize {
 }
 
 const EPBook3D: FC<IProps> = (props: IProps) => {
-  const { storyId, imgUrl, title, description, width, height } = props;
+  const { storyId, imgUrl, title, description, width, height, isShowTitle } =
+    props;
 
   const calcHeightBefore = () => {
     return (
@@ -66,14 +68,23 @@ const EPBook3D: FC<IProps> = (props: IProps) => {
             <img src={imgUrl} />
           </div>
         </Link>
-        <strong className="title text-center">
-          <Paragraph ellipsis={{ rows: 2 }}>
-            <Link to={getStoryDetailURL(storyId, title)}>{title}</Link>
-          </Paragraph>
-        </strong>
-        <div className="description text-center">
-          <Paragraph ellipsis={{ rows: 2 }}>{description}</Paragraph>
-        </div>
+        {isShowTitle && (
+          <>
+            <strong className="title text-center">
+              <Paragraph ellipsis={{ rows: 2 }}>
+                <Link
+                  className="link-hover"
+                  to={getStoryDetailURL(storyId, title)}
+                >
+                  {title}
+                </Link>
+              </Paragraph>
+            </strong>
+            <div className="description text-center">
+              <Paragraph ellipsis={{ rows: 2 }}>{description}</Paragraph>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

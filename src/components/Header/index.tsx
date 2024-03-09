@@ -16,7 +16,7 @@ import {
   Row,
 } from "antd";
 import { useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import "./Header.scss";
 import { FC } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -24,16 +24,20 @@ import { toast } from "react-toastify";
 import { logoutAction } from "../../redux/account/accountSlice";
 import { logout } from "../../services/auth-api.service";
 import { IRootState } from "../../redux/store";
-import EditProfile from "../EditProfile";
-
+import { EMenuKey, EMenuLabel } from "./enum";
+import {
+  RouteEndPointForAuthor,
+  RouteEndPointForUser,
+} from "../../constants/route-end-point.constant";
 interface IProps {}
 
 const Header: FC<IProps> = (props: IProps) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const username = useSelector(
-    (state: IRootState) => state.account?.user?.username
+  const isAuthenticated = useSelector(
+    (state: IRootState) => state.account.isAuthenticated
   );
+  const account = useSelector((state: IRootState) => state.account?.user);
   const [current, setCurrent] = useState<string>("mail");
   const items: MenuProps["items"] = [
     {
@@ -51,50 +55,101 @@ const Header: FC<IProps> = (props: IProps) => {
       key: "alipay",
     },
   ];
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isPopoverOpen, setIPopoverOpen] = useState<boolean>(false);
-
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
-
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
 
   const popoverTitle = () => {
     return (
       <div className="d-flex align-items-center gap-2">
         <Avatar size="large" icon={<UserOutlined />} />
-        <div>{username ?? "vcl"}</div>
+        <div>{account.username ?? "vcl"}</div>
       </div>
     );
   };
 
   const popoverMenu = () => {
+    type MenuItem = Required<MenuProps>["items"][number];
+
+    function getItem(
+      label: React.ReactNode,
+      key: React.Key,
+      icon?: React.ReactNode,
+      children?: MenuItem[],
+      type?: "group"
+    ): MenuItem {
+      return {
+        key,
+        icon,
+        children,
+        label,
+        type,
+      } as MenuItem;
+    }
+
+    const items: MenuProps["items"] = [
+      getItem(
+        <div onClick={() => navigate("/user/dashboard")}>
+          {EMenuLabel.PROFILE}
+        </div>,
+        EMenuKey.PROFILE,
+        null
+      ),
+      getItem(
+        <div onClick={() => navigate("/user/deposit")}>
+          {EMenuLabel.DEPOSIT}
+        </div>,
+        EMenuKey.DEPOSIT,
+        null
+      ),
+      getItem(
+        <div onClick={() => navigate("/author/dashboard")}>
+          {EMenuLabel.MANAGE}
+        </div>,
+        EMenuKey.MANAGE,
+        null
+      ),
+      getItem(
+        <Button block onClick={() => handleLogout()}>
+          Đăng xuất
+        </Button>,
+        "logout",
+        null
+      ),
+    ];
+
+    const onClick: MenuProps["onClick"] = (e) => {
+      const { key } = e;
+      setIPopoverOpen(false);
+      switch (key) {
+        case EMenuKey.PROFILE:
+          navigate(RouteEndPointForUser.DASHBOARD);
+          break;
+        case EMenuKey.DEPOSIT:
+          navigate(RouteEndPointForUser.DEPOSIT);
+          break;
+        case EMenuKey.MANAGE:
+          navigate(RouteEndPointForAuthor.DASHBOARD);
+          break;
+      }
+    };
+
     return (
-      <div>
-        <Button
-          onClick={() => {
-            setIPopoverOpen(false);
-            setIsModalOpen(true);
-          }}
-        >
-          Profile
-        </Button>
-        <Button>Nạp</Button>
-        <Button onClick={() => handleLogout()}>Log out</Button>
-      </div>
+      <Menu
+        className="custom-header-menu"
+        style={{ width: 256, border: "none" }}
+        mode="inline"
+        items={items}
+        onClick={onClick}
+      />
     );
   };
 
   const handleLogout = async () => {
-    // const res = await logout();
-    // if (res && res.dt) {
-    dispatch(logoutAction());
-    toast.success("Logout successfully");
-    navigate("/");
-    // }
+    const res = await logout();
+    if (res && res.ec === 0) {
+      dispatch(logoutAction());
+      toast.success("Logout successfully");
+      navigate("/");
+    }
     setIPopoverOpen(false);
   };
 
@@ -107,9 +162,9 @@ const Header: FC<IProps> = (props: IProps) => {
               <Col span={13}>
                 <Row align={"middle"}>
                   <Col span={4}>
-                    <NavLink className="navbar-brand" to={"/"}>
+                    <Link className="navbar-brand" to={"/"}>
                       The Genesis
-                    </NavLink>
+                    </Link>
                   </Col>
                   <Col span={20}>
                     <Menu
@@ -132,37 +187,38 @@ const Header: FC<IProps> = (props: IProps) => {
                       prefix={<SearchOutlined />}
                     />
                   </Col>
-                  <Col>
-                    <Button
-                      type="primary"
-                      onClick={() => navigate("/auth/login")}
-                    >
-                      Login
-                    </Button>
-                  </Col>
-                  <Col>
-                    <Popover
-                      content={popoverMenu()}
-                      trigger="click"
-                      title={popoverTitle()}
-                      placement="bottomRight"
-                      open={isPopoverOpen}
-                      onOpenChange={(isOpen) => setIPopoverOpen(isOpen)}
-                    >
-                      <Avatar
-                        size="large"
-                        icon={<UserOutlined />}
-                        style={{ cursor: "pointer" }}
-                      />
-                    </Popover>
-                  </Col>
+                  {!isAuthenticated ? (
+                    <Col>
+                      <Button
+                        type="primary"
+                        onClick={() => navigate("/auth/login")}
+                      >
+                        Login
+                      </Button>
+                    </Col>
+                  ) : (
+                    <Col>
+                      <div>Hi {account.username}</div>
+                      <strong className="pointer">
+                        <Popover
+                          content={popoverMenu()}
+                          title={popoverTitle()}
+                          trigger={"click"}
+                          placement="bottomRight"
+                          open={isPopoverOpen}
+                          onOpenChange={(isOpen) => setIPopoverOpen(isOpen)}
+                        >
+                          My Account
+                        </Popover>
+                      </strong>
+                    </Col>
+                  )}
                 </Row>
               </Col>
             </Row>
           </div>
         </div>
       </Affix>
-      <EditProfile isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
     </>
   );
 };

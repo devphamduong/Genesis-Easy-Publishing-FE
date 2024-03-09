@@ -15,7 +15,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <Provider store={store}>
     <PersistGate persistor={persistor}>
       <BrowserRouter>
-        <ToastContainer />
+        <ToastContainer position={'bottom-right'}/>
         <App />
       </BrowserRouter>
     </PersistGate>

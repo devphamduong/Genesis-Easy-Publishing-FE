@@ -4,12 +4,12 @@ import VerticalImageHover from "../VerticalImageHover";
 import { IStory } from "../../interfaces/story.interface";
 import { Button, Col, Divider, Row, Skeleton, Typography } from "antd";
 import { FaPenFancy } from "react-icons/fa6";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { ClockCircleOutlined } from "@ant-design/icons";
 import relativeTime from "dayjs/plugin/relativeTime";
 import dayjs from "dayjs";
-import { getStoryDetailURL } from "../../shared/generate-navigate-url";
 dayjs.extend(relativeTime);
+import { getStoryDetailURL } from "../../shared/generate-navigate-url";
 const { Text } = Typography;
 
 interface IProps {
@@ -23,7 +23,6 @@ interface IProps {
 
 const RowStory: FC<IProps> = (props: IProps) => {
   const { story, rank, imgWidth, imgHight, size, displayUpdatedAt } = props;
-  const navigate = useNavigate();
 
   const renderRowDefault = () => {
     return (
@@ -37,14 +36,12 @@ const RowStory: FC<IProps> = (props: IProps) => {
           />
         </Col>
         <Col span={19} className="d-flex flex-column justify-content-between">
-          <strong
-            onClick={() =>
-              navigate(getStoryDetailURL(story.storyId, story.storyTitle))
-            }
-            className="name"
+          <Link
+            className="link-hover name"
+            to={getStoryDetailURL(story.storyId, story.storyTitle)}
           >
-            {story.storyTitle}
-          </strong>
+            <strong>{story.storyTitle}</strong>
+          </Link>
           <Text ellipsis={true} className="description">
             <span>{story.storyDescription}</span>
           </Text>
@@ -80,14 +77,12 @@ const RowStory: FC<IProps> = (props: IProps) => {
           />
         </Col>
         <Col span={20} className="d-flex flex-column justify-content-between">
-          <strong
-            onClick={() =>
-              navigate(getStoryDetailURL(story.storyId, story.storyTitle))
-            }
-            className="name"
+          <Link
+            className="link-hover name"
+            to={getStoryDetailURL(story.storyId, story.storyTitle)}
           >
-            {story.storyTitle}
-          </strong>
+            <strong>{story.storyTitle}</strong>
+          </Link>
           <Text ellipsis={true} className="description">
             <span>{story.storyDescription}</span>
           </Text>
@@ -101,7 +96,7 @@ const RowStory: FC<IProps> = (props: IProps) => {
             </div>
           </div>
           {displayUpdatedAt && (
-            <div>
+            <div className="time">
               <ClockCircleOutlined />
               <span> {dayjs("2024-02-17T13:00:00").fromNow()}</span>
             </div>

@@ -13,7 +13,6 @@ import { ICategory } from "../interfaces/category.interface";
 import { getAllCategories } from "../services/category-api.service";
 import DetailStoryPage from "../pages/DetailStory";
 import ReadStoryPage from "../pages/ReadStory";
-import WriteChapterPage from "../pages/WriteStory/WriteChapter";
 import CategoryPage from "../pages/Category";
 import AuthLayout from "../layouts/Auth";
 import LoginPage from "../pages/Auth/Login";
@@ -21,6 +20,15 @@ import RegisterPage from "../pages/Auth/Register";
 import ForgotPasswordPage from "../pages/Auth/ForgotPassword";
 import NotFoundPage from "../pages/NotFound";
 import AuthorPage from "../pages/Author";
+import AuthorLayout from "../layouts/Author";
+import ResetPasswordPage from "../pages/Auth/ResetPassword";
+import ProfilePage from "../pages/Profile";
+import ProfileLayout from "../layouts/User/Dashboard";
+import DepositPage from "../pages/Profile/Deposit";
+import DashboardPage from "../pages/Author/Dashboard";
+import WriteStoryPage from "../pages/Author/WriteStory";
+import WriteChapterPage from "../pages/Author/WriteStory/WriteChapter";
+import PostedStoriesPage from "../pages/Author/PostedStories";
 
 interface IProps {}
 
@@ -41,6 +49,7 @@ const AppRoutes: FC<IProps> = (props: IProps) => {
   return (
     <>
       <Routes>
+        {/* main */}
         <Route path="/" element={<UserLayout categories={categories} />}>
           <Route index element={<HomePage />} />
           <Route
@@ -65,22 +74,41 @@ const AppRoutes: FC<IProps> = (props: IProps) => {
               element={<StoriesWithMostFan />}
             />
           </Route>
-          <Route path={"story/:id/:slug"} element={<DetailStoryPage />}></Route>
+          <Route path="story/:id/:slug" element={<DetailStoryPage />}></Route>
           <Route
-            path={"story/read/:id/:chapter"}
+            path="story/read/:id/:chapter"
             element={<ReadStoryPage />}
           ></Route>
-          <Route path={"category/:id/:slug"} element={<CategoryPage />}></Route>
-          <Route path={"author/:id/:slug"} element={<AuthorPage />}></Route>
-          <Route path={"vl"} element={<WriteChapterPage />}></Route>
+          <Route path="category/:id/:slug" element={<CategoryPage />}></Route>
+          <Route path="author/:id/:slug" element={<AuthorPage />}></Route>
         </Route>
+
+        {/* auth */}
         <Route path="/auth" element={<AuthLayout />}>
           <Route path="login" element={<LoginPage />} />
-          <Route path={"register"} element={<RegisterPage />}></Route>
+          <Route path="register" element={<RegisterPage />}></Route>
           <Route
-            path={"forgot-password"}
+            path="forgot-password"
             element={<ForgotPasswordPage />}
           ></Route>
+          <Route path="reset-password" element={<ResetPasswordPage />}></Route>
+        </Route>
+
+        {/* profile */}
+        <Route path="/user" element={<ProfileLayout categories={categories} />}>
+          <Route path="dashboard" element={<ProfilePage />}></Route>
+          <Route path="deposit" element={<DepositPage />}></Route>
+        </Route>
+
+        {/* author */}
+        <Route
+          path="/author"
+          element={<AuthorLayout categories={categories} />}
+        >
+          <Route path="dashboard" element={<DashboardPage />} />
+          <Route path="posted-stories" element={<PostedStoriesPage />} />
+          <Route path="write-story" element={<WriteStoryPage />}></Route>
+          <Route path="write-chapter" element={<WriteChapterPage />}></Route>
         </Route>
         <Route path="*" element={<NotFoundPage />}></Route>
       </Routes>

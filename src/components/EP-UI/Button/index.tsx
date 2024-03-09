@@ -4,12 +4,13 @@ import { Button, ConfigProvider } from "antd";
 import { BaseButtonProps } from "antd/es/button/button";
 
 interface IProps extends BaseButtonProps {
-  warning?: boolean | true;
+  color?: string;
+  warning?: boolean;
   onClick?: () => void;
 }
 
 const EPButton: FC<IProps> = (props: IProps) => {
-  const { onClick, warning, children } = props;
+  const { onClick, warning, color, children } = props;
 
   return (
     <ConfigProvider
@@ -18,6 +19,12 @@ const EPButton: FC<IProps> = (props: IProps) => {
           ? {
               token: {
                 colorPrimary: "#ffc107",
+              },
+            }
+          : color
+          ? {
+              token: {
+                colorPrimary: color,
               },
             }
           : undefined

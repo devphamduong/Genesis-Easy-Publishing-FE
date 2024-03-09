@@ -22,6 +22,16 @@
                 font-size: 10px;
                 color    : #aaa;
             }
+
+            .price {
+                td {
+                    padding: 0 10px;
+                }
+
+                td:nth-child(2) {
+                    text-align: end;
+                }
+            }
         }
 
         .bottom {

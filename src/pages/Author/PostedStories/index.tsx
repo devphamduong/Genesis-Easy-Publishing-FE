@@ -108,7 +108,8 @@ const PostedStoriesPage: FC<IProps> = (props: IProps) => {
     console.log(`selected ${value}`);
   };
 
-  let timeout = null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let timeout: any = null;
   const handleSearch = (event: ChangeEvent<HTMLInputElement>) => {
     clearTimeout(timeout);
     timeout = setTimeout(() => {

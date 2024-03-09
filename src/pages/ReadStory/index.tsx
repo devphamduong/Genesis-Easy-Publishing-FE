@@ -164,14 +164,14 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
           <div className="sort-description">
             Bạn đang đọc
             <Link
-              to={getStoryDetailURL(id, chapter?.split(".")[0])}
+              to={getStoryDetailURL(id!, chapter!.split(".")[0])}
               className="name link-hover"
             >
               {" "}
               {chapterContent?.story.storyTitle}{" "}
             </Link>
             của
-            <Link className="author link-hover">
+            <Link to={""} className="author link-hover">
               {" "}
               {chapterContent?.author.userFullname}
             </Link>

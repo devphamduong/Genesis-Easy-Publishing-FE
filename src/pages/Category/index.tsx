@@ -206,6 +206,11 @@ const CategoryPage: FC<IProps> = (props: IProps) => {
                     storyCategories: [],
                     storyAuthor: { userId: 1, userFullname: "abc" },
                     storyChapterNumber: 10,
+                    storyPrice: 1,
+                    storySale: 1,
+                    userOwned: false,
+                    userFollow: false,
+                    userLike: false,
                   }}
                 />
               </Col>
@@ -222,6 +227,11 @@ const CategoryPage: FC<IProps> = (props: IProps) => {
                     storyCategories: [],
                     storyAuthor: { userId: 1, userFullname: "abc" },
                     storyChapterNumber: 10,
+                    storyPrice: 1,
+                    storySale: 1,
+                    userOwned: false,
+                    userFollow: false,
+                    userLike: false,
                   }}
                 />
               </Col>

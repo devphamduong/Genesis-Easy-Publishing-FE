@@ -14,13 +14,13 @@ import {
   UploadProps,
   message,
 } from "antd";
-import { IWriteStoryForm } from "../../interfaces/story.interface";
 import { useSelector } from "react-redux";
-import { IRootState } from "../../redux/store";
 import { useNavigate } from "react-router-dom";
 import { BsInfoCircleFill } from "react-icons/bs";
 import { CheckOutlined, InboxOutlined } from "@ant-design/icons";
 import Dragger from "antd/es/upload/Dragger";
+import { IRootState } from "../../../redux/store";
+import { IWriteStoryForm } from "../../../interfaces/story.interface";
 
 interface IProps {}
 

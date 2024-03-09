@@ -101,22 +101,25 @@ export interface IWriteStoryForm {
 }
 
 export interface IChapterContent {
-  chapter: {
-    story: {
-      storyId: number;
-      storyTitle: string;
-      storyPrice: number;
-    };
-    content: string;
-    chapterId: number;
-    chapterNumber: number;
-    chapterTitle: string;
-    chapterPrice: number;
-    createTime: string;
-    updateTime: string;
-    comment: number;
-    userPurchaseChapter: number;
-    nextChapterNumber: number;
+  story: {
+    storyId: number;
+    storyTitle: string;
+    storyPrice: number;
   };
+  author: {
+    userId: number;
+    userFullname: string;
+  };
+  content: string;
+  chapterId: number;
+  chapterNumber: number;
+  chapterTitle: string;
+  chapterPrice: number;
+  createTime: string;
+  updateTime: string;
+  comment: number;
+  userPurchaseChapter: number;
+  nextChapterNumber: number;
   message: string;
+  owned: boolean;
 }

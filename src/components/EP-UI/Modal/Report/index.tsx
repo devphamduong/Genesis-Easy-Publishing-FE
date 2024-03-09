@@ -71,7 +71,7 @@ const EPModalReport: FC<IProps> = (props: IProps) => {
         name="control-hooks"
         onFinish={onFinish}
       >
-        <Form.Item
+        <Form.Item<IFormReport>
           name="problem"
           label="Vấn đề"
           rules={[{ required: true, message: "Bắt buộc!" }]}
@@ -86,7 +86,7 @@ const EPModalReport: FC<IProps> = (props: IProps) => {
             })}
           </Select>
         </Form.Item>
-        <Form.Item
+        <Form.Item<IFormReport>
           name="description"
           label="Mô tả"
           rules={[{ required: true }]}
@@ -98,7 +98,7 @@ const EPModalReport: FC<IProps> = (props: IProps) => {
           />
         </Form.Item>
         {inChapter && (
-          <Form.Item
+          <Form.Item<IFormReport>
             name="inChapter"
             label="Trong chương"
             rules={[{ required: true }]}

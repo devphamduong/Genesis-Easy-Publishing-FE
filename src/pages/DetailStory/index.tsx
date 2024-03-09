@@ -56,6 +56,7 @@ import { useSelector } from "react-redux";
 import { IRootState } from "../../redux/store";
 import { AiFillLike, AiOutlineLike } from "react-icons/ai";
 import { FaHeart, FaRegHeart } from "react-icons/fa6";
+import { toast } from "react-toastify";
 dayjs.extend(relativeTime);
 
 const { Paragraph, Text } = Typography;
@@ -316,6 +317,10 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
   };
 
   const handleReadStory = () => {
+    if (!isAuthenticated) {
+      toast.error("Hãy đăng nhập để dùng chức năng này");
+      return;
+    }
     navigate(getStoryReadURL(id!, slug!, 1));
   };
 

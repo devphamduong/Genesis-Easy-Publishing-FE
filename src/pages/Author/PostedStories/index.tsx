@@ -19,7 +19,7 @@ const PostedStoriesPage: FC<IProps> = (props: IProps) => {
     {
       title: "TRUYỆN",
       dataIndex: "name",
-      render(value) {
+      render(value: string) {
         return (
           <Highlighter
             highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}

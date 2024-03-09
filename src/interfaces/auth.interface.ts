@@ -7,7 +7,7 @@ export interface IUser {
   dob: string;
   address: string;
   phone: string;
-  status: string | number;
+  status: string;
   userImage: string;
   descriptionMarkdown?: string;
   descriptionHTML?: string;

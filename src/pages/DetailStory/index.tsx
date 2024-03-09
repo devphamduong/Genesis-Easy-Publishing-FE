@@ -62,7 +62,7 @@ const { Paragraph, Text } = Typography;
 
 interface IProps {}
 
-enum ETabsName {
+enum ETabsLabel {
   DESCRIPTION = "Giới thiệu",
   CHAPTER = "Chương",
   COMMENT = "Bình luận",
@@ -111,19 +111,19 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
   const itemTabs: TabsProps["items"] = [
     {
       key: ETabsKey.DESCRIPTION,
-      label: ETabsName.DESCRIPTION,
+      label: ETabsLabel.DESCRIPTION,
       children: <>{}</>,
     },
     {
       key: ETabsKey.CHAPTER,
-      label: ETabsName.CHAPTER,
+      label: ETabsLabel.CHAPTER,
       children: <>{}</>,
     },
     {
       key: ETabsKey.COMMENT,
       label: (
         <div className="d-flex align-items-center gap-1">
-          <span>{ETabsName.COMMENT}</span>
+          <span>{ETabsLabel.COMMENT}</span>
           <Badge count={1000} overflowCount={999} color="#4497f8"></Badge>
         </div>
       ),

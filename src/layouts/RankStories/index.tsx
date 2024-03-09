@@ -1,13 +1,7 @@
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import { RouteEndPointForUser } from "../../constants/route-end-point.constant";
-import {
-  Affix,
-  Col,
-  Menu,
-  MenuProps,
-  Row,
-} from "antd";
-import { NavLink, Outlet } from "react-router-dom";
+import { Affix, Col, Menu, MenuProps, Row } from "antd";
+import { Link, Outlet, useLocation } from "react-router-dom";
 import "./RankStoriesLayout.scss";
 import { ICategory } from "../../interfaces/category.interface";
 import Cover from "../../components/Cover";
@@ -32,39 +26,37 @@ function getItem(
 
 const items: MenuProps["items"] = [
   getItem(
-    <NavLink to={""}>Bảng xếp hạng</NavLink>,
+    <Link to={RouteEndPointForUser.RANK_STORIES}>Bảng xếp hạng</Link>,
     RouteEndPointForUser.RANK_STORIES,
     null
   ),
   { type: "divider" },
 
   getItem(
-    <NavLink to={RouteEndPointForUser.MOST_READ_IN_WEEK}>
+    <Link to={RouteEndPointForUser.MOST_READ_IN_WEEK}>
       Đọc nhiều trong tuần
-    </NavLink>,
+    </Link>,
     RouteEndPointForUser.MOST_READ_IN_WEEK,
     null
   ),
   getItem(
-    <NavLink to={RouteEndPointForUser.MOST_VIP_STORIES_READ}>
+    <Link to={RouteEndPointForUser.MOST_VIP_STORIES_READ}>
       Truyện VIP nhiều người đọc
-    </NavLink>,
+    </Link>,
     RouteEndPointForUser.MOST_VIP_STORIES_READ,
     null
   ),
   getItem(
-    <NavLink to={RouteEndPointForUser.TOP_FULL_STORIES}>
-      Top truyện full
-    </NavLink>,
+    <Link to={RouteEndPointForUser.TOP_FULL_STORIES}>Top truyện full</Link>,
     RouteEndPointForUser.TOP_FULL_STORIES,
     null
   ),
   { type: "divider" },
 
   getItem(
-    <NavLink to={RouteEndPointForUser.STORIES_WITH_MOST_FAN}>
+    <Link to={RouteEndPointForUser.STORIES_WITH_MOST_FAN}>
       Truyện nhiều fan
-    </NavLink>,
+    </Link>,
     RouteEndPointForUser.STORIES_WITH_MOST_FAN,
     null
   ),
@@ -76,6 +68,14 @@ interface IProps {
 
 const RankStoriesLayout: FC<IProps> = (props: IProps) => {
   const { categories } = props;
+  const location = useLocation();
+  const [currentParams, setCurrentParams] = useState(
+    RouteEndPointForUser.RANK_STORIES
+  );
+
+  useEffect(() => {
+    setCurrentParams(location.pathname);
+  }, [location.pathname]);
 
   return (
     <div className="rank-stories-layout-container">
@@ -92,11 +92,12 @@ const RankStoriesLayout: FC<IProps> = (props: IProps) => {
           <Col span={5} className="left">
             <Affix offsetTop={70}>
               <Menu
-                defaultSelectedKeys={[RouteEndPointForUser.RANK_STORIES]}
+                defaultSelectedKeys={[currentParams]}
+                selectedKeys={[currentParams]}
                 mode="inline"
                 items={items}
               />
-              <EPFilter/>
+              <EPFilter />
             </Affix>
           </Col>
           <Col span={19} className="right">

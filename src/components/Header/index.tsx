@@ -16,7 +16,7 @@ import {
   Row,
 } from "antd";
 import { useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import "./Header.scss";
 import { FC } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -24,6 +24,11 @@ import { toast } from "react-toastify";
 import { logoutAction } from "../../redux/account/accountSlice";
 import { logout } from "../../services/auth-api.service";
 import { IRootState } from "../../redux/store";
+import { EMenuKey, EMenuLabel } from "./enum";
+import {
+  RouteEndPointForAuthor,
+  RouteEndPointForUser,
+} from "../../constants/route-end-point.constant";
 interface IProps {}
 
 const Header: FC<IProps> = (props: IProps) => {
@@ -82,18 +87,24 @@ const Header: FC<IProps> = (props: IProps) => {
 
     const items: MenuProps["items"] = [
       getItem(
-        <div onClick={() => navigate("/user/dashboard")}>Trang cá nhân</div>,
-        "profile",
+        <div onClick={() => navigate("/user/dashboard")}>
+          {EMenuLabel.PROFILE}
+        </div>,
+        EMenuKey.PROFILE,
         null
       ),
       getItem(
-        <div onClick={() => navigate("/user/deposit")}>Ví</div>,
-        "deposit",
+        <div onClick={() => navigate("/user/deposit")}>
+          {EMenuLabel.DEPOSIT}
+        </div>,
+        EMenuKey.DEPOSIT,
         null
       ),
       getItem(
-        <div onClick={() => navigate("/profile")}>Quản lý truyện</div>,
-        "manage",
+        <div onClick={() => navigate("/author/dashboard")}>
+          {EMenuLabel.MANAGE}
+        </div>,
+        EMenuKey.MANAGE,
         null
       ),
       getItem(
@@ -105,12 +116,29 @@ const Header: FC<IProps> = (props: IProps) => {
       ),
     ];
 
+    const onClick: MenuProps["onClick"] = (e) => {
+      const { key } = e;
+      setIPopoverOpen(false);
+      switch (key) {
+        case EMenuKey.PROFILE:
+          navigate(RouteEndPointForUser.DASHBOARD);
+          break;
+        case EMenuKey.DEPOSIT:
+          navigate(RouteEndPointForUser.DEPOSIT);
+          break;
+        case EMenuKey.MANAGE:
+          navigate(RouteEndPointForAuthor.DASHBOARD);
+          break;
+      }
+    };
+
     return (
       <Menu
         className="custom-header-menu"
         style={{ width: 256, border: "none" }}
         mode="inline"
         items={items}
+        onClick={onClick}
       />
     );
   };
@@ -134,9 +162,9 @@ const Header: FC<IProps> = (props: IProps) => {
               <Col span={13}>
                 <Row align={"middle"}>
                   <Col span={4}>
-                    <NavLink className="navbar-brand" to={"/"}>
+                    <Link className="navbar-brand" to={"/"}>
                       The Genesis
-                    </NavLink>
+                    </Link>
                   </Col>
                   <Col span={20}>
                     <Menu

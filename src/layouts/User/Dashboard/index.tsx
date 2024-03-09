@@ -1,5 +1,5 @@
-import { NavLink, Outlet } from "react-router-dom";
-import { FC } from "react";
+import { NavLink, Outlet, useLocation } from "react-router-dom";
+import { FC, useEffect, useState } from "react";
 import { ICategory } from "../../../interfaces/category.interface";
 import Header from "../../../components/Header";
 import Footer from "../../../components/Footer";
@@ -28,16 +28,24 @@ function getItem(
 
 const ProfileLayout: FC<IProps> = (props: IProps) => {
   const { categories } = props;
+  const location = useLocation();
+  const [currentParams, setCurrentParams] = useState(
+    RouteEndPointForUser.DASHBOARD
+  );
+
+  useEffect(() => {
+    setCurrentParams(location.pathname);
+  }, [location.pathname]);
 
   const items: MenuItem[] = [
     getItem(
-      <NavLink to={RouteEndPointForUser.USER_DASHBOARD}>Dashboard</NavLink>,
-      RouteEndPointForUser.USER_DASHBOARD,
+      <NavLink to={RouteEndPointForUser.DASHBOARD}>Dashboard</NavLink>,
+      RouteEndPointForUser.DASHBOARD,
       null
     ),
     getItem(
-      <NavLink to={RouteEndPointForUser.USER_DEPOSIT}>Ví</NavLink>,
-      RouteEndPointForUser.USER_DEPOSIT,
+      <NavLink to={RouteEndPointForUser.DEPOSIT}>Ví</NavLink>,
+      RouteEndPointForUser.DEPOSIT,
       null
     ),
   ];
@@ -49,7 +57,8 @@ const ProfileLayout: FC<IProps> = (props: IProps) => {
         <Row gutter={[16, 10]}>
           <Col span={5}>
             <Menu
-              defaultSelectedKeys={[RouteEndPointForUser.USER_DASHBOARD]}
+              defaultSelectedKeys={[currentParams]}
+              selectedKeys={[currentParams]}
               mode="inline"
               items={items}
             />

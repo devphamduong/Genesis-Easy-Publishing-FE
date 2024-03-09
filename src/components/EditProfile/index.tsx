@@ -98,6 +98,9 @@ const EditProfile: FC<IProps> = (props: IProps) => {
           <Form.Item<IEditProfileForm> label="Địa chỉ" name="address">
             <Input placeholder="Enter your address" />
           </Form.Item>
+          <Form.Item<IEditProfileForm> label="Số điện thoại" name="phone">
+            <Input placeholder="Enter your phone number" />
+          </Form.Item>
           <Form.Item<IEditProfileForm> label="Ngày sinh" name="dob">
             <DatePicker onChange={onChangeDate} />
           </Form.Item>

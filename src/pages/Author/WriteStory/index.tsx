@@ -38,7 +38,7 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
   );
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (!isAuthenticated) {
       navigate("/");
     }
   }, []);

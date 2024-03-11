@@ -86,27 +86,9 @@ const Header: FC<IProps> = (props: IProps) => {
     }
 
     const items: MenuProps["items"] = [
-      getItem(
-        <div onClick={() => navigate("/user/dashboard")}>
-          {EMenuLabel.PROFILE}
-        </div>,
-        EMenuKey.PROFILE,
-        null
-      ),
-      getItem(
-        <div onClick={() => navigate("/user/deposit")}>
-          {EMenuLabel.DEPOSIT}
-        </div>,
-        EMenuKey.DEPOSIT,
-        null
-      ),
-      getItem(
-        <div onClick={() => navigate("/author/dashboard")}>
-          {EMenuLabel.MANAGE}
-        </div>,
-        EMenuKey.MANAGE,
-        null
-      ),
+      getItem(<div>{EMenuLabel.PROFILE}</div>, EMenuKey.PROFILE, null),
+      getItem(<div>{EMenuLabel.DEPOSIT}</div>, EMenuKey.DEPOSIT, null),
+      getItem(<div>{EMenuLabel.MANAGE}</div>, EMenuKey.MANAGE, null),
       getItem(
         <Button block onClick={() => handleLogout()}>
           Đăng xuất
@@ -127,7 +109,7 @@ const Header: FC<IProps> = (props: IProps) => {
           navigate(RouteEndPointForUser.DEPOSIT);
           break;
         case EMenuKey.MANAGE:
-          navigate(RouteEndPointForAuthor.DASHBOARD);
+          navigate(RouteEndPointForAuthor.POSTED_STORIES);
           break;
       }
     };
@@ -198,7 +180,7 @@ const Header: FC<IProps> = (props: IProps) => {
                     </Col>
                   ) : (
                     <Col>
-                      <div>Hi {account.username}</div>
+                      <div>Hi {account.username ?? "friend"}</div>
                       <strong className="pointer">
                         <Popover
                           content={popoverMenu()}

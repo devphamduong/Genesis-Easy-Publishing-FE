@@ -48,6 +48,11 @@ const ProfileLayout: FC<IProps> = (props: IProps) => {
       RouteEndPointForUser.DEPOSIT,
       null
     ),
+    getItem(
+      <NavLink to={RouteEndPointForUser.CHANGE_PASSWORD}>Đổi mật khẩu</NavLink>,
+      RouteEndPointForUser.CHANGE_PASSWORD,
+      null
+    ),
   ];
 
   return (

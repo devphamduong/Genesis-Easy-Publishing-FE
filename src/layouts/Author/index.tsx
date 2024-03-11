@@ -2,7 +2,7 @@ import React, { FC, useEffect, useState } from "react";
 import "./AuthorLayout.scss";
 import "../../components/Header/Header.scss";
 import { ICategory } from "../../interfaces/category.interface";
-import { PieChartOutlined, UserOutlined } from "@ant-design/icons";
+import { UserOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Avatar, Button, Col, Layout, Menu, Popover, Row, theme } from "antd";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
@@ -12,7 +12,10 @@ import { logoutAction } from "../../redux/account/accountSlice";
 import { toast } from "react-toastify";
 import { logout } from "../../services/auth-api.service";
 import { EMenuKey, EMenuLabel } from "../../components/Header/enum";
-import { RouteEndPointForAuthor } from "../../constants/route-end-point.constant";
+import {
+  RouteEndPointForAuthor,
+  RouteEndPointForUser,
+} from "../../constants/route-end-point.constant";
 import { GiBookshelf } from "react-icons/gi";
 import { TbBookUpload } from "react-icons/tb";
 import { GrChapterAdd } from "react-icons/gr";
@@ -74,20 +77,9 @@ const HeaderAuthor = (props: IProps) => {
     }
 
     const items: MenuProps["items"] = [
-      getItem(
-        <div onClick={() => navigate("/user/dashboard")}>
-          {EMenuLabel.PROFILE}
-        </div>,
-        EMenuKey.PROFILE,
-        null
-      ),
-      getItem(
-        <div onClick={() => navigate("/user/deposit")}>
-          {EMenuLabel.DEPOSIT}
-        </div>,
-        EMenuKey.DEPOSIT,
-        null
-      ),
+      getItem(<div>Home</div>, "home", null),
+      getItem(<div>{EMenuLabel.PROFILE}</div>, EMenuKey.PROFILE, null),
+      getItem(<div>{EMenuLabel.DEPOSIT}</div>, EMenuKey.DEPOSIT, null),
       getItem(
         <Button block onClick={() => handleLogout()}>
           Đăng xuất
@@ -101,14 +93,14 @@ const HeaderAuthor = (props: IProps) => {
       const { key } = e;
       setIPopoverOpen(false);
       switch (key) {
+        case "home":
+          navigate("/");
+          break;
         case EMenuKey.PROFILE:
-          navigate("/user/dashboard");
+          navigate(RouteEndPointForUser.DASHBOARD);
           break;
         case EMenuKey.DEPOSIT:
-          navigate("/user/deposit");
-          break;
-        case EMenuKey.MANAGE:
-          navigate("/author/dashboard");
+          navigate(RouteEndPointForUser.DEPOSIT);
           break;
       }
     };
@@ -135,7 +127,7 @@ const HeaderAuthor = (props: IProps) => {
   };
 
   return (
-    <div className="header-container">
+    <div className="header-container container-fluid px-5">
       <Row justify={"end"}>
         <Col>
           <div>Hi {account.username}</div>
@@ -174,16 +166,6 @@ const AuthorLayout: FC<IProps> = (props: IProps) => {
   }, [location.pathname]);
 
   const items: MenuItem[] = [
-    getItem(
-      <div onClick={() => navigate(RouteEndPointForAuthor.DASHBOARD)}>
-        {EMenuLabel.AUTHOR_DASHBOARD}
-      </div>,
-      RouteEndPointForAuthor.DASHBOARD,
-      <PieChartOutlined
-        className="fs-5"
-        onClick={() => navigate(RouteEndPointForAuthor.DASHBOARD)}
-      />
-    ),
     getItem(
       <div onClick={() => navigate(RouteEndPointForAuthor.POSTED_STORIES)}>
         {EMenuLabel.AUTHOR_POSTED_STORY}

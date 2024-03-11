@@ -25,10 +25,10 @@ import ResetPasswordPage from "../pages/Auth/ResetPassword";
 import ProfilePage from "../pages/Profile";
 import ProfileLayout from "../layouts/User/Dashboard";
 import DepositPage from "../pages/Profile/Deposit";
-import DashboardPage from "../pages/Author/Dashboard";
 import WriteStoryPage from "../pages/Author/WriteStory";
 import WriteChapterPage from "../pages/Author/WriteStory/WriteChapter";
 import PostedStoriesPage from "../pages/Author/PostedStories";
+import ChangePasswordPage from "../pages/Auth/ChangePassword";
 
 interface IProps {}
 
@@ -98,6 +98,10 @@ const AppRoutes: FC<IProps> = (props: IProps) => {
         <Route path="/user" element={<ProfileLayout categories={categories} />}>
           <Route path="dashboard" element={<ProfilePage />}></Route>
           <Route path="deposit" element={<DepositPage />}></Route>
+          <Route
+            path="change-password"
+            element={<ChangePasswordPage />}
+          ></Route>
         </Route>
 
         {/* author */}
@@ -105,7 +109,6 @@ const AppRoutes: FC<IProps> = (props: IProps) => {
           path="/author"
           element={<AuthorLayout categories={categories} />}
         >
-          <Route path="dashboard" element={<DashboardPage />} />
           <Route path="posted-stories" element={<PostedStoriesPage />} />
           <Route path="write-story" element={<WriteStoryPage />}></Route>
           <Route path="write-chapter" element={<WriteChapterPage />}></Route>

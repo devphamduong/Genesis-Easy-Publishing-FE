@@ -24,7 +24,7 @@ export const register = (data: IRegisterForm): Promise<IApiResponse<null>> => {
 
 export const updateProfile = (
   data: IEditProfileForm
-): Promise<IApiResponse<null>> => {
+): Promise<IApiResponse<{ access_token: string }>> => {
   return axios.put(`auth/update_profile`, {
     ...data,
   });
@@ -42,6 +42,26 @@ export const forgotPassword = (data: {
   email: string;
 }): Promise<IApiResponse<null>> => {
   return axios.post(`auth/forgot_password`, {
+    ...data,
+  });
+};
+
+export const resetPassword = (data: {
+  token: string;
+  password: string;
+  confirmPassword: string;
+}): Promise<IApiResponse<null>> => {
+  return axios.post(`auth/reset_password`, {
+    ...data,
+  });
+};
+
+export const changePassword = (data: {
+  oldPassword: string;
+  password: string;
+  confirmPassword: string;
+}): Promise<IApiResponse<null>> => {
+  return axios.post(`auth/change_password`, {
     ...data,
   });
 };

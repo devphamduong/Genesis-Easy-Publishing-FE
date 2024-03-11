@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from "react";
 import "./EditProfile.scss";
 import { MdOutlineMail } from "react-icons/md";
-import { Button, DatePicker, DatePickerProps, Form, Input, Select } from "antd";
+import { Button, DatePicker, Form, Input, Select } from "antd";
 const { Option } = Select;
 import { IEditProfileForm } from "../../interfaces/auth.interface";
 import dayjs from "dayjs";
@@ -26,8 +26,8 @@ const EditProfile: FC<IProps> = (props: IProps) => {
   const [contentHTML, setContentHTML] = useState<string>("");
 
   useEffect(() => {
-    account.descriptionMarkdown &&
-      setContentMarkdown(account.descriptionMarkdown);
+    setContentMarkdown(account.descriptionMarkdown ?? "");
+    setContentHTML(account.descriptionHTML ?? "");
   }, []);
 
   const handleEditorChange = ({
@@ -43,16 +43,18 @@ const EditProfile: FC<IProps> = (props: IProps) => {
 
   const onFinish = async (values: IEditProfileForm) => {
     setIsLoading(true);
-    const payload = {
+    const payload: IEditProfileForm = {
       ...values,
+      dob: dayjs(values.dob).format("YYYY-MM-DD"),
       descriptionMarkdown: contentMarkdown,
       descriptionHTML: contentHTML,
     };
     const res = await updateProfile(payload);
     if (res && res.ec === 0) {
-      dispatch(updateUserInfo(payload));
+      dispatch(
+        updateUserInfo({ ...payload, access_token: res.dt.access_token })
+      );
       toast.success(res.em);
-      resetFields();
     } else {
       toast.error(res.em);
     }
@@ -69,8 +71,6 @@ const EditProfile: FC<IProps> = (props: IProps) => {
     setContentHTML("");
   };
 
-  const onChangeDate: DatePickerProps["onChange"] = (date, dateString) => {};
-
   return (
     <div className="edit-profile-container">
       <div className="edit-profile-content">
@@ -86,9 +86,10 @@ const EditProfile: FC<IProps> = (props: IProps) => {
           form={form}
           initialValues={{
             userFullname: account?.userFullname,
+            phone: account.phone,
             address: account?.address,
             dob: account?.dob && dayjs(account?.dob),
-            gender: account?.gender,
+            gender: account?.gender === "Male" ? true : false,
           }}
           onFinish={onFinish}
         >
@@ -102,12 +103,12 @@ const EditProfile: FC<IProps> = (props: IProps) => {
             <Input placeholder="Enter your phone number" />
           </Form.Item>
           <Form.Item<IEditProfileForm> label="Ngày sinh" name="dob">
-            <DatePicker onChange={onChangeDate} />
+            <DatePicker />
           </Form.Item>
           <Form.Item<IEditProfileForm> label="Giới tính" name="gender">
             <Select placeholder="Select your gender">
-              <Option value={"Male"}>Male</Option>
-              <Option value={"Female"}>Female</Option>
+              <Option value={true}>Male</Option>
+              <Option value={false}>Female</Option>
             </Select>
           </Form.Item>
           <Form.Item>

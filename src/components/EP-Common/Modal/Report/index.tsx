@@ -65,12 +65,7 @@ const EPModalReport: FC<IProps> = (props: IProps) => {
       }}
       onCancel={handleCancel}
     >
-      <Form
-        {...formItemLayout}
-        form={form}
-        name="control-hooks"
-        onFinish={onFinish}
-      >
+      <Form {...formItemLayout} form={form} onFinish={onFinish}>
         <Form.Item<IFormReport>
           name="problem"
           label="Vấn đề"

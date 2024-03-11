@@ -19,3 +19,10 @@ export const slugify = (str: string): string => {
     .replace(/\s+/g, "-")
     .replace(/-+/g, "-");
 };
+
+export const splitHTMLToText = (str: string): string => {
+  return str
+    .split(/<[a-zA-Z0-9]*>([^<.*>;]*)<\/[a-zA-Z0-9]*>/gim)
+    .filter((x) => x.trim() !== "")
+    .join(" ");
+};

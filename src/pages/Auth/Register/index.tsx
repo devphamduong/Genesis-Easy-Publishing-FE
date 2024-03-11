@@ -18,13 +18,13 @@ const RegisterPage: FC<IProps> = (props: IProps) => {
     const res = await register(values);
     if (res && res.ec === 0) {
       toast.success(res.em);
+      form.resetFields();
       navigate("/auth/login", {
         state: {
           emailOrUsername: values.email,
           password: values.password,
         },
       });
-      form.resetFields();
     } else {
       toast.error(res.em);
     }
@@ -71,7 +71,7 @@ const RegisterPage: FC<IProps> = (props: IProps) => {
                 <Input size="large" placeholder="Enter your username" />
               </Form.Item>
               <Form.Item<IRegisterForm>
-                label="Password"
+                label="Mật khẩu"
                 name="password"
                 rules={[
                   {

@@ -1,8 +1,10 @@
 import { ChangeEvent, FC, useState } from "react";
 import "./PostedStories.scss";
-import { Input, Select, Table } from "antd";
+import { Drawer, Input, Select, Table } from "antd";
 import Highlighter from "react-highlight-words";
 import { SearchOutlined } from "@ant-design/icons";
+import EPStoryStatistics from "../../../components/EP-UI/StoryStatistics";
+import { BsInfoCircleFill } from "react-icons/bs";
 
 interface IProps {}
 
@@ -14,6 +16,7 @@ const PostedStoriesPage: FC<IProps> = (props: IProps) => {
   const [totalStories, setTotalStories] = useState<number>(0);
   const [sortQuery, setSortQuery] = useState<string>("");
   const [searchText, setSearchText] = useState<string>("");
+  const [openDrawer, setOpenDrawer] = useState(false);
 
   const columns = [
     {
@@ -21,14 +24,19 @@ const PostedStoriesPage: FC<IProps> = (props: IProps) => {
       dataIndex: "name",
       render(value: string) {
         return (
-          <Highlighter
-            highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
-            searchWords={[searchText]}
-            autoEscape
-            textToHighlight={value ? value.toString() : ""}
+          <span
+            onClick={() => setOpenDrawer(true)}
+            className="pointer custom-title-hover"
           >
-            {value}
-          </Highlighter>
+            <Highlighter
+              highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
+              searchWords={[searchText]}
+              autoEscape
+              textToHighlight={value ? value.toString() : ""}
+            >
+              {value}
+            </Highlighter>
+          </span>
         );
       },
       sorter: {
@@ -175,25 +183,42 @@ const PostedStoriesPage: FC<IProps> = (props: IProps) => {
   };
 
   return (
-    <div className="posted-stories-container">
-      <div className="posted-stories-content">
-        <Table
-          title={renderHeader}
-          columns={columns}
-          dataSource={data}
-          onChange={onChangePagination}
-          rowKey={"name"}
-          pagination={{
-            current: currentPage,
-            total: totalStories,
-            pageSize: pageSize,
-            showSizeChanger: true,
-            showTotal: (total, range) =>
-              `${range[0]}-${range[1]} of ${total} items`,
-          }}
-        />
+    <>
+      <div className="posted-stories-container">
+        <div className="posted-stories-content">
+          <div className="fs-6 d-flex align-items-center gap-1">
+            <BsInfoCircleFill />
+            <span>
+              Click vào từng tên truyện để có thể xem chi tiết số liệu thống kê
+              của truyện đó.
+            </span>
+          </div>
+          <Table
+            title={renderHeader}
+            columns={columns}
+            dataSource={data}
+            onChange={onChangePagination}
+            rowKey={"name"}
+            pagination={{
+              current: currentPage,
+              total: totalStories,
+              pageSize: pageSize,
+              showSizeChanger: true,
+              showTotal: (total, range) =>
+                `${range[0]}-${range[1]} of ${total} items`,
+            }}
+          />
+        </div>
       </div>
-    </div>
+      <Drawer
+        title={`Số liệu thống kê của truyện`}
+        placement="right"
+        onClose={() => setOpenDrawer(false)}
+        open={openDrawer}
+      >
+        <EPStoryStatistics />
+      </Drawer>
+    </>
   );
 };
 

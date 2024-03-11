@@ -92,12 +92,13 @@ export interface IPaginationComment {
 }
 
 export interface IWriteStoryForm {
-  title?: string;
+  storyTitle?: string;
   type?: string;
-  author?: string;
-  category?: string;
-  descriptionMarkdown?: string;
-  descriptionHTML?: string;
+  authorId?: string;
+  categoryIds?: string[];
+  storyDescription?: string;
+  storyDescriptionMarkdown?: string;
+  storyDescriptionHtml?: string;
 }
 
 export interface IChapterContent {

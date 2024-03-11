@@ -55,7 +55,9 @@ export const accountSlice = createSlice({
         address,
         descriptionMarkdown,
         descriptionHTML,
+        access_token,
       } = action.payload;
+      localStorage.setItem("access_token", access_token);
       state.user.userFullname = userFullname;
       state.user.gender = gender;
       state.user.phone = phone;

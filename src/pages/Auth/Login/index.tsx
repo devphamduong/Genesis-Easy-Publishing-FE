@@ -77,7 +77,7 @@ const LoginPage: FC<IProps> = (props: IProps) => {
               layout="vertical"
               initialValues={{
                 emailOrUsername: "pduong244@gmail.com",
-                password: "123456",
+                password: "123",
                 remember: false,
               }}
               onFinish={onFinish}
@@ -98,7 +98,7 @@ const LoginPage: FC<IProps> = (props: IProps) => {
                 />
               </Form.Item>
               <Form.Item<ILoginForm>
-                label="Password"
+                label="Mật khẩu"
                 name="password"
                 rules={[
                   {

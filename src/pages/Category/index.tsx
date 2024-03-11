@@ -1,7 +1,6 @@
 import { FC, useEffect, useState } from "react";
 import "./Category.scss";
 import { useParams } from "react-router-dom";
-import Cover from "../../components/Cover";
 import { Col, Divider, Pagination, Row } from "antd";
 import EPBook3D from "../../components/EP-UI/Book3D";
 import ListStories from "../../components/ListStories";
@@ -13,6 +12,7 @@ import {
   getStoriesMostReadByCategoryId,
 } from "../../services/category-api.service";
 import { IStory } from "../../interfaces/story.interface";
+import EPCover from "../../components/EP-UI/Cover";
 
 interface IProps {}
 
@@ -108,7 +108,7 @@ const CategoryPage: FC<IProps> = (props: IProps) => {
 
   return (
     <div className="category-container">
-      <Cover
+      <EPCover
         imgUrl="https://yymedia.codeprime.net/media/genre_cover/bg01.jpeg"
         title="Truyện Huyền Huyễn"
       />

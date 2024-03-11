@@ -21,6 +21,7 @@ import { CheckOutlined, InboxOutlined } from "@ant-design/icons";
 import Dragger from "antd/es/upload/Dragger";
 import { IRootState } from "../../../redux/store";
 import { IWriteStoryForm } from "../../../interfaces/story.interface";
+import { splitHTMLToText } from "../../../shared/function";
 
 interface IProps {}
 
@@ -55,7 +56,14 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
   };
 
   const onFinish = async (values: IWriteStoryForm) => {
-    console.log(values);
+    console.log(descriptionHTML);
+    console.log(splitHTMLToText(descriptionHTML));
+    const payload: IWriteStoryForm = {
+      ...values,
+      storyDescription: "",
+      storyDescriptionMarkdown: descriptionMarkdown,
+      storyDescriptionHtml: descriptionHTML,
+    };
     // setIsLoading(true);
     // const res = await login(values);
     // if (res && res.ec === 0) {
@@ -105,7 +113,7 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
                 <Col span={7}>
                   <Form.Item<IWriteStoryForm>
                     label="Tựa Đề"
-                    name="title"
+                    name="storyTitle"
                     rules={[
                       {
                         required: true,
@@ -146,22 +154,8 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
                 </Col>
                 <Col span={7}>
                   <Form.Item<IWriteStoryForm>
-                    label="Tác giả"
-                    name="author"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Tác giả không được để trống!",
-                      },
-                    ]}
-                  >
-                    <Input size="large" placeholder="Truyện của tác giả" />
-                  </Form.Item>
-                </Col>
-                <Col span={7}>
-                  <Form.Item<IWriteStoryForm>
                     label="Thể loại"
-                    name="category"
+                    name="categoryIds"
                     rules={[
                       {
                         required: true,

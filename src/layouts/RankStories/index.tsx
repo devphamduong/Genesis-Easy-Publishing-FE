@@ -4,8 +4,8 @@ import { Affix, Col, Menu, MenuProps, Row } from "antd";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import "./RankStoriesLayout.scss";
 import { ICategory } from "../../interfaces/category.interface";
-import Cover from "../../components/Cover";
 import EPFilter from "../../components/EP-Common/Filter";
+import EPCover from "../../components/EP-UI/Cover";
 
 type MenuItem = Required<MenuProps>["items"][number];
 function getItem(
@@ -79,7 +79,7 @@ const RankStoriesLayout: FC<IProps> = (props: IProps) => {
 
   return (
     <div className="rank-stories-layout-container">
-      <Cover
+      <EPCover
         imgUrl="https://yystatic.codeprime.net/desktop/img/tables/table-bg-14.jpg"
         title="Kim Thánh Bảng"
         subTitle="Bảng Xếp Hạng Truyện Chữ Toàn Diện Của The Genesis"

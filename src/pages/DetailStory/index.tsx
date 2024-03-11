@@ -29,7 +29,6 @@ import RowStory from "../../components/RowStory";
 import { PiBook } from "react-icons/pi";
 import { BsReverseLayoutTextWindowReverse } from "react-icons/bs";
 import { GiSelfLove } from "react-icons/gi";
-import EPModalReport from "../../components/EP-UI/Modal/Report";
 import {
   IAuthor,
   IChapter,
@@ -57,6 +56,7 @@ import { IRootState } from "../../redux/store";
 import { AiFillLike, AiOutlineLike } from "react-icons/ai";
 import { FaHeart, FaRegHeart } from "react-icons/fa6";
 import { toast } from "react-toastify";
+import EPModalReport from "../../components/EP-Common/Modal/Report";
 dayjs.extend(relativeTime);
 
 const { Paragraph, Text } = Typography;

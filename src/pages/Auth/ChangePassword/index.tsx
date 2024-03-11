@@ -1,21 +1,28 @@
 import { FC, useEffect, useState } from "react";
-import "./ResetPassword.scss";
+import "./ChangePassword.scss";
 import { Button, Form, Input } from "antd";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { resetPassword } from "../../../services/auth-api.service";
+import {
+  changePassword,
+  resetPassword,
+} from "../../../services/auth-api.service";
+import { useDispatch } from "react-redux";
+import { logoutAction } from "../../../redux/account/accountSlice";
+import { BsInfoCircleFill } from "react-icons/bs";
 
 interface IProps {}
 
 type FieldType = {
+  oldPassword: string;
   password: string;
   confirmPassword: string;
 };
 
-const ResetPasswordPage: FC<IProps> = (props: IProps) => {
+const ChangePasswordPage: FC<IProps> = (props: IProps) => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const dispatch = useDispatch();
   const [submittable, setSubmittable] = useState<boolean>(false);
   const values = Form.useWatch([], form);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -32,38 +39,51 @@ const ResetPasswordPage: FC<IProps> = (props: IProps) => {
   }, [values]);
 
   const onFinish = async (values: FieldType) => {
-    const token = searchParams.get("token");
     setIsLoading(true);
-    if (token) {
-      const res = await resetPassword({ ...values, token });
-      if (res && res.ec === 0) {
-        toast.success(res.em);
-        form.resetFields();
-        // navigate("/auth/login", {
-        //   state: {
-        //     emailOrUsername: values.email,
-        //     password: values.password,
-        //   },
-        // });
-      } else {
-        toast.error(res.em);
-      }
-      setIsLoading(false);
+    const res = await changePassword(values);
+    if (res && res.ec === 0) {
+      toast.success(res.em);
+      form.resetFields();
+      dispatch(logoutAction());
+      navigate("/auth/login");
+    } else {
+      toast.error(res.em);
     }
+    setIsLoading(false);
   };
 
   return (
-    <div className="forgot-password-container">
-      <div className="forgot-password-content">
-        <div className="d-flex flex-column gap-5">
+    <div className="change-password-container">
+      <div className="change-password-content">
+        <div className="d-flex flex-column gap-3">
           <div className="top">
-            <h1>Reset password</h1>
-            <p className="fs-5">
-              Please enter your password and confirm password.
-            </p>
+            <div className="fs-6 d-flex align-items-center gap-1">
+              <BsInfoCircleFill />
+              <span>
+                Click vào từng tên truyện để có thể xem chi tiết số liệu thống
+                kê của truyện đó.
+              </span>
+            </div>
           </div>
-          <div className="bottom">
-            <Form form={form} layout="vertical" onFinish={onFinish}>
+          <div className="bottom d-flex justify-content-center">
+            <Form
+              className="w-50"
+              form={form}
+              layout="vertical"
+              onFinish={onFinish}
+            >
+              <Form.Item<FieldType>
+                name="oldPassword"
+                label="Mật khẩu hiện tại"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input your current password!",
+                  },
+                ]}
+              >
+                <Input.Password size="large" />
+              </Form.Item>
               <Form.Item<FieldType>
                 name="password"
                 label="Mật khẩu"
@@ -79,7 +99,7 @@ const ResetPasswordPage: FC<IProps> = (props: IProps) => {
               </Form.Item>
               <Form.Item<FieldType>
                 name="confirmPassword"
-                label="Confirm Password"
+                label="Nhập lại mật khẩu mới"
                 dependencies={["password"]}
                 hasFeedback
                 rules={[
@@ -113,7 +133,7 @@ const ResetPasswordPage: FC<IProps> = (props: IProps) => {
                   htmlType="submit"
                   block
                 >
-                  Reset password
+                  Đổi mật khẩu
                 </Button>
               </Form.Item>
             </Form>
@@ -124,4 +144,4 @@ const ResetPasswordPage: FC<IProps> = (props: IProps) => {
   );
 };
 
-export default ResetPasswordPage;
+export default ChangePasswordPage;

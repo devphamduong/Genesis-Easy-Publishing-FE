@@ -1,6 +1,7 @@
 export const RouteEndPointForUser = {
   DASHBOARD: "/user/dashboard",
   DEPOSIT: "/user/deposit",
+  CHANGE_PASSWORD: "/user/change-password",
   RANK_STORIES: "/rank-stories",
   MOST_READ_IN_WEEK: "/rank-stories/most-read-in-week",
   MOST_VIP_STORIES_READ: "/rank-stories/most-vip-read-in-week",

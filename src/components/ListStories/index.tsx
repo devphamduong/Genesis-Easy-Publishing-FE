@@ -6,7 +6,11 @@ import { FaArrowRightLong } from "react-icons/fa6";
 import { Link, useNavigate } from "react-router-dom";
 import { kFormatter } from "../../shared/function";
 import EPBook3D from "../EP-UI/Book3D";
-import { getStoryDetailURL } from "../../shared/generate-navigate-url";
+import {
+  getAuthorDetailURL,
+  getCategoryDetailURL,
+  getStoryDetailURL,
+} from "../../shared/generate-navigate-url";
 const { Text } = Typography;
 
 interface IProps {
@@ -60,7 +64,13 @@ const ListStories: FC<IProps> = (props: IProps) => {
               </span>
             </Text>
             {displayCategory && (
-              <span className="author" style={{ width: "fit-content" }}>
+              <span
+                className="author"
+                style={{ width: "fit-content" }}
+                onClick={() =>
+                  navigate(getAuthorDetailURL(item.storyAuthor.userId))
+                }
+              >
                 {item.storyAuthor.userFullname}
               </span>
             )}
@@ -112,10 +122,27 @@ const ListStories: FC<IProps> = (props: IProps) => {
             {kFormatter(item.storyChapterNumber)} Chương
           </div>
           <div>
-            <span className="author">{item.storyAuthor.userFullname}</span>
+            <span
+              className="author"
+              onClick={() =>
+                navigate(getAuthorDetailURL(item.storyAuthor.userId))
+              }
+            >
+              {item.storyAuthor.userFullname}
+            </span>
           </div>
           <div>
-            <Button size={"small"}>
+            <Button
+              size={"small"}
+              onClick={() =>
+                navigate(
+                  getCategoryDetailURL(
+                    item.storyCategories[0]?.categoryId,
+                    item.storyCategories[0]?.categoryName
+                  )
+                )
+              }
+            >
               {item.storyCategories[0]?.categoryName}
             </Button>
           </div>

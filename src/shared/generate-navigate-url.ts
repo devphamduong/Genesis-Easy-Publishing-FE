@@ -4,14 +4,18 @@ export const getStoryDetailURL = (
   id: number | string,
   title: string
 ): string => {
-  return `/story/${id}/${slugify(title)}`;
+  return `/story/detail/${id}/${slugify(title)}`;
 };
 
-export const getStoryCategoryURL = (
+export const getAuthorDetailURL = (id?: number | string): string => {
+  return `/author/detail?authorId=${id}`;
+};
+
+export const getCategoryDetailURL = (
   id: number | string,
-  name: string
+  title: string
 ): string => {
-  return `/category/${id}/${slugify(name)}`;
+  return `/category/detail/${id}/${slugify(title)}`;
 };
 
 export const getStoryReadURL = (

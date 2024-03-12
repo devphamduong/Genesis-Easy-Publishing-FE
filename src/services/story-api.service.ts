@@ -6,6 +6,7 @@ import {
   IPaginationComment,
   IPaginationStory,
   IStory,
+  IWriteStoryForm,
 } from "../interfaces/story.interface";
 import axios from "../utils/axios-customize";
 
@@ -84,4 +85,10 @@ export const getChapterContent = (
   chapterNumber: number
 ): Promise<IApiResponse<IChapterContent>> => {
   return axios.get(`chapters/chapter_content/${storyid}/${chapterNumber}`);
+};
+
+export const createStory = (
+  data: IWriteStoryForm
+): Promise<IApiResponse<IChapterContent>> => {
+  return axios.post(`story/save_story`, { ...data });
 };

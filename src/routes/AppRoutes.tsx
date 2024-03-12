@@ -74,13 +74,19 @@ const AppRoutes: FC<IProps> = (props: IProps) => {
               element={<StoriesWithMostFan />}
             />
           </Route>
-          <Route path="story/:id/:slug" element={<DetailStoryPage />}></Route>
+          <Route
+            path="story/detail/:id/:slug"
+            element={<DetailStoryPage />}
+          ></Route>
           <Route
             path="story/read/:id/:chapter"
             element={<ReadStoryPage />}
           ></Route>
-          <Route path="category/:id/:slug" element={<CategoryPage />}></Route>
-          <Route path="author/:id/:slug" element={<AuthorPage />}></Route>
+          <Route
+            path="category/detail/:id/:slug"
+            element={<CategoryPage />}
+          ></Route>
+          <Route path="author/detail" element={<AuthorPage />}></Route>
         </Route>
 
         {/* auth */}

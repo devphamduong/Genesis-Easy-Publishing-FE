@@ -26,7 +26,8 @@ import ListStories from "../../components/ListStories";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import VerticalImageHover from "../../components/VerticalImageHover";
 import {
-  getStoryCategoryURL,
+  getAuthorDetailURL,
+  getCategoryDetailURL,
   getStoryDetailURL,
 } from "../../shared/generate-navigate-url";
 import ListStoriesSkeleton from "../../components/ListStories/ListStoriesSkeleton";
@@ -121,7 +122,7 @@ const HomePage: FC = (props) => {
                         key={`cate-${item.categoryId}-${item.categoryName}`}
                         onClick={() =>
                           navigate(
-                            getStoryCategoryURL(
+                            getCategoryDetailURL(
                               item.categoryId,
                               item.categoryName
                             )
@@ -247,7 +248,16 @@ const HomePage: FC = (props) => {
                                         </strong>
                                       </div>
                                       <div>
-                                        <span className="author-text">
+                                        <span
+                                          className="author-text"
+                                          onClick={() =>
+                                            navigate(
+                                              getAuthorDetailURL(
+                                                item.storyAuthor.userId
+                                              )
+                                            )
+                                          }
+                                        >
                                           {item.storyAuthor.userFullname}
                                         </span>
                                       </div>
@@ -363,7 +373,7 @@ const HomePage: FC = (props) => {
                       <ListStories
                         displayRank
                         displayRead
-                        urlToNavigate={getStoryCategoryURL(
+                        urlToNavigate={getCategoryDetailURL(
                           item.categoryId,
                           item.categoryName
                         )}

@@ -16,7 +16,10 @@ import { IChapterContent } from "../../interfaces/story.interface";
 import { getChapterContent } from "../../services/story-api.service";
 import { useSelector } from "react-redux";
 import { IRootState } from "../../redux/store";
-import { getStoryDetailURL } from "../../shared/generate-navigate-url";
+import {
+  getAuthorDetailURL,
+  getStoryDetailURL,
+} from "../../shared/generate-navigate-url";
 import relativeTime from "dayjs/plugin/relativeTime";
 import dayjs from "dayjs";
 import { FcVip } from "react-icons/fc";
@@ -183,7 +186,10 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
               {chapterContent?.story.storyTitle}{" "}
             </Link>
             của
-            <Link to={""} className="author link-hover">
+            <Link
+              to={getAuthorDetailURL(chapterContent?.author.userId)}
+              className="author link-hover"
+            >
               {" "}
               {chapterContent?.author.userFullname}
             </Link>

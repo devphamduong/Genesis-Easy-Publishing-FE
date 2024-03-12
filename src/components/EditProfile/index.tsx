@@ -61,16 +61,6 @@ const EditProfile: FC<IProps> = (props: IProps) => {
     setIsLoading(false);
   };
 
-  const handleCancel = () => {
-    resetFields();
-  };
-
-  const resetFields = () => {
-    form.resetFields();
-    setContentMarkdown("");
-    setContentHTML("");
-  };
-
   return (
     <div className="edit-profile-container">
       <div className="edit-profile-content">
@@ -122,7 +112,6 @@ const EditProfile: FC<IProps> = (props: IProps) => {
           </Form.Item>
           <Form.Item>
             <div className="d-flex gap-2 justify-content-end">
-              <Button onClick={handleCancel}>Cancel</Button>
               <Button
                 type="primary"
                 disabled={isLoading}

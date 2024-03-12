@@ -46,6 +46,7 @@ import {
 import { getAuthorById } from "../../services/author-api.service";
 import { Typography } from "antd";
 import {
+  getAuthorDetailURL,
   getStoryDetailURL,
   getStoryReadURL,
 } from "../../shared/generate-navigate-url";
@@ -366,7 +367,12 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
                     <div className="title">
                       <strong>{story?.storyTitle}</strong>
                     </div>
-                    <span className="author">
+                    <span
+                      className="author"
+                      onClick={() =>
+                        navigate(getAuthorDetailURL(story?.storyAuthor.userId))
+                      }
+                    >
                       {story?.storyAuthor.userFullname}
                     </span>
                     <div className="category">

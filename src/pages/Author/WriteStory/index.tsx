@@ -10,18 +10,22 @@ import {
   Image,
   Input,
   Row,
+  Select,
   Tooltip,
   UploadProps,
   message,
 } from "antd";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import { BsInfoCircleFill } from "react-icons/bs";
 import { CheckOutlined, InboxOutlined } from "@ant-design/icons";
 import Dragger from "antd/es/upload/Dragger";
 import { IRootState } from "../../../redux/store";
 import { IWriteStoryForm } from "../../../interfaces/story.interface";
-import { splitHTMLToText } from "../../../shared/function";
+import { getPlainTextFromHTML } from "../../../shared/function";
+import { ICategory } from "../../../interfaces/category.interface";
+import { createStory } from "../../../services/story-api.service";
+import { toast } from "react-toastify";
 
 interface IProps {}
 
@@ -29,14 +33,17 @@ const mdParser = new MarkdownIt(/* Markdown-it options */);
 
 const WriteStoryPage: FC<IProps> = (props: IProps) => {
   const [form] = Form.useForm<IWriteStoryForm>();
+  const categories: ICategory[] = useOutletContext();
   const [descriptionMarkdown, setDescriptionMarkdown] = useState<string>(
     "**Phần tóm tắt viết ở đây!!**"
   );
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [descriptionHTML, setDescriptionHTML] = useState<string>("");
   const navigate = useNavigate();
   const isAuthenticated = useSelector(
     (state: IRootState) => state.account.isAuthenticated
   );
+  const account = useSelector((state: IRootState) => state.account.user);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -56,26 +63,24 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
   };
 
   const onFinish = async (values: IWriteStoryForm) => {
-    console.log(descriptionHTML);
-    console.log(splitHTMLToText(descriptionHTML));
     const payload: IWriteStoryForm = {
       ...values,
-      storyDescription: "",
+      authorId: account.userId,
+      storyDescription: getPlainTextFromHTML(descriptionHTML),
       storyDescriptionMarkdown: descriptionMarkdown,
       storyDescriptionHtml: descriptionHTML,
     };
-    // setIsLoading(true);
-    // const res = await login(values);
-    // if (res && res.ec === 0) {
-    //   localStorage.setItem("access_token", res.dt.access_token);
-    //   dispatch(loginAction(res.dt.user));
-    //   toast.success(res.em);
-    //   navigate("/");
-    //   form.resetFields();
-    // } else {
-    //   toast.error(res.em);
-    // }
-    // setIsLoading(false);
+    setIsLoading(true);
+    const res = await createStory(payload);
+    if (res && res.ec === 0) {
+      toast.success(res.em);
+      form.resetFields();
+      setDescriptionMarkdown("");
+      setDescriptionHTML("");
+    } else {
+      toast.error(res.em);
+    }
+    setIsLoading(false);
   };
 
   const propsUpLoad: UploadProps = {
@@ -150,7 +155,6 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
                       placeholder="Loại truyện mà bạn sắp viết"
                     />
                   </Form.Item>
-                  <span></span>
                 </Col>
                 <Col span={7}>
                   <Form.Item<IWriteStoryForm>
@@ -159,13 +163,23 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
                     rules={[
                       {
                         required: true,
-                        message: "Thể loại không được để trống!",
+                        message: "Ít nhất 1 thể loại được chọn!",
                       },
                     ]}
                   >
-                    <Input
+                    <Select
+                      mode="multiple"
                       size="large"
-                      placeholder="Truyện Lựa chọn thể loại truyện"
+                      placeholder="Thể loại"
+                      options={
+                        categories &&
+                        categories?.map((item) => {
+                          return {
+                            value: item.categoryId,
+                            label: item.categoryName,
+                          };
+                        })
+                      }
                     />
                   </Form.Item>
                 </Col>
@@ -185,6 +199,8 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
                 <Button
                   icon={<CheckOutlined />}
                   type="primary"
+                  loading={isLoading}
+                  disabled={isLoading}
                   onClick={() => form.submit()}
                 >
                   Lưu truyện mới

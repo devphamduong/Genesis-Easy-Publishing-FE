@@ -5,6 +5,8 @@ export interface IStory {
   storyTitle: string;
   storyImage: string;
   storyDescription: string;
+  storyDescriptionMarkdown?: string;
+  storyDescriptionHtml?: string;
   storyCategories: ICategory[];
   storyAuthor: {
     userId: number | string;
@@ -38,11 +40,15 @@ export interface IAuthor {
   authorName: string;
   authorImage: string;
   authorStories: number;
+  authorDescriptionHtml?: string;
+  authorDescriptionMarkdown?: string;
   authorNewestStory: {
     storyId: number;
     storyTitle: string;
     storyImage: string;
     storyDescription: string;
+    storyDescriptionMarkdown?: string;
+    storyDescriptionHtml?: string;
   };
 }
 
@@ -94,7 +100,7 @@ export interface IPaginationComment {
 export interface IWriteStoryForm {
   storyTitle?: string;
   type?: string;
-  authorId?: string;
+  authorId?: string | number;
   categoryIds?: string[];
   storyDescription?: string;
   storyDescriptionMarkdown?: string;

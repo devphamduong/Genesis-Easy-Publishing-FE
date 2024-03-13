@@ -1,31 +1,96 @@
-import { ChangeEvent, FC, useState } from "react";
+import { ChangeEvent, FC, useEffect, useState } from "react";
 import "./PostedStories.scss";
 import { Drawer, Input, Select, Table } from "antd";
 import Highlighter from "react-highlight-words";
 import { SearchOutlined } from "@ant-design/icons";
 import EPStoryStatistics from "../../../components/EP-UI/StoryStatistics";
 import { BsInfoCircleFill } from "react-icons/bs";
+import { useSelector } from "react-redux";
+import { IRootState } from "../../../redux/store";
+import {
+  getAuthorPostedStories,
+  getChartStory,
+} from "../../../services/author-api.service";
+import { IStory, IStoryInteraction } from "../../../interfaces/story.interface";
+import relativeTime from "dayjs/plugin/relativeTime";
+import dayjs from "dayjs";
+dayjs.extend(relativeTime);
 
 interface IProps {}
 
 const PAGE_SIZE = 10;
 
 const PostedStoriesPage: FC<IProps> = (props: IProps) => {
+  const [stories, setStories] = useState<IStory[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(PAGE_SIZE);
   const [totalStories, setTotalStories] = useState<number>(0);
   const [sortQuery, setSortQuery] = useState<string>("");
   const [searchText, setSearchText] = useState<string>("");
   const [openDrawer, setOpenDrawer] = useState(false);
+  const account = useSelector((state: IRootState) => state.account.user);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [currentStory, setCurrentStory] = useState<IStory>();
+  const [dataStoryInteraction, setDataStoryInteraction] =
+    useState<IStoryInteraction>();
+
+  useEffect(() => {
+    fetchPostedStories();
+  }, [currentPage, pageSize, searchText, sortQuery]);
+
+  useEffect(() => {
+    if (openDrawer && currentStory) {
+      fetchChartStory();
+    }
+  }, [currentStory, openDrawer]);
+
+  const fetchPostedStories = async () => {
+    setIsLoading(true);
+    let query = `current=${currentPage}&pageSize=${pageSize}`;
+    if (searchText) {
+      query += "&title=" + searchText;
+    }
+    if (sortQuery) {
+      query += sortQuery;
+    }
+    window.history.replaceState(null, "", "?" + query);
+    const res = await getAuthorPostedStories(
+      `authorid=${account.userId}&` + query
+    );
+    if (res && res.ec === 0) {
+      setTotalStories(res.dt.totalStories);
+      setStories(res.dt.list);
+    }
+    setIsLoading(false);
+  };
+
+  const fetchChartStory = async () => {
+    const res = await getChartStory(currentStory!.storyId);
+    if (res && res.ec === 0) {
+      const payload = {
+        follow: res.dt.follow,
+        like: res.dt.like,
+        read: res.dt.read,
+        view: res.dt.view,
+        purchaseChapter: res.dt.purchaseChapter,
+        purchaseStory: res.dt.purchaseStory,
+        reportStory: res.dt.reportStory,
+      };
+      setDataStoryInteraction(payload);
+    }
+  };
 
   const columns = [
     {
       title: "TRUYỆN",
-      dataIndex: "name",
-      render(value: string) {
+      dataIndex: "storyTitle",
+      render(value: string, record: IStory) {
         return (
           <span
-            onClick={() => setOpenDrawer(true)}
+            onClick={() => {
+              setCurrentStory(record);
+              setOpenDrawer(true);
+            }}
             className="pointer custom-title-hover"
           >
             <Highlighter
@@ -39,58 +104,32 @@ const PostedStoriesPage: FC<IProps> = (props: IProps) => {
           </span>
         );
       },
-      sorter: {
-        compare: (a, b) => a.chinese - b.chinese,
-        multiple: 3,
+      sorter: true,
+    },
+    {
+      title: "SỐ NGƯỜI ĐÃ MUA",
+      dataIndex: "userPurchaseStory",
+      sorter: true,
+    },
+    {
+      title: "NGÀY TẠO",
+      dataIndex: "storyCreateTime",
+      render(value: string) {
+        return (
+          <span>
+            {dayjs("2022-02-01T05:52:10.323").format("DD/MM/YYYY")}{" "}
+            <span className="time">
+              ({dayjs("2022-02-01T05:52:10.323").fromNow()})
+            </span>
+          </span>
+        );
       },
+      sorter: true,
     },
-    {
-      title: "MỚI XUẤT BẢN",
-      dataIndex: "chinese",
-      sorter: {
-        compare: (a, b) => a.chinese - b.chinese,
-        multiple: 3,
-      },
-    },
-    {
-      title: "THỜI GIAN",
-      dataIndex: "math",
-      sorter: {
-        compare: (a, b) => a.math - b.math,
-        multiple: 2,
-      },
-    },
-    {
-      title: "",
-      dataIndex: "math",
-    },
-  ];
-
-  const data = [
-    {
-      key: "1",
-      name: "John Brown",
-      chinese: 98,
-      math: 60,
-    },
-    {
-      key: "2",
-      name: "Jim Green",
-      chinese: 98,
-      math: 66,
-    },
-    {
-      key: "3",
-      name: "Joe Black",
-      chinese: 98,
-      math: 90,
-    },
-    {
-      key: "4",
-      name: "Jim Red",
-      chinese: 88,
-      math: 99,
-    },
+    // {
+    //   title: "",
+    //   dataIndex: "math",
+    // },
   ];
 
   const onChangePagination = (pagination, filters, sorter, extra) => {
@@ -122,7 +161,6 @@ const PostedStoriesPage: FC<IProps> = (props: IProps) => {
     clearTimeout(timeout);
     timeout = setTimeout(() => {
       setSearchText(event.target.value);
-      console.log("object");
     }, 1000);
   };
 
@@ -196,9 +234,10 @@ const PostedStoriesPage: FC<IProps> = (props: IProps) => {
           <Table
             title={renderHeader}
             columns={columns}
-            dataSource={data}
+            dataSource={stories}
             onChange={onChangePagination}
-            rowKey={"name"}
+            rowKey={"storyId"}
+            loading={isLoading}
             pagination={{
               current: currentPage,
               total: totalStories,
@@ -211,12 +250,12 @@ const PostedStoriesPage: FC<IProps> = (props: IProps) => {
         </div>
       </div>
       <Drawer
-        title={`Số liệu thống kê của truyện`}
+        title={`Số liệu thống kê của truyện "${currentStory?.storyTitle}"`}
         placement="right"
         onClose={() => setOpenDrawer(false)}
         open={openDrawer}
       >
-        <EPStoryStatistics />
+        <EPStoryStatistics storyInteraction={dataStoryInteraction} />
       </Drawer>
     </>
   );

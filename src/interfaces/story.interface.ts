@@ -33,6 +33,19 @@ export interface IStory {
   userOwned: boolean;
   userFollow: boolean;
   userLike: boolean;
+  storyCreateTime: string;
+}
+
+export interface IStoryInteraction {
+  // storyId: number | string;
+  // storyTitle: string;
+  follow: number;
+  like: number;
+  read: number;
+  view: number;
+  purchaseChapter: number;
+  purchaseStory: number;
+  reportStory: number;
 }
 
 export interface IAuthor {

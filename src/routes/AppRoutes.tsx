@@ -29,6 +29,7 @@ import WriteStoryPage from "../pages/Author/WriteStory";
 import WriteChapterPage from "../pages/Author/WriteStory/WriteChapter";
 import PostedStoriesPage from "../pages/Author/PostedStories";
 import ChangePasswordPage from "../pages/Auth/ChangePassword";
+import PaymentConfirmPage from "../pages/PaymentConfirm";
 
 interface IProps {}
 
@@ -51,6 +52,10 @@ const AppRoutes: FC<IProps> = (props: IProps) => {
       <Routes>
         {/* main */}
         <Route path="/" element={<UserLayout categories={categories} />}>
+          <Route
+            path="payment-confirm"
+            element={<PaymentConfirmPage />}
+          ></Route>
           <Route index element={<HomePage />} />
           <Route
             path={RouteEndPointForUser.RANK_STORIES}

@@ -1,0 +1,12 @@
+.edit-profile-container {
+    .edit-profile-content {
+        .avatar {
+            .ant-upload-wrapper {
+                .ant-upload-list {
+                    display       : flex;
+                    flex-direction: column;
+                }
+            }
+        }
+    }
+}

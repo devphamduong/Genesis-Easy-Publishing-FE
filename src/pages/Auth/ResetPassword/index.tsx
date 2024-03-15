@@ -3,7 +3,7 @@ import "./ResetPassword.scss";
 import { Button, Form, Input } from "antd";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { resetPassword } from "../../../services/auth-api.service";
+import { resetPassword, verifyToken } from "../../../services/auth-api.service";
 
 interface IProps {}
 
@@ -19,6 +19,17 @@ const ResetPasswordPage: FC<IProps> = (props: IProps) => {
   const [submittable, setSubmittable] = useState<boolean>(false);
   const values = Form.useWatch([], form);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isTokenExpired, setIsTokenExpired] = useState<boolean>(false);
+
+  useEffect(() => {
+    const token = searchParams.get("token");
+    async () => {
+      const res = await verifyToken({ token: !token ? "" : token });
+      if (res && res.ec !== 0) {
+        setIsTokenExpired(true);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     form.validateFields({ validateOnly: true }).then(
@@ -106,7 +117,7 @@ const ResetPasswordPage: FC<IProps> = (props: IProps) => {
 
               <Form.Item>
                 <Button
-                  disabled={!submittable || isLoading}
+                  disabled={!submittable || isLoading || isTokenExpired}
                   loading={isLoading}
                   size="large"
                   type="primary"

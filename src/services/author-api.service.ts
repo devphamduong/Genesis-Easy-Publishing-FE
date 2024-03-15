@@ -1,6 +1,7 @@
 import { IApiResponse } from "../interfaces/global.interface";
 import {
   IAuthor,
+  IChapterInteraction,
   IPaginationStory,
   IStory,
   IStoryInteraction,
@@ -35,4 +36,10 @@ export const getChartStory = (
   id: string | number
 ): Promise<IApiResponse<IStoryInteraction>> => {
   return axios.get(`interaction/author_manage/story?storyid=${id}`);
+};
+
+export const getChartChapters = (
+  id: string | number
+): Promise<IApiResponse<IChapterInteraction[]>> => {
+  return axios.get(`interaction/author_manage/chapter?storyid=${id}`);
 };

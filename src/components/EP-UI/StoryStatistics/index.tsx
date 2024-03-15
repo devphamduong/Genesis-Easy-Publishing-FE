@@ -10,15 +10,24 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
+  LineChart,
+  Line,
 } from "recharts";
-import { IStoryInteraction } from "../../../interfaces/story.interface";
+import {
+  IChapterInteraction,
+  IStoryInteraction,
+} from "../../../interfaces/story.interface";
 
 interface IProps {
+  width?: string | number;
+  height?: string | number;
   storyInteraction?: IStoryInteraction;
+  chaptersInteraction?: IChapterInteraction[];
 }
 
 const EPStoryStatistics: FC<IProps> = (props: IProps) => {
-  const { storyInteraction } = props;
+  const { storyInteraction, chaptersInteraction, width, height } = props;
+
   const data = [
     {
       name: "Page A",
@@ -67,7 +76,7 @@ const EPStoryStatistics: FC<IProps> = (props: IProps) => {
   return (
     <>
       {storyInteraction && (
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer width={width ?? "100%"} height={height ?? "100%"}>
           <BarChart
             width={500}
             height={300}
@@ -95,6 +104,40 @@ const EPStoryStatistics: FC<IProps> = (props: IProps) => {
               activeBar={<Rectangle fill="pink" stroke="blue" />}
             />
           </BarChart>
+        </ResponsiveContainer>
+      )}
+      {chaptersInteraction && chaptersInteraction?.length > 0 && (
+        <ResponsiveContainer width={width ?? "100%"} height={height ?? "100%"}>
+          <LineChart
+            width={500}
+            height={300}
+            data={chaptersInteraction.map((item, index) => {
+              return {
+                name: "Chapter " + item.chapterNumber,
+                purchased: item.purchaseChapter,
+                reported: item.reportChapter,
+              };
+            })}
+            margin={{
+              top: 5,
+              right: 30,
+              left: 20,
+              bottom: 5,
+            }}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="name" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Line
+              type="monotone"
+              dataKey="purchased"
+              stroke="#8884d8"
+              activeDot={{ r: 8 }}
+            />
+            <Line type="monotone" dataKey="reported" stroke="#82ca9d" />
+          </LineChart>
         </ResponsiveContainer>
       )}
     </>

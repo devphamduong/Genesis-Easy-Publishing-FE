@@ -9,9 +9,14 @@ import { useSelector } from "react-redux";
 import { IRootState } from "../../../redux/store";
 import {
   getAuthorPostedStories,
+  getChartChapters,
   getChartStory,
 } from "../../../services/author-api.service";
-import { IStory, IStoryInteraction } from "../../../interfaces/story.interface";
+import {
+  IChapterInteraction,
+  IStory,
+  IStoryInteraction,
+} from "../../../interfaces/story.interface";
 import relativeTime from "dayjs/plugin/relativeTime";
 import dayjs from "dayjs";
 dayjs.extend(relativeTime);
@@ -33,6 +38,9 @@ const PostedStoriesPage: FC<IProps> = (props: IProps) => {
   const [currentStory, setCurrentStory] = useState<IStory>();
   const [dataStoryInteraction, setDataStoryInteraction] =
     useState<IStoryInteraction>();
+  const [dataChaptersInteraction, setDataChaptersInteraction] = useState<
+    IChapterInteraction[]
+  >([]);
 
   useEffect(() => {
     fetchPostedStories();
@@ -41,6 +49,7 @@ const PostedStoriesPage: FC<IProps> = (props: IProps) => {
   useEffect(() => {
     if (openDrawer && currentStory) {
       fetchChartStory();
+      fetchChartChapters();
     }
   }, [currentStory, openDrawer]);
 
@@ -77,6 +86,20 @@ const PostedStoriesPage: FC<IProps> = (props: IProps) => {
         reportStory: res.dt.reportStory,
       };
       setDataStoryInteraction(payload);
+    }
+  };
+
+  const fetchChartChapters = async () => {
+    const res = await getChartChapters(currentStory!.storyId);
+    if (res && res.ec === 0) {
+      // const payload = {
+      //   chapterId: res.dt.chapterId,
+      //   chapterTitle: res.dt.chapterTitle,
+      //   chapterNumber: res.dt.chapterNumber,
+      //   purchaseChapter: res.dt.purchaseChapter,
+      //   reportChapter: res.dt.reportChapter
+      // };
+      setDataChaptersInteraction(res.dt);
     }
   };
 
@@ -255,7 +278,12 @@ const PostedStoriesPage: FC<IProps> = (props: IProps) => {
         onClose={() => setOpenDrawer(false)}
         open={openDrawer}
       >
-        <EPStoryStatistics storyInteraction={dataStoryInteraction} />
+        <EPStoryStatistics
+          width={"65%"}
+          height={"65%"}
+          storyInteraction={dataStoryInteraction}
+          chaptersInteraction={dataChaptersInteraction}
+        />
       </Drawer>
     </>
   );

@@ -37,8 +37,6 @@ export interface IStory {
 }
 
 export interface IStoryInteraction {
-  // storyId: number | string;
-  // storyTitle: string;
   follow: number;
   like: number;
   read: number;
@@ -81,6 +79,14 @@ export interface IChapter {
   createTime: string;
   comment: number;
   userPurchaseChapter: number;
+}
+
+export interface IChapterInteraction {
+  chapterId: number;
+  chapterTitle: string;
+  chapterNumber: number;
+  purchaseChapter: number;
+  reportChapter: number;
 }
 
 export interface IComment {

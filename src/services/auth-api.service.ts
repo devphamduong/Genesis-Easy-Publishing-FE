@@ -30,6 +30,22 @@ export const updateProfile = (
   });
 };
 
+export const updateAvatar = (
+  fileImg: string
+): Promise<IApiResponse<unknown>> => {
+  const bodyFormData = new FormData();
+  bodyFormData.append("image", fileImg);
+  return axios({
+    method: "put",
+    url: "auth/update_avatar",
+    data: bodyFormData,
+    // headers: {
+    //     "Content-Type": "multipart/form-data",
+    //     "upload-type": "avatar"
+    // },
+  });
+};
+
 export const logout = (): Promise<IApiResponse<null>> => {
   return axios.post(`auth/logout`);
 };
@@ -42,6 +58,14 @@ export const forgotPassword = (data: {
   email: string;
 }): Promise<IApiResponse<null>> => {
   return axios.post(`auth/forgot_password`, {
+    ...data,
+  });
+};
+
+export const verifyToken = (data: {
+  token: string;
+}): Promise<IApiResponse<null>> => {
+  return axios.post(`auth/verify_token`, {
     ...data,
   });
 };

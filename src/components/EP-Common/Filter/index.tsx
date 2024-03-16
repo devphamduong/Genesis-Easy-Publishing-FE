@@ -3,7 +3,7 @@ import "./EPFilter.scss";
 import { Button, Checkbox, Form, GetProp, Input, Select, Slider } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import { IFilterOptions } from "../../../interfaces/global.interface";
-import { getFilterOptions } from "../../../services/common-api.service";
+import { getFilterOptions } from "../../../services/common-api-service";
 
 interface IProps {}
 

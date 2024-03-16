@@ -20,7 +20,7 @@ import MarkdownIt from "markdown-it";
 import "react-markdown-editor-lite/lib/index.css";
 import { useDispatch, useSelector } from "react-redux";
 import { IRootState } from "../../redux/store";
-import { updateAvatar, updateProfile } from "../../services/auth-api.service";
+import { updateAvatar, updateProfile } from "../../services/auth-api-service";
 import { toast } from "react-toastify";
 import { updateUserInfo } from "../../redux/account/accountSlice";
 import ImgCrop from "antd-img-crop";

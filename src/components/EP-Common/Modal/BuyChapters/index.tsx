@@ -17,11 +17,9 @@ import { RiMoneyDollarCircleFill } from "react-icons/ri";
 import { IoCheckmark } from "react-icons/io5";
 import { useSelector } from "react-redux";
 import { IRootState } from "../../../../redux/store";
+import { IPropsEPModal } from "../../../../interfaces/global.interface";
 
-interface IProps {
-  isModalOpen: boolean;
-  setIsModalOpen: (value: boolean) => void;
-}
+interface IProps extends IPropsEPModal {}
 
 interface IFormBuyChapters {
   from: number;

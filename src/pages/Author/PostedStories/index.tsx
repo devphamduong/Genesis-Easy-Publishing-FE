@@ -11,7 +11,7 @@ import {
   getAuthorPostedStories,
   getChartChapters,
   getChartStory,
-} from "../../../services/author-api.service";
+} from "../../../services/author-api-service";
 import {
   IChapterInteraction,
   IStory,
@@ -273,6 +273,7 @@ const PostedStoriesPage: FC<IProps> = (props: IProps) => {
         </div>
       </div>
       <Drawer
+        className="drawer-posted-stories"
         title={`Số liệu thống kê của truyện "${currentStory?.storyTitle}"`}
         placement="right"
         onClose={() => setOpenDrawer(false)}

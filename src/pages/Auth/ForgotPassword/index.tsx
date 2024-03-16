@@ -2,7 +2,7 @@ import { FC, useEffect, useState } from "react";
 import "./ForgotPassword.scss";
 import { Button, Form, Input } from "antd";
 import { Link } from "react-router-dom";
-import { forgotPassword } from "../../../services/auth-api.service";
+import { forgotPassword } from "../../../services/auth-api-service";
 import { toast } from "react-toastify";
 
 interface IProps {}

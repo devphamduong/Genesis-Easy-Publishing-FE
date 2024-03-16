@@ -22,13 +22,13 @@ import { FC } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { logoutAction } from "../../redux/account/accountSlice";
-import { logout } from "../../services/auth-api.service";
+import { logout } from "../../services/auth-api-service";
 import { IRootState } from "../../redux/store";
 import { EMenuKey, EMenuLabel } from "./enum";
 import {
-  RouteEndPointForAuthor,
-  RouteEndPointForUser,
-} from "../../constants/route-end-point.constant";
+  ERouteEndPointForAuthor,
+  ERouteEndPointForUser,
+} from "../../enum/route-end-point.enum";
 interface IProps {}
 
 const Header: FC<IProps> = (props: IProps) => {
@@ -103,13 +103,13 @@ const Header: FC<IProps> = (props: IProps) => {
       setIPopoverOpen(false);
       switch (key) {
         case EMenuKey.PROFILE:
-          navigate(RouteEndPointForUser.DASHBOARD);
+          navigate(ERouteEndPointForUser.DASHBOARD);
           break;
         case EMenuKey.DEPOSIT:
-          navigate(RouteEndPointForUser.DEPOSIT);
+          navigate(ERouteEndPointForUser.DEPOSIT);
           break;
         case EMenuKey.MANAGE:
-          navigate(RouteEndPointForAuthor.POSTED_STORIES);
+          navigate(ERouteEndPointForAuthor.POSTED_STORIES);
           break;
       }
     };

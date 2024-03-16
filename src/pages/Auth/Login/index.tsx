@@ -2,7 +2,7 @@ import { FC, useEffect, useState } from "react";
 import "./Login.scss";
 import { Button, Checkbox, Form, Input } from "antd";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { login } from "../../../services/auth-api.service";
+import { login } from "../../../services/auth-api-service";
 import { ILoginForm } from "../../../interfaces/auth.interface";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";

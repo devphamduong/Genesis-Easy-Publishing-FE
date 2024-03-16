@@ -4,7 +4,7 @@ import { Button, Checkbox, Form, Input } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { IRegisterForm } from "../../../interfaces/auth.interface";
 import { toast } from "react-toastify";
-import { register } from "../../../services/auth-api.service";
+import { register } from "../../../services/auth-api-service";
 
 interface IProps {}
 

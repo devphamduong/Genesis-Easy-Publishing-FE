@@ -6,7 +6,7 @@ import { IAuthor, IStory } from "../../interfaces/story.interface";
 import {
   getAuthorDetailById,
   getAuthorStoriesById,
-} from "../../services/author-api.service";
+} from "../../services/author-api-service";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Meta from "antd/es/card/Meta";
 import { getStoryDetailURL } from "../../shared/generate-navigate-url";

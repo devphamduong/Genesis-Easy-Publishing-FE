@@ -22,8 +22,6 @@
     }
 }
 
-.ant-drawer {
-    .ant-drawer-content-wrapper {
-        width: 70vw !important;
-    }
+.ant-drawer-content-wrapper:has(.drawer-posted-stories) {
+    width: 70vw !important;
 }

@@ -13,7 +13,7 @@ import { getChapterNumber } from "./shared/function";
 import { kFormatter } from "../../shared/function";
 import EPButton from "../../components/EP-UI/Button";
 import { IChapterContent } from "../../interfaces/story.interface";
-import { getChapterContent } from "../../services/story-api.service";
+import { getChapterContent } from "../../services/story-api-service";
 import { useSelector } from "react-redux";
 import { IRootState } from "../../redux/store";
 import {
@@ -28,6 +28,7 @@ import { IoMdDoneAll } from "react-icons/io";
 import { IoCheckmark } from "react-icons/io5";
 import EPModalReport from "../../components/EP-Common/Modal/Report";
 import EPModalBuyChapters from "../../components/EP-Common/Modal/BuyChapters";
+import EPModalTopUp from "../../components/EP-Common/Modal/TopUp";
 dayjs.extend(relativeTime);
 const { confirm } = Modal;
 
@@ -44,6 +45,7 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
     useState<boolean>(false);
   const [isSubmittedLike, setIsSubmittedLike] = useState<boolean>(false);
   const [chapterContent, setChapterContent] = useState<IChapterContent>();
+  const [isModalTopUpOpen, setIsModalTopUpOpen] = useState<boolean>(false);
 
   useEffect(() => {
     fetchChapterContent();
@@ -79,6 +81,25 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
     });
   };
 
+  const handleNextChapter = () => {
+    const newEndPoint = window.location.pathname.replace(
+      `chapter-${chapterContent?.chapterNumber}`,
+      `chapter-${chapterContent?.nextChapterNumber}`
+    );
+    history.replaceState(null, "", newEndPoint);
+    chapterContent?.nextChapterNumber !== -1 &&
+      setCurrentChapter(chapterContent!.nextChapterNumber);
+  };
+
+  const handlePrevChapter = () => {
+    const newEndPoint = window.location.pathname.replace(
+      `chapter-${chapterContent?.chapterNumber}`,
+      `chapter-${currentChapter - 1}`
+    );
+    history.replaceState(null, "", newEndPoint);
+    currentChapter - 1 > 0 && setCurrentChapter(currentChapter - 1);
+  };
+
   return (
     <>
       <div className="read-story-container">
@@ -91,6 +112,7 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
                   type="primary"
                   size={"large"}
                   className="d-flex gap-1 align-items-center w-100 justify-content-center"
+                  onClick={() => handlePrevChapter()}
                 >
                   <LeftOutlined />
                   <span>Trước</span>
@@ -98,9 +120,11 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
               </Col>
               <Col span={12}>
                 <Button
+                  disabled={chapterContent?.nextChapterNumber === -1}
                   type="primary"
                   size={"large"}
                   className="d-flex gap-1 align-items-center w-100 justify-content-center"
+                  onClick={() => handleNextChapter()}
                 >
                   <span>Tiếp</span>
                   <RightOutlined />
@@ -148,6 +172,7 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
                     type="primary"
                     icon={<RiMoneyDollarCircleFill />}
                     size={"large"}
+                    onClick={() => setIsModalTopUpOpen(true)}
                   >
                     Nạp TLT
                   </EPButton>
@@ -264,10 +289,15 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
         isModalOpen={isModalReportOpen}
         setIsModalOpen={setIsModalReportOpen}
         inChapter={currentChapter}
+        storyId={id}
       />
       <EPModalBuyChapters
         isModalOpen={isModalBuyChaptersOpen}
         setIsModalOpen={setIsModalBuyChaptersOpen}
+      />
+      <EPModalTopUp
+        isModalOpen={isModalTopUpOpen}
+        setIsModalOpen={setIsModalTopUpOpen}
       />
     </>
   );

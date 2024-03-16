@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import {
   changePassword,
   resetPassword,
-} from "../../../services/auth-api.service";
+} from "../../../services/auth-api-service";
 import { useDispatch } from "react-redux";
 import { logoutAction } from "../../../redux/account/accountSlice";
 import { BsInfoCircleFill } from "react-icons/bs";

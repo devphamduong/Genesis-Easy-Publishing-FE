@@ -24,7 +24,7 @@ import { IRootState } from "../../../redux/store";
 import { IWriteStoryForm } from "../../../interfaces/story.interface";
 import { getPlainTextFromHTML } from "../../../shared/function";
 import { ICategory } from "../../../interfaces/category.interface";
-import { createStory } from "../../../services/story-api.service";
+import { createStory } from "../../../services/story-api-service";
 import { toast } from "react-toastify";
 
 interface IProps {}

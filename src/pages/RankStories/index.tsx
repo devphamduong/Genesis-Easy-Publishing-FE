@@ -3,7 +3,7 @@ import "./RankStories.scss";
 import { Col, Row, Spin, Tabs, TabsProps } from "antd";
 import { useOutletContext } from "react-router-dom";
 import { ICategory } from "../../interfaces/category.interface";
-import { getTopFamous } from "../../services/story-api.service";
+import { getTopFamous } from "../../services/story-api-service";
 import { IPaginationStory, IStory } from "../../interfaces/story.interface";
 import RowStory from "../../components/RowStory";
 

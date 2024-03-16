@@ -4,7 +4,7 @@ import { ICategory } from "../../../interfaces/category.interface";
 import Header from "../../../components/Header";
 import Footer from "../../../components/Footer";
 import { Col, Menu, MenuProps, Row } from "antd";
-import { RouteEndPointForUser } from "../../../constants/route-end-point.constant";
+import { ERouteEndPointForUser } from "../../../enum/route-end-point.enum";
 
 interface IProps {
   categories: ICategory[];
@@ -30,7 +30,7 @@ const ProfileLayout: FC<IProps> = (props: IProps) => {
   const { categories } = props;
   const location = useLocation();
   const [currentParams, setCurrentParams] = useState(
-    RouteEndPointForUser.DASHBOARD
+    ERouteEndPointForUser.DASHBOARD
   );
 
   useEffect(() => {
@@ -39,18 +39,20 @@ const ProfileLayout: FC<IProps> = (props: IProps) => {
 
   const items: MenuItem[] = [
     getItem(
-      <NavLink to={RouteEndPointForUser.DASHBOARD}>Dashboard</NavLink>,
-      RouteEndPointForUser.DASHBOARD,
+      <NavLink to={ERouteEndPointForUser.DASHBOARD}>Dashboard</NavLink>,
+      ERouteEndPointForUser.DASHBOARD,
       null
     ),
     getItem(
-      <NavLink to={RouteEndPointForUser.DEPOSIT}>Ví</NavLink>,
-      RouteEndPointForUser.DEPOSIT,
+      <NavLink to={ERouteEndPointForUser.DEPOSIT}>Ví</NavLink>,
+      ERouteEndPointForUser.DEPOSIT,
       null
     ),
     getItem(
-      <NavLink to={RouteEndPointForUser.CHANGE_PASSWORD}>Đổi mật khẩu</NavLink>,
-      RouteEndPointForUser.CHANGE_PASSWORD,
+      <NavLink to={ERouteEndPointForUser.CHANGE_PASSWORD}>
+        Đổi mật khẩu
+      </NavLink>,
+      ERouteEndPointForUser.CHANGE_PASSWORD,
       null
     ),
   ];

@@ -10,7 +10,7 @@ import {
   getPaginationStoriesByCategoryId,
   getStoriesByCategoryId,
   getStoriesMostReadByCategoryId,
-} from "../../services/category-api.service";
+} from "../../services/category-api-service";
 import { IStory } from "../../interfaces/story.interface";
 import EPCover from "../../components/EP-UI/Cover";
 

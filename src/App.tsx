@@ -1,7 +1,7 @@
 import { FC, useEffect } from "react";
 import AppRoutes from "./routes/AppRoutes";
 import { useDispatch, useSelector } from "react-redux";
-import { getAccount } from "./services/auth-api.service";
+import { getAccount } from "./services/auth-api-service";
 import { getAccountAction } from "./redux/account/accountSlice";
 import { IRootState } from "./redux/store";
 

@@ -42,8 +42,8 @@ import {
   getRelatedStoriesById,
   getStoryDetailById,
   likeStory,
-} from "../../services/story-api.service";
-import { getAuthorById } from "../../services/author-api.service";
+} from "../../services/story-api-service";
+import { getAuthorById } from "../../services/author-api-service";
 import { Typography } from "antd";
 import {
   getAuthorDetailURL,
@@ -126,7 +126,11 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
       label: (
         <div className="d-flex align-items-center gap-1">
           <span>{ETabsLabel.COMMENT}</span>
-          <Badge count={1000} overflowCount={999} color="#4497f8"></Badge>
+          <Badge
+            count={totalComment}
+            overflowCount={999}
+            color="#4497f8"
+          ></Badge>
         </div>
       ),
       children: <></>,
@@ -327,11 +331,13 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
 
   const handleStoryInteraction = async (option: EInteractionKey) => {
     let res;
-    if (option === EInteractionKey.LIKE) {
-      res = await likeStory(id!);
-    }
-    if (option === EInteractionKey.FOLLOW) {
-      res = await followStory(id!);
+    switch (option) {
+      case EInteractionKey.LIKE:
+        res = await likeStory(id!);
+        break;
+      case EInteractionKey.FOLLOW:
+        res = await followStory(id!);
+        break;
     }
     if (res && res.ec === 0) {
       option === EInteractionKey.LIKE
@@ -651,6 +657,7 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
       <EPModalReport
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
+        storyId={story?.storyId}
       />
     </>
   );

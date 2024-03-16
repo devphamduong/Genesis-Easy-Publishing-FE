@@ -126,6 +126,14 @@ export interface IWriteStoryForm {
   storyDescriptionHtml?: string;
 }
 
+export interface IReportForm {
+  reportTypeId: number;
+  storyId: number;
+  chapterId?: number;
+  commentId?: number;
+  reportContent?: string;
+}
+
 export interface IChapterContent {
   story: {
     storyId: number;

@@ -3,7 +3,7 @@ import "./ResetPassword.scss";
 import { Button, Form, Input } from "antd";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { resetPassword, verifyToken } from "../../../services/auth-api.service";
+import { resetPassword, verifyToken } from "../../../services/auth-api-service";
 
 interface IProps {}
 

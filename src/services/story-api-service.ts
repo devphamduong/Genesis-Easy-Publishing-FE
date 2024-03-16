@@ -5,6 +5,7 @@ import {
   IPaginationChapter,
   IPaginationComment,
   IPaginationStory,
+  IReportForm,
   IStory,
   IWriteStoryForm,
 } from "../interfaces/story.interface";
@@ -78,6 +79,10 @@ export const followStory = (
   id: string | number
 ): Promise<IApiResponse<null>> => {
   return axios.put(`interaction/story_follow?storyid=${id}`);
+};
+
+export const reportStory = (data: IReportForm): Promise<IApiResponse<null>> => {
+  return axios.post(`reports/send`, { ...data });
 };
 
 export const getChapterContent = (

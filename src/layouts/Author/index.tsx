@@ -10,12 +10,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { IRootState } from "../../redux/store";
 import { logoutAction } from "../../redux/account/accountSlice";
 import { toast } from "react-toastify";
-import { logout } from "../../services/auth-api.service";
+import { logout } from "../../services/auth-api-service";
 import { EMenuKey, EMenuLabel } from "../../components/Header/enum";
 import {
-  RouteEndPointForAuthor,
-  RouteEndPointForUser,
-} from "../../constants/route-end-point.constant";
+  ERouteEndPointForAuthor,
+  ERouteEndPointForUser,
+} from "../../enum/route-end-point.enum";
 import { GiBookshelf } from "react-icons/gi";
 import { TbBookUpload } from "react-icons/tb";
 import { GrChapterAdd } from "react-icons/gr";
@@ -97,10 +97,10 @@ const HeaderAuthor = (props: IProps) => {
           navigate("/");
           break;
         case EMenuKey.PROFILE:
-          navigate(RouteEndPointForUser.DASHBOARD);
+          navigate(ERouteEndPointForUser.DASHBOARD);
           break;
         case EMenuKey.DEPOSIT:
-          navigate(RouteEndPointForUser.DEPOSIT);
+          navigate(ERouteEndPointForUser.DEPOSIT);
           break;
       }
     };
@@ -155,7 +155,7 @@ const AuthorLayout: FC<IProps> = (props: IProps) => {
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState<boolean>(false);
   const [currentParams, setCurrentParams] = useState(
-    RouteEndPointForAuthor.DASHBOARD
+    ERouteEndPointForAuthor.DASHBOARD
   );
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -167,33 +167,33 @@ const AuthorLayout: FC<IProps> = (props: IProps) => {
 
   const items: MenuItem[] = [
     getItem(
-      <div onClick={() => navigate(RouteEndPointForAuthor.POSTED_STORIES)}>
+      <div onClick={() => navigate(ERouteEndPointForAuthor.POSTED_STORIES)}>
         {EMenuLabel.AUTHOR_POSTED_STORY}
       </div>,
-      RouteEndPointForAuthor.POSTED_STORIES,
+      ERouteEndPointForAuthor.POSTED_STORIES,
       <GiBookshelf
         className="fs-5"
-        onClick={() => navigate(RouteEndPointForAuthor.POSTED_STORIES)}
+        onClick={() => navigate(ERouteEndPointForAuthor.POSTED_STORIES)}
       />
     ),
     getItem(
-      <div onClick={() => navigate(RouteEndPointForAuthor.WRITE_STORY)}>
+      <div onClick={() => navigate(ERouteEndPointForAuthor.WRITE_STORY)}>
         {EMenuLabel.AUTHOR_WRITE_STORY}
       </div>,
-      RouteEndPointForAuthor.WRITE_STORY,
+      ERouteEndPointForAuthor.WRITE_STORY,
       <TbBookUpload
         className="fs-5"
-        onClick={() => navigate(RouteEndPointForAuthor.WRITE_STORY)}
+        onClick={() => navigate(ERouteEndPointForAuthor.WRITE_STORY)}
       />
     ),
     getItem(
-      <div onClick={() => navigate(RouteEndPointForAuthor.WRITE_CHAPTER)}>
+      <div onClick={() => navigate(ERouteEndPointForAuthor.WRITE_CHAPTER)}>
         {EMenuLabel.AUTHOR_WRITE_CHAPTER}
       </div>,
-      RouteEndPointForAuthor.WRITE_CHAPTER,
+      ERouteEndPointForAuthor.WRITE_CHAPTER,
       <GrChapterAdd
         className="fs-5"
-        onClick={() => navigate(RouteEndPointForAuthor.WRITE_CHAPTER)}
+        onClick={() => navigate(ERouteEndPointForAuthor.WRITE_CHAPTER)}
       />
     ),
   ];

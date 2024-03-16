@@ -29,7 +29,7 @@ function getItem(
 const ProfileLayout: FC<IProps> = (props: IProps) => {
   const { categories } = props;
   const location = useLocation();
-  const [currentParams, setCurrentParams] = useState(
+  const [currentParams, setCurrentParams] = useState<string>(
     ERouteEndPointForUser.DASHBOARD
   );
 
@@ -46,6 +46,18 @@ const ProfileLayout: FC<IProps> = (props: IProps) => {
     getItem(
       <NavLink to={ERouteEndPointForUser.DEPOSIT}>Ví</NavLink>,
       ERouteEndPointForUser.DEPOSIT,
+      null
+    ),
+    getItem(
+      <NavLink to={ERouteEndPointForUser.FOLLOWING}>
+        Truyện đang theo dõi
+      </NavLink>,
+      ERouteEndPointForUser.FOLLOWING,
+      null
+    ),
+    getItem(
+      <NavLink to={ERouteEndPointForUser.READ_HISTORY}>Lịch sử đọc</NavLink>,
+      ERouteEndPointForUser.READ_HISTORY,
       null
     ),
     getItem(

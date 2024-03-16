@@ -6,14 +6,12 @@ import { Button, Col, Divider, Row, Skeleton, Typography } from "antd";
 import { FaPenFancy } from "react-icons/fa6";
 import { Link, useNavigate } from "react-router-dom";
 import { ClockCircleOutlined } from "@ant-design/icons";
-import relativeTime from "dayjs/plugin/relativeTime";
-import dayjs from "dayjs";
-dayjs.extend(relativeTime);
 
 import {
   getAuthorDetailURL,
   getStoryDetailURL,
 } from "../../shared/generate-navigate-url";
+import { dayjsFrom } from "../../shared/function";
 const { Text } = Typography;
 
 interface IProps {
@@ -113,7 +111,7 @@ const RowStory: FC<IProps> = (props: IProps) => {
           {displayUpdatedAt && (
             <div className="time">
               <ClockCircleOutlined />
-              <span> {dayjs("2024-02-17T13:00:00").fromNow()}</span>
+              <span> {dayjsFrom(story.storyCreateTime)}</span>
             </div>
           )}
         </Col>

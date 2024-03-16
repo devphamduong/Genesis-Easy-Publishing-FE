@@ -17,6 +17,14 @@ export interface IStory {
   storyLatestChapter?: {
     chapterId: number | string;
     chapterTitle: string;
+    chapterNumber: number;
+    createTime: string;
+  };
+  storyReadChapter?: {
+    chapterId: number | string;
+    chapterTitle: string;
+    chapterNumber: number;
+    createTime: string;
   };
   userCount?: number;
   storyPrice: number;
@@ -31,6 +39,7 @@ export interface IStory {
     view: number;
   };
   userOwned: boolean;
+  authorOwned: boolean;
   userFollow: boolean;
   userLike: boolean;
   storyCreateTime: string;

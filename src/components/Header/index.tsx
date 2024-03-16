@@ -9,6 +9,7 @@ import {
   Avatar,
   Button,
   Col,
+  Drawer,
   Input,
   Menu,
   MenuProps,
@@ -29,6 +30,8 @@ import {
   ERouteEndPointForAuthor,
   ERouteEndPointForUser,
 } from "../../enum/route-end-point.enum";
+import EPButton from "../EP-UI/Button";
+import { PiBookmarks } from "react-icons/pi";
 interface IProps {}
 
 const Header: FC<IProps> = (props: IProps) => {
@@ -39,6 +42,7 @@ const Header: FC<IProps> = (props: IProps) => {
   );
   const account = useSelector((state: IRootState) => state.account?.user);
   const [current, setCurrent] = useState<string>("mail");
+  const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const items: MenuProps["items"] = [
     {
       label: <NavLink to={"/"}>Truyện chất lượng cao</NavLink>,
@@ -55,13 +59,24 @@ const Header: FC<IProps> = (props: IProps) => {
       key: "alipay",
     },
   ];
-  const [isPopoverOpen, setIPopoverOpen] = useState<boolean>(false);
+  const [isPopoverOpen, setIsPopoverOpen] = useState<boolean>(false);
 
   const popoverTitle = () => {
     return (
-      <div className="d-flex align-items-center gap-2">
-        <Avatar size="large" icon={<UserOutlined />} />
-        <div>{account.username ?? "vcl"}</div>
+      <div className="d-flex align-items-center justify-content-between">
+        <div className="d-flex align-items-center gap-2">
+          <Avatar size="large" icon={<UserOutlined />} />
+          <div>{account.username ?? "vcl"}</div>
+        </div>
+        <EPButton
+          icon={<PiBookmarks />}
+          onClick={() => {
+            setIsPopoverOpen(false);
+            setOpenDrawer(true);
+          }}
+        >
+          Theo dõi
+        </EPButton>
       </div>
     );
   };
@@ -100,7 +115,7 @@ const Header: FC<IProps> = (props: IProps) => {
 
     const onClick: MenuProps["onClick"] = (e) => {
       const { key } = e;
-      setIPopoverOpen(false);
+      setIsPopoverOpen(false);
       switch (key) {
         case EMenuKey.PROFILE:
           navigate(ERouteEndPointForUser.DASHBOARD);
@@ -132,7 +147,7 @@ const Header: FC<IProps> = (props: IProps) => {
       toast.success("Logout successfully");
       navigate("/");
     }
-    setIPopoverOpen(false);
+    setIsPopoverOpen(false);
   };
 
   return (
@@ -188,7 +203,7 @@ const Header: FC<IProps> = (props: IProps) => {
                           trigger={"click"}
                           placement="bottomRight"
                           open={isPopoverOpen}
-                          onOpenChange={(isOpen) => setIPopoverOpen(isOpen)}
+                          onOpenChange={(isOpen) => setIsPopoverOpen(isOpen)}
                         >
                           My Account
                         </Popover>
@@ -201,6 +216,25 @@ const Header: FC<IProps> = (props: IProps) => {
           </div>
         </div>
       </Affix>
+      <Drawer
+        className="drawer-header"
+        title="Truyện đang theo dõi"
+        placement={"right"}
+        onClose={() => setOpenDrawer(false)}
+        open={openDrawer}
+        extra={
+          <Button
+            type="primary"
+            onClick={() => navigate(ERouteEndPointForUser.FOLLOWING)}
+          >
+            Xem đầy đủ
+          </Button>
+        }
+      >
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+      </Drawer>
     </>
   );
 };

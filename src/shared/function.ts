@@ -1,3 +1,7 @@
+import relativeTime from "dayjs/plugin/relativeTime";
+import dayjs from "dayjs";
+dayjs.extend(relativeTime);
+
 export const kFormatter = (num: number): number | string => {
   const absNum = Math.abs(num);
   if (absNum > 999) {
@@ -22,4 +26,8 @@ export const slugify = (str: string): string => {
 
 export const getPlainTextFromHTML = (str: string): string => {
   return str.replace(/<[^>]+>/g, "");
+};
+
+export const dayjsFrom = (date: string): string => {
+  return dayjs(date).fromNow();
 };

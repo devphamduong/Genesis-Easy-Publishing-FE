@@ -82,4 +82,8 @@ body {
     /* Non-prefixed version, currently
                                   supported by Chrome, Edge, Opera and Firefox */
   }
+
+  .ant-drawer {
+    z-index: 1030;
+  }
 }

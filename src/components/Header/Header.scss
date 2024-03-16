@@ -41,3 +41,7 @@
         }
     }
 }
+
+.ant-drawer-content-wrapper:has(.drawer-header) {
+    width: 30vw !important;
+}

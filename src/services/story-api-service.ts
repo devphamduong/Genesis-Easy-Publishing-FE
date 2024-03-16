@@ -71,6 +71,13 @@ export const getPaginationCommentsByStoryId = (
   );
 };
 
+export const getPaginationStoriesFollowing = (
+  page: number,
+  pageSize: number
+): Promise<IApiResponse<IPaginationStory>> => {
+  return axios.get(`shelves/my_follow?page=${page}&pageSize=${pageSize}`);
+};
+
 export const likeStory = (id: string | number): Promise<IApiResponse<null>> => {
   return axios.put(`interaction/story_like?storyid=${id}`);
 };

@@ -12,7 +12,7 @@ import {
 } from "antd";
 import { toast } from "react-toastify";
 import {
-  MomoTopUp,
+  momoTopUp,
   VNPayTopUp,
 } from "../../../../services/transaction-api-service";
 import { IPropsEPModal } from "../../../../interfaces/global.interface";
@@ -84,7 +84,7 @@ const EPModalTopUp: FC<IProps> = (props: IProps) => {
   };
 
   const handleMomoTopUp = async (amount) => {
-    const res = await MomoTopUp({ requiredAmount: amount });
+    const res = await momoTopUp({ requiredAmount: amount });
     if (res && res.ec === 0) {
       window.open(res.dt.paymentUrl, "_blank");
       form.resetFields();

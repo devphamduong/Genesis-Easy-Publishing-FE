@@ -9,10 +9,19 @@ export const VNPayTopUp = (data: {
   });
 };
 
-export const MomoTopUp = (data: {
+export const momoTopUp = (data: {
   requiredAmount: number;
 }): Promise<IApiResponse<{ paymentUrl: string }>> => {
   return axios.post(`transaction/momo_request`, {
     ...data,
   });
+};
+
+export const getTransactionHistory = (
+  page: number,
+  pageSize: number
+): Promise<IApiResponse<{ paymentUrl: string }>> => {
+  return axios.get(
+    `transaction/transaction_history?page=${page}&pageSize=${pageSize}`
+  );
 };

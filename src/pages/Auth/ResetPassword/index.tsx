@@ -22,6 +22,10 @@ const ResetPasswordPage: FC<IProps> = (props: IProps) => {
   const [isTokenExpired, setIsTokenExpired] = useState<boolean>(false);
 
   useEffect(() => {
+    validateToken();
+  }, []);
+
+  const validateToken = async () => {
     const token = searchParams.get("token");
     async () => {
       const res = await verifyToken({ token: !token ? "" : token });
@@ -29,7 +33,7 @@ const ResetPasswordPage: FC<IProps> = (props: IProps) => {
         setIsTokenExpired(true);
       }
     };
-  }, []);
+  };
 
   useEffect(() => {
     form.validateFields({ validateOnly: true }).then(

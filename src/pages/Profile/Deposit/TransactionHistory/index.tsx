@@ -1,7 +1,8 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import "./TransactionHistory.scss";
 import { GoArrowDown, GoArrowUp } from "react-icons/go";
 import { Table, TableProps, Tag } from "antd";
+import { getTransactionHistory } from "../../../../services/transaction-api-service";
 
 interface IProps {}
 
@@ -12,6 +13,20 @@ const TransactionHistoryPage: FC<IProps> = (props: IProps) => {
   const [pageSize, setPageSize] = useState<number>(PAGE_SIZE);
   const [totalStories, setTotalStories] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [transactionHistory, setTransactionHistory] = useState();
+
+  useEffect(() => {
+    fetchTransactionHistory();
+  }, [currentPage, pageSize]);
+
+  const fetchTransactionHistory = async () => {
+    const res = await getTransactionHistory(currentPage, pageSize);
+    if (res && res.ec === 0) {
+      console.log(res);
+      // transactionHistory(res.dt.)
+    }
+  };
+
   const columns: TableProps["columns"] = [
     {
       title: "Hoạt động",

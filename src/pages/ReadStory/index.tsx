@@ -10,7 +10,7 @@ import {
 } from "@ant-design/icons";
 import { Link, useParams } from "react-router-dom";
 import { getChapterNumber } from "./shared/function";
-import { kFormatter } from "../../shared/function";
+import { dayjsFrom, kFormatter } from "../../shared/function";
 import EPButton from "../../components/EP-UI/Button";
 import { IChapterContent } from "../../interfaces/story.interface";
 import { getChapterContent } from "../../services/story-api-service";
@@ -20,8 +20,6 @@ import {
   getAuthorDetailURL,
   getStoryDetailURL,
 } from "../../shared/generate-navigate-url";
-import relativeTime from "dayjs/plugin/relativeTime";
-import dayjs from "dayjs";
 import { FcVip } from "react-icons/fc";
 import { RiMoneyDollarCircleFill } from "react-icons/ri";
 import { IoMdDoneAll } from "react-icons/io";
@@ -29,7 +27,6 @@ import { IoCheckmark } from "react-icons/io5";
 import EPModalReport from "../../components/EP-Common/Modal/Report";
 import EPModalBuyChapters from "../../components/EP-Common/Modal/BuyChapters";
 import EPModalTopUp from "../../components/EP-Common/Modal/TopUp";
-dayjs.extend(relativeTime);
 const { confirm } = Modal;
 
 interface IProps {}
@@ -140,7 +137,7 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
                 <FcVip className="fs-1" />
                 <div>
                   Chương này là chương VIP, để xem nội dung bạn cần{" "}
-                  <strong>{chapterContent?.chapterPrice}</strong> Tử Linh Thạch{" "}
+                  <strong>{chapterContent?.chapterPrice}</strong> Tử Linh Thạch
                   (TLT).
                 </div>
                 <div className="d-flex flex-column gap-2 text-center">
@@ -227,6 +224,7 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
                   type="primary"
                   size={"large"}
                   className="d-flex gap-1 align-items-center w-100 justify-content-center"
+                  onClick={() => handlePrevChapter()}
                 >
                   <LeftOutlined />
                   <span>Trước</span>
@@ -234,9 +232,11 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
               </Col>
               <Col span={12}>
                 <Button
+                  disabled={chapterContent?.nextChapterNumber === -1}
                   type="primary"
                   size={"large"}
                   className="d-flex gap-1 align-items-center w-100 justify-content-center"
+                  onClick={() => handleNextChapter()}
                 >
                   <span>Tiếp</span>
                   <RightOutlined />
@@ -266,7 +266,7 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
                     </Col>{" "}
                     <Col span={22}>
                       {chapterContent?.updateTime &&
-                        dayjs(chapterContent?.updateTime).fromNow()}
+                        dayjsFrom(chapterContent?.updateTime)}
                     </Col>
                     <Col span={2} className="text-lighter">
                       Lượt mua

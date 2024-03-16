@@ -19,7 +19,7 @@ import {
 } from "antd";
 import VerticalImageHover from "../../components/VerticalImageHover";
 import EPTag from "../../components/EP-UI/Tag";
-import { kFormatter } from "../../shared/function";
+import { dayjsFrom, kFormatter } from "../../shared/function";
 import {
   ClockCircleOutlined,
   UserOutlined,
@@ -50,15 +50,12 @@ import {
   getStoryDetailURL,
   getStoryReadURL,
 } from "../../shared/generate-navigate-url";
-import relativeTime from "dayjs/plugin/relativeTime";
-import dayjs from "dayjs";
 import { useSelector } from "react-redux";
 import { IRootState } from "../../redux/store";
 import { AiFillLike, AiOutlineLike } from "react-icons/ai";
 import { FaHeart, FaRegHeart } from "react-icons/fa6";
 import { toast } from "react-toastify";
 import EPModalReport from "../../components/EP-Common/Modal/Report";
-dayjs.extend(relativeTime);
 
 const { Paragraph, Text } = Typography;
 
@@ -257,7 +254,7 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
         dataIndex: "createTime",
         render: (createTime) => (
           <>
-            <span>{dayjs(createTime).fromNow()}</span>
+            <span className="time">{dayjsFrom(createTime)}</span>
           </>
         ),
       },
@@ -297,7 +294,7 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
                   <div className="d-flex align-items-center justify-content-between">
                     <strong>{item.userComment.userFullname}</strong>
                     <span className="time text-small">
-                      {dayjs(item.commentDate).fromNow()}
+                      {dayjsFrom(item.commentDate)}
                     </span>
                   </div>
                 }
@@ -422,9 +419,10 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
                       >
                         Đọc Từ Đầu
                       </Button>
-                      {!story?.userOwned && (
-                        <Button size="large">Mua Trọn Bộ</Button>
-                      )}
+                      {!story?.userOwned ||
+                        (!story?.authorOwned && (
+                          <Button size="large">Mua Trọn Bộ</Button>
+                        ))}
                       <Space.Compact block size="large">
                         {isAuthenticated ? (
                           <>
@@ -540,7 +538,11 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
             <Row gutter={[16, 10]}>
               <Col span={19}>
                 {currentTab === ETabsKey.DESCRIPTION ? (
-                  <div>{story?.storyDescription}</div>
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: story?.storyDescription ?? "",
+                    }}
+                  />
                 ) : currentTab === ETabsKey.CHAPTER ? (
                   renderTableChapter()
                 ) : (
@@ -626,7 +628,7 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
                               {item.chapterTitle}{" "}
                             </Link>
                             <span className="time">
-                              {dayjs(item.createTime).fromNow()}
+                              {dayjsFrom(item.createTime)}
                             </span>
                           </div>
                         );

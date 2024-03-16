@@ -167,7 +167,7 @@ const EditProfile: FC<IProps> = (props: IProps) => {
               phone: account.phone,
               address: account?.address,
               dob: account?.dob && dayjs(account?.dob),
-              gender: account?.gender === "Male" ? true : false,
+              gender: account?.gender,
             }}
             onFinish={onFinish}
           >
@@ -185,8 +185,8 @@ const EditProfile: FC<IProps> = (props: IProps) => {
             </Form.Item>
             <Form.Item<IEditProfileForm> label="Giới tính" name="gender">
               <Select placeholder="Select your gender">
-                <Option value={true}>Male</Option>
-                <Option value={false}>Female</Option>
+                <Option value={"Male"}>Male</Option>
+                <Option value={"Female"}>Female</Option>
               </Select>
             </Form.Item>
             <Form.Item>

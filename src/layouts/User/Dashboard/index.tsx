@@ -4,7 +4,8 @@ import { ICategory } from "../../../interfaces/category.interface";
 import Header from "../../../components/Header";
 import Footer from "../../../components/Footer";
 import { Col, Menu, MenuProps, Row } from "antd";
-import { ERouteEndPointForUser } from "../../../enum/route-end-point.enum";
+import { ERouteEndPointForUser } from "../../../enums/route-end-point.enum";
+import { EMenuLabel } from "../../../enums/menu.enum";
 
 interface IProps {
   categories: ICategory[];
@@ -44,25 +45,36 @@ const ProfileLayout: FC<IProps> = (props: IProps) => {
       null
     ),
     getItem(
-      <NavLink to={ERouteEndPointForUser.DEPOSIT}>Ví</NavLink>,
+      <NavLink to={ERouteEndPointForUser.DEPOSIT}>
+        {EMenuLabel.DEPOSIT}
+      </NavLink>,
       ERouteEndPointForUser.DEPOSIT,
       null
     ),
     getItem(
+      <NavLink to={ERouteEndPointForUser.OWNED_STORIES}>
+        {EMenuLabel.OWNED_STORIES}
+      </NavLink>,
+      ERouteEndPointForUser.OWNED_STORIES,
+      null
+    ),
+    getItem(
       <NavLink to={ERouteEndPointForUser.FOLLOWING}>
-        Truyện đang theo dõi
+        {EMenuLabel.FOLLOWING}
       </NavLink>,
       ERouteEndPointForUser.FOLLOWING,
       null
     ),
     getItem(
-      <NavLink to={ERouteEndPointForUser.READ_HISTORY}>Lịch sử đọc</NavLink>,
+      <NavLink to={ERouteEndPointForUser.READ_HISTORY}>
+        {EMenuLabel.READ_HISTORY}
+      </NavLink>,
       ERouteEndPointForUser.READ_HISTORY,
       null
     ),
     getItem(
       <NavLink to={ERouteEndPointForUser.CHANGE_PASSWORD}>
-        Đổi mật khẩu
+        {EMenuLabel.CHANGE_PASSWORD}
       </NavLink>,
       ERouteEndPointForUser.CHANGE_PASSWORD,
       null

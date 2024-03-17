@@ -56,6 +56,7 @@ import { AiFillLike, AiOutlineLike } from "react-icons/ai";
 import { FaHeart, FaRegHeart } from "react-icons/fa6";
 import { toast } from "react-toastify";
 import EPModalReport from "../../components/EP-Common/Modal/Report";
+import { FcVip } from "react-icons/fc";
 
 const { Paragraph, Text } = Typography;
 
@@ -143,12 +144,12 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
   }, [id]);
 
   useEffect(() => {
-    fetchPaginationChapters();
-  }, [currentPageChapter, pageSizeChapter]);
+    currentTab === ETabsKey.CHAPTER && fetchPaginationChapters();
+  }, [currentTab, currentPageChapter, pageSizeChapter]);
 
   useEffect(() => {
-    fetchPaginationComments();
-  }, [currentPageComment, pageSizeComment]);
+    currentTab === ETabsKey.COMMENT && fetchPaginationComments();
+  }, [currentTab, currentPageComment, pageSizeComment]);
 
   const fetchStoryById = async (id: number | string) => {
     const res = await getStoryDetailById(id);
@@ -210,6 +211,16 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
     }
   };
 
+  const renderDescription = (description: string) => {
+    return (
+      <div
+        dangerouslySetInnerHTML={{
+          __html: description,
+        }}
+      />
+    );
+  };
+
   const renderTableChapter = () => {
     const columns: TableProps["columns"] = [
       {
@@ -230,8 +241,12 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
         key: "chapterNumber",
         render(chapterNumber, record: IChapter, index) {
           return (
-            <Link to={getStoryReadURL(id!, slug!, record.chapterNumber)}>
-              Chương số {chapterNumber}
+            <Link
+              to={getStoryReadURL(id!, slug!, record.chapterNumber)}
+              className="d-flex gap-2 align-items-center"
+            >
+              {record.chapterPrice > 0 && <FcVip className="fs-5" />}
+              <span>Chương số {chapterNumber}</span>
             </Link>
           );
         },
@@ -303,17 +318,19 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
             </List.Item>
           )}
         />
-        <Pagination
-          className="text-end"
-          responsive
-          current={currentPageComment}
-          total={totalComment}
-          pageSize={pageSizeComment}
-          showSizeChanger={false}
-          onChange={(page: number, pageSize: number) =>
-            handleChangePageChapter(page, pageSize, ETabsKey.COMMENT)
-          }
-        />
+        {comments.length > 0 && (
+          <Pagination
+            className="text-end"
+            responsive
+            current={currentPageComment}
+            total={totalComment}
+            pageSize={pageSizeComment}
+            showSizeChanger={false}
+            onChange={(page: number, pageSize: number) =>
+              handleChangePageChapter(page, pageSize, ETabsKey.COMMENT)
+            }
+          />
+        )}
       </>
     );
   };
@@ -346,6 +363,8 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
             ...prevState!,
             userFollow: !prevState!.userFollow,
           }));
+    } else {
+      toast.error(res.em);
     }
   };
 
@@ -424,55 +443,34 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
                           <Button size="large">Mua Trọn Bộ</Button>
                         ))}
                       <Space.Compact block size="large">
-                        {isAuthenticated ? (
-                          <>
-                            <Tooltip title="Like">
-                              <Button
-                                className="fs-5 d-flex align-items-center justify-content-center icon-like"
-                                onClick={() =>
-                                  handleStoryInteraction(EInteractionKey.LIKE)
-                                }
-                                icon={
-                                  story?.userLike ? (
-                                    <AiFillLike />
-                                  ) : (
-                                    <AiOutlineLike />
-                                  )
-                                }
-                              />
-                            </Tooltip>
-                            <Tooltip title="Follow">
-                              <Button
-                                className="fs-5 d-flex align-items-center justify-content-center icon-follow"
-                                onClick={() =>
-                                  handleStoryInteraction(EInteractionKey.FOLLOW)
-                                }
-                                icon={
-                                  story?.userFollow ? (
-                                    <FaHeart />
-                                  ) : (
-                                    <FaRegHeart />
-                                  )
-                                }
-                              />
-                            </Tooltip>
-                          </>
-                        ) : (
-                          <>
-                            <Tooltip title="Like">
-                              <Button
-                                className="fs-5 d-flex align-items-center justify-content-center icon-like"
-                                icon={<AiOutlineLike />}
-                              />
-                            </Tooltip>
-                            <Tooltip title="Follow">
-                              <Button
-                                className="fs-5 d-flex align-items-center justify-content-center icon-follow"
-                                icon={<FaRegHeart />}
-                              />
-                            </Tooltip>
-                          </>
-                        )}
+                        <>
+                          <Tooltip title="Like">
+                            <Button
+                              className="fs-5 d-flex align-items-center justify-content-center icon-like"
+                              onClick={() =>
+                                handleStoryInteraction(EInteractionKey.LIKE)
+                              }
+                              icon={
+                                story?.userLike ? (
+                                  <AiFillLike />
+                                ) : (
+                                  <AiOutlineLike />
+                                )
+                              }
+                            />
+                          </Tooltip>
+                          <Tooltip title="Follow">
+                            <Button
+                              className="fs-5 d-flex align-items-center justify-content-center icon-follow"
+                              onClick={() =>
+                                handleStoryInteraction(EInteractionKey.FOLLOW)
+                              }
+                              icon={
+                                story?.userFollow ? <FaHeart /> : <FaRegHeart />
+                              }
+                            />
+                          </Tooltip>
+                        </>
                         <Tooltip title="Report">
                           <Button
                             className="fs-5 d-flex align-items-center justify-content-center"
@@ -537,17 +535,11 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
             />
             <Row gutter={[16, 10]}>
               <Col span={19}>
-                {currentTab === ETabsKey.DESCRIPTION ? (
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: story?.storyDescription ?? "",
-                    }}
-                  />
-                ) : currentTab === ETabsKey.CHAPTER ? (
-                  renderTableChapter()
-                ) : (
-                  renderListComment()
-                )}
+                {currentTab === ETabsKey.DESCRIPTION
+                  ? renderDescription(story?.storyDescription ?? "")
+                  : currentTab === ETabsKey.CHAPTER
+                  ? renderTableChapter()
+                  : renderListComment()}
               </Col>
               <Col
                 span={5}

@@ -17,6 +17,7 @@ import {
 } from "../../../../services/transaction-api-service";
 import { IPropsEPModal } from "../../../../interfaces/global.interface";
 import EPButton from "../../../EP-UI/Button";
+import EPCondition from "../../../EP-UI/Condition";
 
 interface IProps extends IPropsEPModal {}
 
@@ -49,6 +50,12 @@ const momoPrices = [
   },
   {
     amount: 1000000,
+  },
+  {
+    amount: 20000000,
+  },
+  {
+    amount: 50000000,
   },
 ];
 
@@ -132,7 +139,7 @@ const EPModalTopUp: FC<IProps> = (props: IProps) => {
           },
         ]}
       />
-      <div className="payment-content mb-3">
+      <div className="payment-content">
         {chosenPayment === EPaymentMethod.VNPAY ? (
           <div>
             <Form onFinish={onFinish} form={form}>
@@ -194,13 +201,14 @@ const EPModalTopUp: FC<IProps> = (props: IProps) => {
           </>
         )}
       </div>
-      <span className="fs-6">
+      <div className="fs-6 my-3">
         Giao dịch sẽ được xử lý trong 1-2 phút. Nếu sau 10 phút bạn vẫn chưa
         nhận được TLT vui lòng chụp ảnh GD có{" "}
         <strong>kèm thời gian cụ thể và nội dung chuyển khoản</strong> vào page
         của The Genesis. Chúng tôi sẽ hỗ trợ bạn trong khung giờ từ 9:00-18:00.
         Trân trọng cảm ơn!
-      </span>
+      </div>
+      <EPCondition />
     </Modal>
   );
 };

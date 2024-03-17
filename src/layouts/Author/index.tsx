@@ -11,14 +11,15 @@ import { IRootState } from "../../redux/store";
 import { logoutAction } from "../../redux/account/accountSlice";
 import { toast } from "react-toastify";
 import { logout } from "../../services/auth-api-service";
-import { EMenuKey, EMenuLabel } from "../../components/Header/enum";
+import { EMenuKey, EMenuLabel } from "../../enums/menu.enum";
 import {
   ERouteEndPointForAuthor,
   ERouteEndPointForUser,
-} from "../../enum/route-end-point.enum";
+} from "../../enums/route-end-point.enum";
 import { GiBookshelf } from "react-icons/gi";
 import { TbBookUpload } from "react-icons/tb";
 import { GrChapterAdd } from "react-icons/gr";
+import { VscOpenPreview } from "react-icons/vsc";
 
 const { Content, Footer, Sider } = Layout;
 
@@ -194,6 +195,16 @@ const AuthorLayout: FC<IProps> = (props: IProps) => {
       <GrChapterAdd
         className="fs-5"
         onClick={() => navigate(ERouteEndPointForAuthor.WRITE_CHAPTER)}
+      />
+    ),
+    getItem(
+      <div onClick={() => navigate(ERouteEndPointForAuthor.REVIEW_STORY)}>
+        {EMenuLabel.AUTHOR_REVIEW_STORY}
+      </div>,
+      ERouteEndPointForAuthor.REVIEW_STORY,
+      <VscOpenPreview
+        className="fs-5"
+        onClick={() => navigate(ERouteEndPointForAuthor.REVIEW_STORY)}
       />
     ),
   ];

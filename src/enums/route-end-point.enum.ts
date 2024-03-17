@@ -1,6 +1,7 @@
 export enum ERouteEndPointForUser {
   DASHBOARD = "/user/dashboard",
   DEPOSIT = "/user/deposit",
+  OWNED_STORIES = "/user/owned-stories",
   FOLLOWING = "/user/following",
   READ_HISTORY = "/user/read-history",
   CHANGE_PASSWORD = "/user/change-password",
@@ -16,4 +17,5 @@ export enum ERouteEndPointForAuthor {
   POSTED_STORIES = "/author/posted-stories",
   WRITE_STORY = "/author/write-story",
   WRITE_CHAPTER = "/author/write-chapter",
+  REVIEW_STORY = "/author/review-story",
 }

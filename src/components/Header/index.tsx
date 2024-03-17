@@ -25,11 +25,11 @@ import { toast } from "react-toastify";
 import { logoutAction } from "../../redux/account/accountSlice";
 import { logout } from "../../services/auth-api-service";
 import { IRootState } from "../../redux/store";
-import { EMenuKey, EMenuLabel } from "./enum";
+import { EMenuKey, EMenuLabel } from "../../enums/menu.enum";
 import {
   ERouteEndPointForAuthor,
   ERouteEndPointForUser,
-} from "../../enum/route-end-point.enum";
+} from "../../enums/route-end-point.enum";
 import EPButton from "../EP-UI/Button";
 import { PiBookmarks } from "react-icons/pi";
 interface IProps {}

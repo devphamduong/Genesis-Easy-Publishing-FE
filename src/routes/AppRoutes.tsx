@@ -4,7 +4,7 @@ import { Route, Routes } from "react-router-dom";
 import { FC, useEffect, useState } from "react";
 import RankStories from "../pages/RankStories";
 import MostReadInWeek from "../pages/RankStories/MostReadInWeek";
-import { ERouteEndPointForUser } from "../enum/route-end-point.enum";
+import { ERouteEndPointForUser } from "../enums/route-end-point.enum";
 import StoriesWithMostFan from "../pages/RankStories/StoriesWithMostFan";
 import TopFullStories from "../pages/RankStories/TopFullStories";
 import MostVIPStoriesRead from "../pages/RankStories/MostVIPStoriesRead";
@@ -32,11 +32,19 @@ import ChangePasswordPage from "../pages/Auth/ChangePassword";
 import PaymentConfirmPage from "../pages/PaymentConfirm";
 import FollowingPage from "../pages/Profile/Following";
 import ReadHistoryPage from "../pages/Profile/ReadHistory";
+import OwnedStoriesPage from "../pages/Profile/OwnedStories";
+import ReviewStoryPage from "../pages/Author/ReviewStory";
+import ProtectedRoute from "../components/ProtectedRoute";
+import { IRootState } from "../redux/store";
+import { useSelector } from "react-redux";
 
 interface IProps {}
 
 const AppRoutes: FC<IProps> = (props: IProps) => {
   const [categories, setCategories] = useState<ICategory[]>([]);
+  const isAuthenticated = useSelector(
+    (state: IRootState) => state.account.isAuthenticated
+  );
 
   useEffect(() => {
     fetchAllCategories();
@@ -108,25 +116,34 @@ const AppRoutes: FC<IProps> = (props: IProps) => {
         </Route>
 
         {/* profile */}
-        <Route path="/user" element={<ProfileLayout categories={categories} />}>
-          <Route path="dashboard" element={<ProfilePage />}></Route>
-          <Route path="deposit" element={<DepositPage />}></Route>
-          <Route path="following" element={<FollowingPage />}></Route>
-          <Route path="read-history" element={<ReadHistoryPage />}></Route>
+        <Route element={<ProtectedRoute isAuthenticated={isAuthenticated} />}>
           <Route
-            path="change-password"
-            element={<ChangePasswordPage />}
-          ></Route>
+            path="/user"
+            element={<ProfileLayout categories={categories} />}
+          >
+            <Route path="dashboard" element={<ProfilePage />}></Route>
+            <Route path="deposit" element={<DepositPage />}></Route>
+            <Route path="owned-stories" element={<OwnedStoriesPage />}></Route>
+            <Route path="following" element={<FollowingPage />}></Route>
+            <Route path="read-history" element={<ReadHistoryPage />}></Route>
+            <Route
+              path="change-password"
+              element={<ChangePasswordPage />}
+            ></Route>
+          </Route>
         </Route>
 
         {/* author */}
-        <Route
-          path="/author"
-          element={<AuthorLayout categories={categories} />}
-        >
-          <Route path="posted-stories" element={<PostedStoriesPage />} />
-          <Route path="write-story" element={<WriteStoryPage />}></Route>
-          <Route path="write-chapter" element={<WriteChapterPage />}></Route>
+        <Route element={<ProtectedRoute isAuthenticated={isAuthenticated} />}>
+          <Route
+            path="/author"
+            element={<AuthorLayout categories={categories} />}
+          >
+            <Route path="posted-stories" element={<PostedStoriesPage />} />
+            <Route path="write-story" element={<WriteStoryPage />}></Route>
+            <Route path="write-chapter" element={<WriteChapterPage />}></Route>
+            <Route path="review-story" element={<ReviewStoryPage />}></Route>
+          </Route>
         </Route>
         <Route path="*" element={<NotFoundPage />}></Route>
       </Routes>

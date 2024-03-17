@@ -78,6 +78,13 @@ export const getPaginationStoriesFollowing = (
   return axios.get(`shelves/my_follow?page=${page}&pageSize=${pageSize}`);
 };
 
+export const getPaginationOwnedStories = (
+  page: number,
+  pageSize: number
+): Promise<IApiResponse<IPaginationStory>> => {
+  return axios.get(`shelves/my_owned?page=${page}&pageSize=${pageSize}`);
+};
+
 export const likeStory = (id: string | number): Promise<IApiResponse<null>> => {
   return axios.put(`interaction/story_like?storyid=${id}`);
 };

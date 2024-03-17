@@ -57,11 +57,12 @@ const ChangePasswordPage: FC<IProps> = (props: IProps) => {
       <div className="change-password-content">
         <div className="d-flex flex-column gap-3">
           <div className="top">
-            <div className="fs-6 d-flex align-items-center gap-1">
+            <div className="d-flex align-items-center gap-1">
               <BsInfoCircleFill />
               <span>
-                Click vào từng tên truyện để có thể xem chi tiết số liệu thống
-                kê của truyện đó.
+                Hãy sử dụng mật khẩu có tính bảo mật cao, khó đoán. Sau khi đổi
+                thành công, hệ thống sẽ thoát tài khoản. Bạn phải đăng nhập với
+                mật khẩu mới.
               </span>
             </div>
           </div>

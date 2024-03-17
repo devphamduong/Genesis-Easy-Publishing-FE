@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from "react";
-import { ERouteEndPointForUser } from "../../enum/route-end-point.enum";
+import { ERouteEndPointForUser } from "../../enums/route-end-point.enum";
 import { Affix, Col, Menu, MenuProps, Row } from "antd";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import "./RankStoriesLayout.scss";

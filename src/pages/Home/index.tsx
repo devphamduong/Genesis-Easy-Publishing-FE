@@ -396,6 +396,7 @@ const HomePage: FC = (props) => {
         </div>
       </div>
       <Drawer
+        className="drawer-category-full"
         title={null}
         placement={"top"}
         closable={false}
@@ -403,9 +404,32 @@ const HomePage: FC = (props) => {
         open={isOpenDrawer}
         key={"top"}
       >
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
+        <Card>
+          {categories.map((item) => {
+            return (
+              <Card.Grid
+                key={`category-full-${item.categoryId}`}
+                className="pointer"
+                style={{ width: "16.6666667%", padding: 10 }}
+                onClick={() =>
+                  navigate(
+                    getCategoryDetailURL(item.categoryId, item.categoryName)
+                  )
+                }
+              >
+                <div className="d-flex align-items-center px-2 category gap-2">
+                  <div className="icon">{item.icon ?? "O"}</div>
+                  <div>
+                    <strong className="name">{item.categoryName}</strong>
+                    <div className="amount">
+                      {kFormatter(item.storiesNumber!)}
+                    </div>
+                  </div>
+                </div>
+              </Card.Grid>
+            );
+          })}
+        </Card>
       </Drawer>
     </>
   );

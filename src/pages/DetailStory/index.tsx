@@ -2,13 +2,18 @@ import { FC, useEffect, useState } from "react";
 import "./DetailStory.scss";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import {
+  App,
   Avatar,
   Badge,
   Button,
   Col,
   Divider,
+  Flex,
+  Input,
   List,
   Pagination,
+  Popconfirm,
+  Popover,
   Row,
   Space,
   Table,
@@ -22,12 +27,16 @@ import EPTag from "../../components/EP-UI/Tag";
 import { dayjsFrom, kFormatter } from "../../shared/function";
 import {
   ClockCircleOutlined,
+  ExclamationCircleFilled,
   UserOutlined,
   WarningOutlined,
 } from "@ant-design/icons";
 import RowStory from "../../components/RowStory";
 import { PiBook } from "react-icons/pi";
-import { BsReverseLayoutTextWindowReverse } from "react-icons/bs";
+import {
+  BsReverseLayoutTextWindowReverse,
+  BsThreeDotsVertical,
+} from "react-icons/bs";
 import { GiSelfLove } from "react-icons/gi";
 import {
   IAuthor,
@@ -36,12 +45,14 @@ import {
   IStory,
 } from "../../interfaces/story.interface";
 import {
+  commentStory,
   followStory,
   getPaginationChaptersByStoryId,
   getPaginationCommentsByStoryId,
   getRelatedStoriesById,
   getStoryDetailById,
   likeStory,
+  updateComment,
 } from "../../services/story-api-service";
 import { getAuthorById } from "../../services/author-api-service";
 import { Typography } from "antd";
@@ -50,13 +61,24 @@ import {
   getStoryDetailURL,
   getStoryReadURL,
 } from "../../shared/generate-navigate-url";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { IRootState } from "../../redux/store";
 import { AiFillLike, AiOutlineLike } from "react-icons/ai";
 import { FaHeart, FaRegHeart } from "react-icons/fa6";
 import { toast } from "react-toastify";
 import EPModalReport from "../../components/EP-Common/Modal/Report";
 import { FcVip } from "react-icons/fc";
+import { buyStory } from "../../services/transaction-api-service";
+import { updateAccountBalance } from "../../redux/account/accountSlice";
+import { EUpdateBalanceAction } from "../../enums/transaction.enum";
+import { IUpdateBalanceAction } from "../../interfaces/transaction.interface";
+import {
+  MdDeleteOutline,
+  MdOutlineModeEdit,
+  MdOutlinedFlag,
+} from "react-icons/md";
+import EPButton from "../../components/EP-UI/Button";
+const { TextArea } = Input;
 
 const { Paragraph, Text } = Typography;
 
@@ -92,6 +114,8 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
     (state: IRootState) => state.account.isAuthenticated
   );
   const navigate = useNavigate();
+  const { modal } = App.useApp();
+  const dispatch = useDispatch();
   const [story, setStory] = useState<IStory>();
   const [author, setAuthor] = useState<IAuthor>();
   const [relatedStories, setRelatedStories] = useState<IStory[]>([]);
@@ -107,6 +131,10 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
   const [totalComment, setTotalComment] = useState<number>(0);
   const [pageSizeComment, setPageSizeComment] =
     useState<number>(PAGE_SIZE_COMMENT);
+  const [isDisplayButtonComment, setIsDisplayButtonComment] =
+    useState<boolean>(false);
+  const [commentContent, setCommentContent] = useState<string>("");
+  const [isEditingComment, setIsEditingComment] = useState<boolean>(false);
 
   const itemTabs: TabsProps["items"] = [
     {
@@ -137,7 +165,7 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
 
   useEffect(() => {
     if (id) {
-      fetchStoryById(id);
+      fetchStoryById();
       fetchRelatedStoriesById(id);
       fetchAuthorById(id);
     }
@@ -151,8 +179,8 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
     currentTab === ETabsKey.COMMENT && fetchPaginationComments();
   }, [currentTab, currentPageComment, pageSizeComment]);
 
-  const fetchStoryById = async (id: number | string) => {
-    const res = await getStoryDetailById(id);
+  const fetchStoryById = async () => {
+    const res = await getStoryDetailById(id!);
     if (res && res.ec === 0) {
       setStory(res.dt);
       PRICE = res.dt.storyPrice;
@@ -292,10 +320,70 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
     );
   };
 
+  const handleComment = async () => {
+    if (id) {
+      const res = await commentStory({
+        storyId: id,
+        commentContent,
+      });
+      if (res && res.ec === 0) {
+        setCommentContent("");
+        setIsDisplayButtonComment(false);
+        fetchPaginationComments();
+      } else {
+        toast.error(res.em);
+      }
+    }
+  };
+
+  const handleUpdateComment = async (id: number, mode: string) => {
+    const res = await updateComment(id, {
+      content: mode === "edit" ? commentContent : "",
+    });
+    if (res && res.ec === 0) {
+      fetchPaginationComments();
+    } else {
+      toast.error(res.em);
+    }
+  };
+
   const renderListComment = () => {
     return (
       <>
+        <Flex gap={"small"} vertical>
+          <Row>
+            <Col span={1}>
+              <Avatar icon={<UserOutlined />} />
+            </Col>
+            <Col span={23}>
+              <TextArea
+                variant="filled"
+                placeholder="Bạn đang nghĩ gì?"
+                autoSize
+                value={commentContent}
+                onChange={(e) => setCommentContent(e.target.value)}
+                onFocus={() => setIsDisplayButtonComment(true)}
+              />
+            </Col>
+          </Row>
+          {isDisplayButtonComment && (
+            <Flex gap="small" justify="end">
+              <Button
+                onClick={() => {
+                  setCommentContent("");
+                  setIsDisplayButtonComment(false);
+                }}
+              >
+                Hủy
+              </Button>
+              <Button type="primary" onClick={() => handleComment()}>
+                Bình luận
+              </Button>
+            </Flex>
+          )}
+        </Flex>
         <List
+          className="mt-3"
           dataSource={comments}
           renderItem={(item, index) => (
             <List.Item key={index}>
@@ -306,14 +394,106 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
                   />
                 }
                 title={
-                  <div className="d-flex align-items-center justify-content-between">
-                    <strong>{item.userComment.userFullname}</strong>
-                    <span className="time text-small">
-                      {dayjsFrom(item.commentDate)}
-                    </span>
-                  </div>
+                  !isEditingComment ? (
+                    <div className="d-flex align-items-center justify-content-between">
+                      <div className="d-flex align-items-center gap-2">
+                        <strong>{item.userComment.userFullname}</strong>
+                        <span className="time text-small">
+                          {dayjsFrom(item.commentDate)}
+                        </span>
+                      </div>
+                      <Popover
+                        content={
+                          <div className="d-flex flex-column align-items-center gap-2">
+                            {item.commentWriter ? (
+                              <>
+                                <EPButton
+                                  type="text"
+                                  icon={<MdOutlineModeEdit className="fs-5" />}
+                                  onClick={
+                                    () => setIsEditingComment(true)
+                                    // handleUpdateComment(item.commentId, "edit")
+                                  }
+                                >
+                                  Sửa
+                                </EPButton>
+                                <Popconfirm
+                                  title="Xóa bình luận"
+                                  description="Bạn có muốn xóa vĩnh viễn không?"
+                                  okText="Xóa"
+                                  cancelText="Hủy"
+                                  onConfirm={() =>
+                                    handleUpdateComment(
+                                      item.commentId,
+                                      "delete"
+                                    )
+                                  }
+                                >
+                                  <EPButton
+                                    type="text"
+                                    icon={<MdDeleteOutline className="fs-5" />}
+                                  >
+                                    Xóa
+                                  </EPButton>
+                                </Popconfirm>
+                              </>
+                            ) : (
+                              <EPButton
+                                type="text"
+                                icon={<MdOutlinedFlag className="fs-5" />}
+                              >
+                                Report
+                              </EPButton>
+                            )}
+                          </div>
+                        }
+                        trigger={"click"}
+                      >
+                        <EPButton shape="circle" type="text">
+                          <BsThreeDotsVertical />
+                        </EPButton>
+                      </Popover>
+                    </div>
+                  ) : (
+                    item.commentWriter && (
+                      <Flex gap={"small"} vertical>
+                        <Row>
+                          <Col span={23}>
+                            <TextArea
+                              variant="filled"
+                              placeholder="Bạn đang nghĩ gì?"
+                              autoSize
+                              value={commentContent}
+                              onChange={(e) =>
+                                setCommentContent(e.target.value)
+                              }
+                              onFocus={() => setIsDisplayButtonComment(true)}
+                            />
+                          </Col>
+                        </Row>
+                        {isDisplayButtonComment && (
+                          <Flex gap="small" justify="end">
+                            <Button
+                              onClick={() => {
+                                setCommentContent("");
+                                setIsEditingComment(false);
+                              }}
+                            >
+                              Hủy
+                            </Button>
+                            <Button
+                              type="primary"
+                              onClick={() => handleComment()}
+                            >
+                              Lưu thay đổi
+                            </Button>
+                          </Flex>
+                        )}
+                      </Flex>
+                    )
+                  )
                 }
-                description={item.commentContent}
+                description={!isEditingComment && item.commentContent}
               />
             </List.Item>
           )}
@@ -363,6 +543,43 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
             ...prevState!,
             userFollow: !prevState!.userFollow,
           }));
+    } else {
+      toast.error(res.em);
+    }
+  };
+
+  const showConfirmBuyStory = async (
+    storyId: number | string,
+    price: number
+  ) => {
+    modal.confirm({
+      title: (
+        <span>
+          Mua trọn bộ <strong>{price}</strong> TLT
+        </span>
+      ),
+      icon: <ExclamationCircleFilled />,
+      content: "Bạn có chắc không?",
+      okText: "Mua",
+      cancelText: "Bỏ qua",
+      onOk() {
+        handleBuyStory(storyId, price);
+      },
+      onCancel() {},
+    });
+  };
+
+  const handleBuyStory = async (id: number | string, price: number) => {
+    const res = await buyStory(id);
+    if (res && res.ec === 0) {
+      toast.success(res.em);
+      fetchStoryById();
+      dispatch(
+        updateAccountBalance({
+          updateAction: EUpdateBalanceAction.BUY,
+          amount: price,
+        } as IUpdateBalanceAction)
+      );
     } else {
       toast.error(res.em);
     }
@@ -440,7 +657,17 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
                       </Button>
                       {!story?.userOwned ||
                         (!story?.authorOwned && (
-                          <Button size="large">Mua Trọn Bộ</Button>
+                          <Button
+                            size="large"
+                            onClick={() =>
+                              showConfirmBuyStory(
+                                story.storyId,
+                                NEW_PRICE as number
+                              )
+                            }
+                          >
+                            Mua Trọn Bộ
+                          </Button>
                         ))}
                       <Space.Compact block size="large">
                         <>

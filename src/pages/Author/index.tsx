@@ -87,7 +87,7 @@ const AuthorPage: FC<IProps> = (props: IProps) => {
                 >
                   <Meta
                     title={item.storyTitle}
-                    description={item.storyAuthor.userFullname}
+                    description={item?.storyAuthor?.userFullname}
                   />
                 </Card>
               );

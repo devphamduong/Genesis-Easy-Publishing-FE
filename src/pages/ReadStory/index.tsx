@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from "react";
 import "./ReadStory.scss";
-import { Button, Col, Descriptions, FloatButton, Modal, Row } from "antd";
+import { App, Button, Col, Descriptions, FloatButton, Modal, Row } from "antd";
 import {
   ExclamationCircleFilled,
   HeartOutlined,
@@ -14,7 +14,7 @@ import { dayjsFrom, kFormatter } from "../../shared/function";
 import EPButton from "../../components/EP-UI/Button";
 import { IChapterContent } from "../../interfaces/story.interface";
 import { getChapterContent } from "../../services/story-api-service";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { IRootState } from "../../redux/store";
 import {
   getAuthorDetailURL,
@@ -27,12 +27,19 @@ import { IoCheckmark } from "react-icons/io5";
 import EPModalReport from "../../components/EP-Common/Modal/Report";
 import EPModalBuyChapters from "../../components/EP-Common/Modal/BuyChapters";
 import EPModalTopUp from "../../components/EP-Common/Modal/TopUp";
+import { buySingleChapter } from "../../services/transaction-api-service";
+import { toast } from "react-toastify";
+import { updateAccountBalance } from "../../redux/account/accountSlice";
+import { EUpdateBalanceAction } from "../../enums/transaction.enum";
+import { IUpdateBalanceAction } from "../../interfaces/transaction.interface";
 const { confirm } = Modal;
 
 interface IProps {}
 
 const ReadStoryPage: FC<IProps> = (props: IProps) => {
+  const { modal } = App.useApp();
   const { id, chapter } = useParams();
+  const dispatch = useDispatch();
   const account = useSelector((state: IRootState) => state.account.user);
   const [currentChapter, setCurrentChapter] = useState<number>(
     getChapterNumber(chapter!)
@@ -59,8 +66,8 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
     setIsSubmittedLike(true);
   };
 
-  const showConfirmBuyChapter = (price: number) => {
-    confirm({
+  const showConfirmBuyChapter = (storyId: number | string, price: number) => {
+    modal.confirm({
       title: (
         <span>
           Mua chương giá <strong>{price}</strong> TLT
@@ -68,13 +75,12 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
       ),
       icon: <ExclamationCircleFilled />,
       content: "Bạn có chắc không?",
+      okText: "Mua",
       cancelText: "Bỏ qua",
       onOk() {
-        console.log("OK");
+        handleBuySingleChapter(storyId, price);
       },
-      onCancel() {
-        console.log("Cancel");
-      },
+      onCancel() {},
     });
   };
 
@@ -95,6 +101,22 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
     );
     history.replaceState(null, "", newEndPoint);
     currentChapter - 1 > 0 && setCurrentChapter(currentChapter - 1);
+  };
+
+  const handleBuySingleChapter = async (id: number | string, price: number) => {
+    const res = await buySingleChapter(id);
+    if (res && res.ec === 0) {
+      toast.success(res.em);
+      fetchChapterContent();
+      dispatch(
+        updateAccountBalance({
+          updateAction: EUpdateBalanceAction.BUY,
+          amount: price,
+        } as IUpdateBalanceAction)
+      );
+    } else {
+      toast.error(res.em);
+    }
   };
 
   return (
@@ -148,7 +170,10 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
                     icon={<IoCheckmark />}
                     size={"large"}
                     onClick={() =>
-                      showConfirmBuyChapter(chapterContent!.chapterPrice)
+                      showConfirmBuyChapter(
+                        chapterContent!.chapterId,
+                        chapterContent!.chapterPrice
+                      )
                     }
                   >
                     Mua Chương Này

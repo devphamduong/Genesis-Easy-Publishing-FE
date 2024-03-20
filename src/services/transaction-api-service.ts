@@ -25,3 +25,13 @@ export const getTransactionHistory = (
     `transaction/transaction_history?page=${page}&pageSize=${pageSize}`
   );
 };
+
+export const buySingleChapter = (
+  id: number | string
+): Promise<IApiResponse<null>> => {
+  return axios.post(`transaction/add_transaction_buy_chapter?chapterId=${id}`);
+};
+
+export const buyStory = (id: number | string): Promise<IApiResponse<null>> => {
+  return axios.post(`transaction/add_transaction_buy_story?storyId=${id}`);
+};

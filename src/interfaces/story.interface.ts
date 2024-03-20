@@ -43,16 +43,20 @@ export interface IStory {
   userFollow: boolean;
   userLike: boolean;
   storyCreateTime: string;
+  status?: number;
 }
 
 export interface IStoryInteraction {
-  follow: number;
-  like: number;
-  read: number;
-  view: number;
-  purchaseChapter: number;
-  purchaseStory: number;
-  reportStory: number;
+  follow?: number;
+  like?: number;
+  read?: number;
+  view?: number;
+  purchaseChapter?: number;
+  purchaseStory?: number;
+  reportStory?: number;
+  commentStory?: number;
+  commentChapter?: number;
+  reportChapter?: number;
 }
 
 export interface IAuthor {
@@ -91,11 +95,15 @@ export interface IChapter {
 }
 
 export interface IChapterInteraction {
-  chapterId: number;
-  chapterTitle: string;
-  chapterNumber: number;
-  purchaseChapter: number;
-  reportChapter: number;
+  interaction: {
+    chapterId: number;
+    chapterTitle: string;
+    chapterNumber: number;
+    purchaseChapter: number;
+    reportChapter: number;
+  }[];
+  min: number;
+  max: number;
 }
 
 export interface IComment {
@@ -107,6 +115,13 @@ export interface IComment {
   commentId: number;
   commentContent: string;
   commentDate: string;
+  commentWriter: boolean;
+}
+
+export interface ISendCommentPayload {
+  storyId: number | string;
+  chapterId?: number;
+  commentContent: string;
 }
 
 export interface IPaginationChapter {
@@ -129,6 +144,10 @@ export interface IWriteStoryForm {
   storyTitle?: string;
   type?: string;
   authorId?: string | number;
+  storyPrice?: number;
+  storySale?: number;
+  storyImage?: string;
+  status?: number;
   categoryIds?: string[];
   storyDescription?: string;
   storyDescriptionMarkdown?: string;

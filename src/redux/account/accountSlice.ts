@@ -1,5 +1,7 @@
-import { IUser } from "./../../interfaces/auth.interface";
+import { EUpdateBalanceAction } from "../../enums/transaction.enum";
+import { IUser } from "../../interfaces/auth.interface";
 import { createSlice } from "@reduxjs/toolkit";
+import { IUpdateBalanceAction } from "../../interfaces/transaction.interface";
 
 const initialState: {
   isAuthenticated: boolean;
@@ -21,6 +23,7 @@ const initialState: {
     userImage: "",
     descriptionMarkdown: "",
     descriptionHTML: "",
+    tlt: 0,
   },
 };
 
@@ -66,6 +69,16 @@ export const accountSlice = createSlice({
       state.user.descriptionMarkdown = descriptionMarkdown;
       state.user.descriptionHTML = descriptionHTML;
     },
+    updateAccountBalance: (state, action) => {
+      const { updateAction, amount }: IUpdateBalanceAction = action.payload;
+      switch (updateAction) {
+        case EUpdateBalanceAction.BUY:
+          state.user.tlt -= amount;
+          break;
+        case EUpdateBalanceAction.TOPUP:
+          break;
+      }
+    },
   },
   extraReducers: (builder) => {},
 });
@@ -76,6 +89,7 @@ export const {
   logoutAction,
   updateUserAvatar,
   updateUserInfo,
+  updateAccountBalance,
 } = accountSlice.actions;
 
 export default accountSlice.reducer;

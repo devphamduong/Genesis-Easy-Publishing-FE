@@ -11,6 +11,7 @@ export interface IUser {
   userImage: string;
   descriptionMarkdown?: string;
   descriptionHTML?: string;
+  tlt: number;
 }
 
 export interface ILoginResponse {

@@ -7,7 +7,7 @@ import { IRootState } from "./redux/store";
 
 interface IProps {}
 
-const App: FC<IProps> = (props: IProps) => {
+const AppMain: FC<IProps> = (props: IProps) => {
   const dispatch = useDispatch();
   const isLoading = useSelector((state: IRootState) => state.account.isLoading);
 
@@ -31,4 +31,4 @@ const App: FC<IProps> = (props: IProps) => {
   return <AppRoutes />;
 };
 
-export default App;
+export default AppMain;

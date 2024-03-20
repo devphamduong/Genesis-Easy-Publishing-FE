@@ -4,12 +4,15 @@ import { FC } from "react";
 
 interface IProps {
   isAuthenticated: boolean;
+  children: React.ReactNode;
 }
 
 const ProtectedRoute: FC<IProps> = (props) => {
-  const { isAuthenticated } = props;
+  const { isAuthenticated, children } = props;
 
-  return <>{isAuthenticated ? <Outlet /> : <NotPermitted />}</>;
+  return (
+    <>{isAuthenticated ? children ? children : <Outlet /> : <NotPermitted />}</>
+  );
 };
 
 export default ProtectedRoute;

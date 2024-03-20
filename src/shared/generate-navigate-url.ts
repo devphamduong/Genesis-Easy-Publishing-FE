@@ -25,3 +25,11 @@ export const getStoryReadURL = (
 ): string => {
   return `/story/read/${id}/${slug}.chapter-${chapter}`;
 };
+
+export const getStoryEditURL = (id: number | string): string => {
+  return `/author/write-story?edit-story-id=${id}`;
+};
+
+export const getChapterEditURL = (id: number | string): string => {
+  return `/author/write-chapter?edit-chapter-id=${id}`;
+};

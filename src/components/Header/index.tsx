@@ -32,6 +32,7 @@ import {
 } from "../../enums/route-end-point.enum";
 import EPButton from "../EP-UI/Button";
 import { PiBookmarks } from "react-icons/pi";
+import { kFormatter } from "../../shared/function";
 interface IProps {}
 
 const Header: FC<IProps> = (props: IProps) => {
@@ -194,20 +195,26 @@ const Header: FC<IProps> = (props: IProps) => {
                       </Button>
                     </Col>
                   ) : (
-                    <Col>
-                      <div>Hi {account.username ?? "friend"}</div>
-                      <strong className="pointer">
-                        <Popover
-                          content={popoverMenu()}
-                          title={popoverTitle()}
-                          trigger={"click"}
-                          placement="bottomRight"
-                          open={isPopoverOpen}
-                          onOpenChange={(isOpen) => setIsPopoverOpen(isOpen)}
-                        >
-                          My Account
-                        </Popover>
-                      </strong>
+                    <Col className="d-flex align-items-center gap-5">
+                      <div>
+                        <div>Hi {account.username ?? "friend"}</div>
+                        <strong className="pointer">
+                          <Popover
+                            content={popoverMenu()}
+                            title={popoverTitle()}
+                            trigger={"click"}
+                            placement="bottomRight"
+                            open={isPopoverOpen}
+                            onOpenChange={(isOpen) => setIsPopoverOpen(isOpen)}
+                          >
+                            My Account
+                          </Popover>
+                        </strong>
+                      </div>
+                      <span>
+                        Bạn đang có: {kFormatter(account.tlt)}{" "}
+                        <strong>TLT</strong>
+                      </span>
                     </Col>
                   )}
                 </Row>

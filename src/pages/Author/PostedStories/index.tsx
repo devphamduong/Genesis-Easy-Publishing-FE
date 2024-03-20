@@ -19,6 +19,16 @@ import {
 } from "../../../interfaces/story.interface";
 import relativeTime from "dayjs/plugin/relativeTime";
 import dayjs from "dayjs";
+import { LiaUserEditSolid } from "react-icons/lia";
+import EPButton from "../../../components/EP-UI/Button";
+import { MdDeleteOutline } from "react-icons/md";
+import { GrChapterAdd } from "react-icons/gr";
+import { useNavigate } from "react-router-dom";
+import {
+  getChapterEditURL,
+  getStoryEditURL,
+} from "../../../shared/generate-navigate-url";
+import { ERouteEndPointForAuthor } from "../../../enums/route-end-point.enum";
 dayjs.extend(relativeTime);
 
 interface IProps {}
@@ -26,6 +36,7 @@ interface IProps {}
 const PAGE_SIZE = 10;
 
 const PostedStoriesPage: FC<IProps> = (props: IProps) => {
+  const navigate = useNavigate();
   const [stories, setStories] = useState<IStory[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(PAGE_SIZE);
@@ -38,9 +49,8 @@ const PostedStoriesPage: FC<IProps> = (props: IProps) => {
   const [currentStory, setCurrentStory] = useState<IStory>();
   const [dataStoryInteraction, setDataStoryInteraction] =
     useState<IStoryInteraction>();
-  const [dataChaptersInteraction, setDataChaptersInteraction] = useState<
-    IChapterInteraction[]
-  >([]);
+  const [dataChaptersInteraction, setDataChaptersInteraction] =
+    useState<IChapterInteraction>();
 
   useEffect(() => {
     fetchPostedStories();
@@ -84,6 +94,9 @@ const PostedStoriesPage: FC<IProps> = (props: IProps) => {
         purchaseChapter: res.dt.purchaseChapter,
         purchaseStory: res.dt.purchaseStory,
         reportStory: res.dt.reportStory,
+        commentStory: res.dt.commentStory,
+        commentChapter: res.dt.commentChapter,
+        reportChapter: res.dt.reportChapter,
       };
       setDataStoryInteraction(payload);
     }
@@ -149,10 +162,25 @@ const PostedStoriesPage: FC<IProps> = (props: IProps) => {
       },
       sorter: true,
     },
-    // {
-    //   title: "",
-    //   dataIndex: "math",
-    // },
+    {
+      title: "",
+      dataIndex: "actions",
+      render(value, record: IStory) {
+        return (
+          <div className="d-flex gap-2">
+            <EPButton
+              icon={<LiaUserEditSolid className="fs-5" />}
+              onClick={() => navigate(getStoryEditURL(record.storyId))}
+            />
+            <EPButton
+              icon={<GrChapterAdd className="fs-5" />}
+              onClick={() => navigate(ERouteEndPointForAuthor.WRITE_CHAPTER)}
+            />
+            <EPButton danger icon={<MdDeleteOutline className="fs-5" />} />
+          </div>
+        );
+      },
+    },
   ];
 
   const onChangePagination = (pagination, filters, sorter, extra) => {
@@ -280,7 +308,7 @@ const PostedStoriesPage: FC<IProps> = (props: IProps) => {
         open={openDrawer}
       >
         <EPStoryStatistics
-          width={"65%"}
+          width={"100%"}
           height={"65%"}
           storyInteraction={dataStoryInteraction}
           chaptersInteraction={dataChaptersInteraction}

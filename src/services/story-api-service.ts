@@ -8,7 +8,6 @@ import {
   IReportForm,
   ISendCommentPayload,
   IStory,
-  IWriteStoryForm,
 } from "../interfaces/story.interface";
 import axios from "../utils/axios-customize";
 
@@ -126,16 +125,4 @@ export const getStoryInformation = (
   storyid: string | number
 ): Promise<IApiResponse<IStory>> => {
   return axios.get(`story/story_information?storyId=${storyid}`);
-};
-
-export const updateStory = (
-  data: IWriteStoryForm
-): Promise<IApiResponse<IStory>> => {
-  return axios.put(`story/update_story`, { ...data });
-};
-
-export const createStory = (
-  data: IWriteStoryForm
-): Promise<IApiResponse<null>> => {
-  return axios.post(`story/save_story`, { ...data });
 };

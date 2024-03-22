@@ -1,6 +1,6 @@
 import { ChangeEvent, FC, useEffect, useState } from "react";
 import "./PostedStories.scss";
-import { Drawer, Input, Select, Table } from "antd";
+import { Drawer, Input, Select, Table, Tooltip } from "antd";
 import Highlighter from "react-highlight-words";
 import { SearchOutlined } from "@ant-design/icons";
 import EPStoryStatistics from "../../../components/EP-UI/StoryStatistics";
@@ -25,10 +25,11 @@ import { MdDeleteOutline } from "react-icons/md";
 import { GrChapterAdd } from "react-icons/gr";
 import { useNavigate } from "react-router-dom";
 import {
-  getChapterEditURL,
-  getStoryEditURL,
+  getEditStoryURL,
+  getWriteChapterURL,
 } from "../../../shared/generate-navigate-url";
-import { ERouteEndPointForAuthor } from "../../../enums/route-end-point.enum";
+import { slugify } from "../../../shared/function";
+import PostedVolumesPage from "../PostedVolumes";
 dayjs.extend(relativeTime);
 
 interface IProps {}
@@ -103,15 +104,8 @@ const PostedStoriesPage: FC<IProps> = (props: IProps) => {
   };
 
   const fetchChartChapters = async () => {
-    const res = await getChartChapters(currentStory!.storyId);
+    const res = await getChartChapters(`storyId=${currentStory!.storyId}`);
     if (res && res.ec === 0) {
-      // const payload = {
-      //   chapterId: res.dt.chapterId,
-      //   chapterTitle: res.dt.chapterTitle,
-      //   chapterNumber: res.dt.chapterNumber,
-      //   purchaseChapter: res.dt.purchaseChapter,
-      //   reportChapter: res.dt.reportChapter
-      // };
       setDataChaptersInteraction(res.dt);
     }
   };
@@ -168,14 +162,35 @@ const PostedStoriesPage: FC<IProps> = (props: IProps) => {
       render(value, record: IStory) {
         return (
           <div className="d-flex gap-2">
-            <EPButton
-              icon={<LiaUserEditSolid className="fs-5" />}
-              onClick={() => navigate(getStoryEditURL(record.storyId))}
-            />
-            <EPButton
-              icon={<GrChapterAdd className="fs-5" />}
-              onClick={() => navigate(ERouteEndPointForAuthor.WRITE_CHAPTER)}
-            />
+            <Tooltip title="Sửa truyện">
+              <EPButton
+                icon={<LiaUserEditSolid className="fs-5" />}
+                onClick={() =>
+                  navigate(
+                    getEditStoryURL(record.storyId, slugify(record.storyTitle))
+                  )
+                }
+              />
+            </Tooltip>
+            <Tooltip title="Thêm chương mới">
+              <EPButton
+                icon={<GrChapterAdd className="fs-5" />}
+                onClick={() =>
+                  navigate(
+                    getWriteChapterURL(
+                      record.storyId,
+                      slugify(record.storyTitle)
+                    ),
+                    {
+                      state: {
+                        storyId: record.storyId,
+                        storyTitle: record.storyTitle,
+                      },
+                    }
+                  )
+                }
+              />
+            </Tooltip>
             <EPButton danger icon={<MdDeleteOutline className="fs-5" />} />
           </div>
         );
@@ -300,16 +315,22 @@ const PostedStoriesPage: FC<IProps> = (props: IProps) => {
           />
         </div>
       </div>
+      <PostedVolumesPage />
       <Drawer
         className="drawer-posted-stories"
         title={`Số liệu thống kê của truyện "${currentStory?.storyTitle}"`}
         placement="right"
-        onClose={() => setOpenDrawer(false)}
+        onClose={() => {
+          setOpenDrawer(false);
+          setDataStoryInteraction(undefined);
+          setDataChaptersInteraction(undefined);
+        }}
         open={openDrawer}
       >
         <EPStoryStatistics
           width={"100%"}
           height={"65%"}
+          storyId={currentStory?.storyId}
           storyInteraction={dataStoryInteraction}
           chaptersInteraction={dataChaptersInteraction}
         />

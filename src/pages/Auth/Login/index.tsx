@@ -41,7 +41,6 @@ const LoginPage: FC<IProps> = (props: IProps) => {
       if (location.state) {
         form.setFieldValue("emailOrUsername", location.state.emailOrUsername);
         form.setFieldValue("password", location.state.password);
-        window.history.replaceState({}, "");
       }
     }
   }, []);

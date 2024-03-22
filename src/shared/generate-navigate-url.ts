@@ -26,8 +26,23 @@ export const getStoryReadURL = (
   return `/story/read/${id}/${slug}.chapter-${chapter}`;
 };
 
-export const getStoryEditURL = (id: number | string): string => {
-  return `/author/write-story?edit-story-id=${id}`;
+export const getEditStoryURL = (id: number | string, slug: string): string => {
+  return `/author/write-story?mode=edit&storyId=${id}&storyTitle=${slug}`;
+};
+
+export const getWriteChapterURL = (
+  id: number | string,
+  slug: string
+): string => {
+  return `/author/write-chapter?mode=add&storyId=${id}&storyTitle=${slug}`;
+};
+
+export const getEditChapterURL = (
+  storyId: number | string,
+  chapterId: number | string,
+  slug: string
+): string => {
+  return `/author/write-chapter?mode=edit&storyId=${storyId}&chapterId=${chapterId}&storyTitle=${slug}`;
 };
 
 export const getChapterEditURL = (id: number | string): string => {

@@ -143,6 +143,7 @@ export interface IPaginationComment {
 export interface IWriteStoryForm {
   storyTitle?: string;
   type?: string;
+  storyId: number | string;
   authorId?: string | number;
   storyPrice?: number;
   storySale?: number;
@@ -152,6 +153,17 @@ export interface IWriteStoryForm {
   storyDescription?: string;
   storyDescriptionMarkdown?: string;
   storyDescriptionHtml?: string;
+}
+
+export interface IWriteChapterForm {
+  storyId: number | string;
+  chapterId: number | string;
+  volumeId: number;
+  chapterTitle: string;
+  storyTitle: string;
+  chapterContentMarkdown: string;
+  chapterContentHtml: string;
+  chapterPrice: number;
 }
 
 export interface IReportForm {
@@ -184,4 +196,12 @@ export interface IChapterContent {
   nextChapterNumber: number;
   message: string;
   owned: boolean;
+}
+
+export interface IVolume {
+  volumeId: number;
+  volumeNumber: number;
+  volumeTitle: string;
+  createTime: string;
+  chapters: IChapter[];
 }

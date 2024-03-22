@@ -152,7 +152,12 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
             </Row>
           </div>
           {chapterContent && chapterContent?.owned ? (
-            <div className="content noselect">{chapterContent?.content}</div>
+            <div
+              className="content noselect"
+              dangerouslySetInnerHTML={{
+                __html: chapterContent?.content ?? "",
+              }}
+            />
           ) : (
             chapterContent && (
               <div className="d-flex flex-column gap-2 align-items-center justify-content-center">

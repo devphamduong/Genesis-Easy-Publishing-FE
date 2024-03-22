@@ -7,7 +7,7 @@ export enum EMenuLabel {
   CHANGE_PASSWORD = "Đổi mật khẩu",
   MANAGE = "Quản lý truyện",
   AUTHOR_DASHBOARD = "Thống kê",
-  AUTHOR_WRITE_STORY = "Tạo truyện mới",
+  AUTHOR_WRITE_STORY = "Viết truyện",
   AUTHOR_WRITE_CHAPTER = "Viết chương truyện",
   AUTHOR_POSTED_STORY = "Truyện đã đăng",
   AUTHOR_REVIEW_STORY = "Review truyện",

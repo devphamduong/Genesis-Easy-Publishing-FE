@@ -29,11 +29,9 @@ import { IRootState } from "../../../redux/store";
 import { IWriteStoryForm } from "../../../interfaces/story.interface";
 import { getPlainTextFromHTML } from "../../../shared/function";
 import { ICategory } from "../../../interfaces/category.interface";
-import {
-  createStory,
-  getStoryInformation,
-} from "../../../services/story-api-service";
+import { getStoryInformation } from "../../../services/story-api-service";
 import { toast } from "react-toastify";
+import { createStory, updateStory } from "../../../services/author-api-service";
 
 interface IProps {}
 
@@ -43,7 +41,8 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
   const [form] = Form.useForm<IWriteStoryForm>();
   const categories: ICategory[] = useOutletContext();
   const [searchParams, setSearchParams] = useSearchParams();
-  const storyId = searchParams.get("edit-story-id");
+  const mode = searchParams.get("mode");
+  const storyId = searchParams.get("storyId");
   const [descriptionMarkdown, setDescriptionMarkdown] = useState<string>(
     "**Phần tóm tắt viết ở đây!!**"
   );
@@ -62,7 +61,7 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
   }, []);
 
   useEffect(() => {
-    if (storyId) {
+    if (storyId && mode === "edit") {
       fetchStoryInformation();
     }
   }, [storyId]);
@@ -98,13 +97,19 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
   const onFinish = async (values: IWriteStoryForm) => {
     const payload: IWriteStoryForm = {
       ...values,
+      storyId: storyId!,
       authorId: account.userId,
       storyDescription: getPlainTextFromHTML(descriptionHTML),
       storyDescriptionMarkdown: descriptionMarkdown,
       storyDescriptionHtml: descriptionHTML,
     };
     setIsLoading(true);
-    const res = await createStory(payload);
+    let res;
+    if (mode === "add") {
+      res = await createStory(payload);
+    } else {
+      res = await updateStory(payload);
+    }
     if (res && res.ec === 0) {
       toast.success(res.em);
       form.resetFields();
@@ -176,12 +181,12 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
                       </div>
                     }
                     name="type"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Loại truyện không được để trống!",
-                      },
-                    ]}
+                    // rules={[
+                    //   {
+                    //     required: true,
+                    //     message: "Loại truyện không được để trống!",
+                    //   },
+                    // ]}
                   >
                     <Input
                       size="large"
@@ -290,7 +295,11 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
                   disabled={isLoading}
                   onClick={() => form.submit()}
                 >
-                  Lưu truyện mới
+                  {mode === "edit" ? (
+                    <span>Lưu thay đổi</span>
+                  ) : (
+                    <span>Lưu truyện mới</span>
+                  )}
                 </Button>
               </Form.Item>
             </Form>

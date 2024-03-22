@@ -5,6 +5,9 @@ import {
   IPaginationStory,
   IStory,
   IStoryInteraction,
+  IVolume,
+  IWriteChapterForm,
+  IWriteStoryForm,
 } from "../interfaces/story.interface";
 import axios from "../utils/axios-customize";
 
@@ -39,7 +42,43 @@ export const getChartStory = (
 };
 
 export const getChartChapters = (
-  id: string | number
+  query: string
 ): Promise<IApiResponse<IChapterInteraction>> => {
-  return axios.get(`interaction/author_manage/chapter?storyId=${id}`);
+  return axios.get(`interaction/author_manage/chapter?${query}`);
+};
+
+export const getVolumes = (
+  id: number | string
+): Promise<IApiResponse<IVolume[]>> => {
+  return axios.get(`chapters/volume_list?storyId=${id}`);
+};
+
+export const getStoryVolume = (
+  id: number | string
+): Promise<IApiResponse<IVolume[]>> => {
+  return axios.get(`chapters/story_volume?storyId=${id}`);
+};
+
+export const updateStory = (
+  data: IWriteStoryForm
+): Promise<IApiResponse<IStory>> => {
+  return axios.put(`story/update_story`, { ...data });
+};
+
+export const createStory = (
+  data: IWriteStoryForm
+): Promise<IApiResponse<null>> => {
+  return axios.post(`story/save_story`, { ...data });
+};
+
+export const addChapter = (
+  data: IWriteChapterForm
+): Promise<IApiResponse<null>> => {
+  return axios.post(`chapters/add_chapter`, { ...data });
+};
+
+export const updateChapter = (
+  data: IWriteChapterForm
+): Promise<IApiResponse<null>> => {
+  return axios.put(`chapters/update_chapter`, { ...data });
 };

@@ -155,7 +155,7 @@ const AuthorLayout: FC<IProps> = (props: IProps) => {
   const location = useLocation();
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState<boolean>(false);
-  const [currentParams, setCurrentParams] = useState(
+  const [currentParams, setCurrentParams] = useState<string>(
     ERouteEndPointForAuthor.DASHBOARD
   );
   const {

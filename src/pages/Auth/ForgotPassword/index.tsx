@@ -2,7 +2,7 @@ import { FC, useEffect, useState } from "react";
 import "./ForgotPassword.scss";
 import { Button, Form, Input } from "antd";
 import { Link } from "react-router-dom";
-import { forgotPassword } from "../../../services/auth-api.service";
+import { forgotPassword } from "../../../services/auth-api-service";
 import { toast } from "react-toastify";
 
 interface IProps {}
@@ -15,7 +15,7 @@ const ForgotPasswordPage: FC<IProps> = (props: IProps) => {
   const [form] = Form.useForm();
   const [submittable, setSubmittable] = useState<boolean>(false);
   const values = Form.useWatch([], form);
-  const [isDisableButton, setIsDisableButton] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     form.validateFields({ validateOnly: true }).then(
@@ -29,14 +29,15 @@ const ForgotPasswordPage: FC<IProps> = (props: IProps) => {
   }, [values]);
 
   const onFinish = async (values: FieldType) => {
-    setIsDisableButton(true);
+    setIsLoading(true);
     const res = await forgotPassword(values);
     if (res && res.ec === 0) {
       toast.success(res.em);
+      form.resetFields();
     } else {
       toast.error(res.em);
-      setIsDisableButton(true);
     }
+    setIsLoading(false);
   };
 
   return (
@@ -72,7 +73,8 @@ const ForgotPasswordPage: FC<IProps> = (props: IProps) => {
 
               <Form.Item>
                 <Button
-                  disabled={!submittable || isDisableButton}
+                  disabled={!submittable || isLoading}
+                  loading={isLoading}
                   size="large"
                   type="primary"
                   htmlType="submit"

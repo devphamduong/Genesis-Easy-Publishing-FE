@@ -35,6 +35,7 @@ const EPButton: FC<IProps> = (props: IProps) => {
         onClick={onClick}
         type={props.type ?? "primary"}
         style={warning ? { color: "#000" } : undefined}
+        className="d-flex align-items-center justify-content-center"
       >
         {children}
       </Button>

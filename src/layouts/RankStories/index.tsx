@@ -1,11 +1,11 @@
 import { FC, useEffect, useState } from "react";
-import { RouteEndPointForUser } from "../../constants/route-end-point.constant";
+import { ERouteEndPointForUser } from "../../enums/route-end-point.enum";
 import { Affix, Col, Menu, MenuProps, Row } from "antd";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import "./RankStoriesLayout.scss";
 import { ICategory } from "../../interfaces/category.interface";
-import Cover from "../../components/Cover";
 import EPFilter from "../../components/EP-Common/Filter";
+import EPCover from "../../components/EP-UI/Cover";
 
 type MenuItem = Required<MenuProps>["items"][number];
 function getItem(
@@ -26,38 +26,38 @@ function getItem(
 
 const items: MenuProps["items"] = [
   getItem(
-    <Link to={RouteEndPointForUser.RANK_STORIES}>Bảng xếp hạng</Link>,
-    RouteEndPointForUser.RANK_STORIES,
+    <Link to={ERouteEndPointForUser.RANK_STORIES}>Bảng xếp hạng</Link>,
+    ERouteEndPointForUser.RANK_STORIES,
     null
   ),
   { type: "divider" },
 
   getItem(
-    <Link to={RouteEndPointForUser.MOST_READ_IN_WEEK}>
+    <Link to={ERouteEndPointForUser.MOST_READ_IN_WEEK}>
       Đọc nhiều trong tuần
     </Link>,
-    RouteEndPointForUser.MOST_READ_IN_WEEK,
+    ERouteEndPointForUser.MOST_READ_IN_WEEK,
     null
   ),
   getItem(
-    <Link to={RouteEndPointForUser.MOST_VIP_STORIES_READ}>
+    <Link to={ERouteEndPointForUser.MOST_VIP_STORIES_READ}>
       Truyện VIP nhiều người đọc
     </Link>,
-    RouteEndPointForUser.MOST_VIP_STORIES_READ,
+    ERouteEndPointForUser.MOST_VIP_STORIES_READ,
     null
   ),
   getItem(
-    <Link to={RouteEndPointForUser.TOP_FULL_STORIES}>Top truyện full</Link>,
-    RouteEndPointForUser.TOP_FULL_STORIES,
+    <Link to={ERouteEndPointForUser.TOP_FULL_STORIES}>Top truyện full</Link>,
+    ERouteEndPointForUser.TOP_FULL_STORIES,
     null
   ),
   { type: "divider" },
 
   getItem(
-    <Link to={RouteEndPointForUser.STORIES_WITH_MOST_FAN}>
+    <Link to={ERouteEndPointForUser.STORIES_WITH_MOST_FAN}>
       Truyện nhiều fan
     </Link>,
-    RouteEndPointForUser.STORIES_WITH_MOST_FAN,
+    ERouteEndPointForUser.STORIES_WITH_MOST_FAN,
     null
   ),
 ];
@@ -69,8 +69,8 @@ interface IProps {
 const RankStoriesLayout: FC<IProps> = (props: IProps) => {
   const { categories } = props;
   const location = useLocation();
-  const [currentParams, setCurrentParams] = useState(
-    RouteEndPointForUser.RANK_STORIES
+  const [currentParams, setCurrentParams] = useState<string>(
+    ERouteEndPointForUser.RANK_STORIES
   );
 
   useEffect(() => {
@@ -79,7 +79,7 @@ const RankStoriesLayout: FC<IProps> = (props: IProps) => {
 
   return (
     <div className="rank-stories-layout-container">
-      <Cover
+      <EPCover
         imgUrl="https://yystatic.codeprime.net/desktop/img/tables/table-bg-14.jpg"
         title="Kim Thánh Bảng"
         subTitle="Bảng Xếp Hạng Truyện Chữ Toàn Diện Của The Genesis"

@@ -86,3 +86,7 @@
         }
     }
 }
+
+.ant-drawer-content-wrapper:has(.drawer-category-full) {
+    height: fit-content !important;
+}

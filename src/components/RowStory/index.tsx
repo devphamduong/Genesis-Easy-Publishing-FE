@@ -4,12 +4,14 @@ import VerticalImageHover from "../VerticalImageHover";
 import { IStory } from "../../interfaces/story.interface";
 import { Button, Col, Divider, Row, Skeleton, Typography } from "antd";
 import { FaPenFancy } from "react-icons/fa6";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ClockCircleOutlined } from "@ant-design/icons";
-import relativeTime from "dayjs/plugin/relativeTime";
-import dayjs from "dayjs";
-dayjs.extend(relativeTime);
-import { getStoryDetailURL } from "../../shared/generate-navigate-url";
+
+import {
+  getAuthorDetailURL,
+  getStoryDetailURL,
+} from "../../shared/generate-navigate-url";
+import { dayjsFrom } from "../../shared/function";
 const { Text } = Typography;
 
 interface IProps {
@@ -23,6 +25,7 @@ interface IProps {
 
 const RowStory: FC<IProps> = (props: IProps) => {
   const { story, rank, imgWidth, imgHight, size, displayUpdatedAt } = props;
+  const navigate = useNavigate();
 
   const renderRowDefault = () => {
     return (
@@ -45,7 +48,12 @@ const RowStory: FC<IProps> = (props: IProps) => {
           <Text ellipsis={true} className="description">
             <span>{story.storyDescription}</span>
           </Text>
-          <div className="d-flex align-items-center gap-1 author">
+          <div
+            className="d-flex align-items-center gap-1 author"
+            onClick={() =>
+              navigate(getAuthorDetailURL(story.storyAuthor.userId))
+            }
+          >
             <FaPenFancy />
             <strong>{story.storyAuthor.userFullname}</strong>
           </div>
@@ -87,7 +95,12 @@ const RowStory: FC<IProps> = (props: IProps) => {
             <span>{story.storyDescription}</span>
           </Text>
           <div className="d-flex align-items-center justify-content-between">
-            <div className="d-flex align-items-center justify-content-between gap-1 author-chapters">
+            <div
+              className="d-flex align-items-center justify-content-between gap-1 author-chapters"
+              onClick={() =>
+                navigate(getAuthorDetailURL(story.storyAuthor.userId))
+              }
+            >
               <FaPenFancy />
               <strong>{story.storyAuthor.userFullname}</strong>
             </div>
@@ -98,7 +111,7 @@ const RowStory: FC<IProps> = (props: IProps) => {
           {displayUpdatedAt && (
             <div className="time">
               <ClockCircleOutlined />
-              <span> {dayjs("2024-02-17T13:00:00").fromNow()}</span>
+              <span> {dayjsFrom(story.storyCreateTime)}</span>
             </div>
           )}
         </Col>

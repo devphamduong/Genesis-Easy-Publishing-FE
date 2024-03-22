@@ -9,6 +9,7 @@ import {
   Avatar,
   Button,
   Col,
+  Drawer,
   Input,
   Menu,
   MenuProps,
@@ -22,13 +23,16 @@ import { FC } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { logoutAction } from "../../redux/account/accountSlice";
-import { logout } from "../../services/auth-api.service";
+import { logout } from "../../services/auth-api-service";
 import { IRootState } from "../../redux/store";
-import { EMenuKey, EMenuLabel } from "./enum";
+import { EMenuKey, EMenuLabel } from "../../enums/menu.enum";
 import {
-  RouteEndPointForAuthor,
-  RouteEndPointForUser,
-} from "../../constants/route-end-point.constant";
+  ERouteEndPointForAuthor,
+  ERouteEndPointForUser,
+} from "../../enums/route-end-point.enum";
+import EPButton from "../EP-UI/Button";
+import { PiBookmarks } from "react-icons/pi";
+import { kFormatter } from "../../shared/function";
 interface IProps {}
 
 const Header: FC<IProps> = (props: IProps) => {
@@ -39,6 +43,7 @@ const Header: FC<IProps> = (props: IProps) => {
   );
   const account = useSelector((state: IRootState) => state.account?.user);
   const [current, setCurrent] = useState<string>("mail");
+  const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const items: MenuProps["items"] = [
     {
       label: <NavLink to={"/"}>Truyện chất lượng cao</NavLink>,
@@ -55,13 +60,24 @@ const Header: FC<IProps> = (props: IProps) => {
       key: "alipay",
     },
   ];
-  const [isPopoverOpen, setIPopoverOpen] = useState<boolean>(false);
+  const [isPopoverOpen, setIsPopoverOpen] = useState<boolean>(false);
 
   const popoverTitle = () => {
     return (
-      <div className="d-flex align-items-center gap-2">
-        <Avatar size="large" icon={<UserOutlined />} />
-        <div>{account.username ?? "vcl"}</div>
+      <div className="d-flex align-items-center justify-content-between">
+        <div className="d-flex align-items-center gap-2">
+          <Avatar size="large" icon={<UserOutlined />} />
+          <div>{account.username ?? "vcl"}</div>
+        </div>
+        <EPButton
+          icon={<PiBookmarks />}
+          onClick={() => {
+            setIsPopoverOpen(false);
+            setOpenDrawer(true);
+          }}
+        >
+          Theo dõi
+        </EPButton>
       </div>
     );
   };
@@ -86,27 +102,9 @@ const Header: FC<IProps> = (props: IProps) => {
     }
 
     const items: MenuProps["items"] = [
-      getItem(
-        <div onClick={() => navigate("/user/dashboard")}>
-          {EMenuLabel.PROFILE}
-        </div>,
-        EMenuKey.PROFILE,
-        null
-      ),
-      getItem(
-        <div onClick={() => navigate("/user/deposit")}>
-          {EMenuLabel.DEPOSIT}
-        </div>,
-        EMenuKey.DEPOSIT,
-        null
-      ),
-      getItem(
-        <div onClick={() => navigate("/author/dashboard")}>
-          {EMenuLabel.MANAGE}
-        </div>,
-        EMenuKey.MANAGE,
-        null
-      ),
+      getItem(<div>{EMenuLabel.PROFILE}</div>, EMenuKey.PROFILE, null),
+      getItem(<div>{EMenuLabel.DEPOSIT}</div>, EMenuKey.DEPOSIT, null),
+      getItem(<div>{EMenuLabel.MANAGE}</div>, EMenuKey.MANAGE, null),
       getItem(
         <Button block onClick={() => handleLogout()}>
           Đăng xuất
@@ -118,16 +116,16 @@ const Header: FC<IProps> = (props: IProps) => {
 
     const onClick: MenuProps["onClick"] = (e) => {
       const { key } = e;
-      setIPopoverOpen(false);
+      setIsPopoverOpen(false);
       switch (key) {
         case EMenuKey.PROFILE:
-          navigate(RouteEndPointForUser.DASHBOARD);
+          navigate(ERouteEndPointForUser.DASHBOARD);
           break;
         case EMenuKey.DEPOSIT:
-          navigate(RouteEndPointForUser.DEPOSIT);
+          navigate(ERouteEndPointForUser.DEPOSIT);
           break;
         case EMenuKey.MANAGE:
-          navigate(RouteEndPointForAuthor.DASHBOARD);
+          navigate(ERouteEndPointForAuthor.POSTED_STORIES);
           break;
       }
     };
@@ -150,7 +148,7 @@ const Header: FC<IProps> = (props: IProps) => {
       toast.success("Logout successfully");
       navigate("/");
     }
-    setIPopoverOpen(false);
+    setIsPopoverOpen(false);
   };
 
   return (
@@ -197,20 +195,26 @@ const Header: FC<IProps> = (props: IProps) => {
                       </Button>
                     </Col>
                   ) : (
-                    <Col>
-                      <div>Hi {account.username}</div>
-                      <strong className="pointer">
-                        <Popover
-                          content={popoverMenu()}
-                          title={popoverTitle()}
-                          trigger={"click"}
-                          placement="bottomRight"
-                          open={isPopoverOpen}
-                          onOpenChange={(isOpen) => setIPopoverOpen(isOpen)}
-                        >
-                          My Account
-                        </Popover>
-                      </strong>
+                    <Col className="d-flex align-items-center gap-5">
+                      <div>
+                        <div>Hi {account.username ?? "friend"}</div>
+                        <strong className="pointer">
+                          <Popover
+                            content={popoverMenu()}
+                            title={popoverTitle()}
+                            trigger={"click"}
+                            placement="bottomRight"
+                            open={isPopoverOpen}
+                            onOpenChange={(isOpen) => setIsPopoverOpen(isOpen)}
+                          >
+                            My Account
+                          </Popover>
+                        </strong>
+                      </div>
+                      <span>
+                        Bạn đang có: {kFormatter(account.tlt)}{" "}
+                        <strong>TLT</strong>
+                      </span>
                     </Col>
                   )}
                 </Row>
@@ -219,6 +223,25 @@ const Header: FC<IProps> = (props: IProps) => {
           </div>
         </div>
       </Affix>
+      <Drawer
+        className="drawer-header"
+        title="Truyện đang theo dõi"
+        placement={"right"}
+        onClose={() => setOpenDrawer(false)}
+        open={openDrawer}
+        extra={
+          <Button
+            type="primary"
+            onClick={() => navigate(ERouteEndPointForUser.FOLLOWING)}
+          >
+            Xem đầy đủ
+          </Button>
+        }
+      >
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+      </Drawer>
     </>
   );
 };

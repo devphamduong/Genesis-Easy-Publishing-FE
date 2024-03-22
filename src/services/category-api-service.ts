@@ -10,13 +10,13 @@ export const getAllCategories = (): Promise<IApiResponse<ICategory[]>> => {
 export const getStoriesByCategoryId = (
   id: string
 ): Promise<IApiResponse<IStory[]>> => {
-  return axios.get(`shelves/topcate_shelves?cateid=${id}`);
+  return axios.get(`shelves/topcate_shelves?cateId=${id}`);
 };
 
 export const getStoriesMostReadByCategoryId = (
   id: string
 ): Promise<IApiResponse<IStory[]>> => {
-  return axios.get(`shelves/topcate_read?cateid=${id}`);
+  return axios.get(`shelves/topcate_read?cateId=${id}`);
 };
 
 export const getPaginationStoriesByCategoryId = (
@@ -25,6 +25,6 @@ export const getPaginationStoriesByCategoryId = (
   pageSize: number
 ): Promise<IApiResponse<IPaginationStory>> => {
   return axios.get(
-    `shelves/cate_shelves?cateid=${id}&page=${page}&pageSize=${pageSize}`
+    `shelves/cate_shelves?cateId=${id}&page=${page}&pageSize=${pageSize}`
   );
 };

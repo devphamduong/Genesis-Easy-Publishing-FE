@@ -5,6 +5,8 @@ import {
   IPaginationChapter,
   IPaginationComment,
   IPaginationStory,
+  IReportForm,
+  ISendCommentPayload,
   IStory,
 } from "../interfaces/story.interface";
 import axios from "../utils/axios-customize";
@@ -40,13 +42,13 @@ export const getTopReadStories = (): Promise<
 export const getStoryDetailById = (
   id: number | string
 ): Promise<IApiResponse<IStory>> => {
-  return axios.get(`story/story_detail?storyid=${id}`);
+  return axios.get(`story/story_detail?storyId=${id}`);
 };
 
 export const getRelatedStoriesById = (
   id: number | string
 ): Promise<IApiResponse<IStory[]>> => {
-  return axios.get(`story/story_detail/related?storyid=${id}`);
+  return axios.get(`story/story_detail/related?storyId=${id}`);
 };
 
 export const getPaginationChaptersByStoryId = (
@@ -55,7 +57,7 @@ export const getPaginationChaptersByStoryId = (
   pageSize: number
 ): Promise<IApiResponse<IPaginationChapter>> => {
   return axios.get(
-    `chapters/story_detail?storyid=${id}&page=${page}&pageSize=${pageSize}`
+    `chapters/story_detail?storyId=${id}&page=${page}&pageSize=${pageSize}`
   );
 };
 
@@ -65,18 +67,51 @@ export const getPaginationCommentsByStoryId = (
   pageSize: number
 ): Promise<IApiResponse<IPaginationComment>> => {
   return axios.get(
-    `comments/story_detail?storyid=${id}&page=${page}&pageSize=${pageSize}`
+    `comments/story_detail?storyId=${id}&page=${page}&pageSize=${pageSize}`
   );
 };
 
+export const getPaginationStoriesFollowing = (
+  page: number,
+  pageSize: number
+): Promise<IApiResponse<IPaginationStory>> => {
+  return axios.get(`shelves/my_follow?page=${page}&pageSize=${pageSize}`);
+};
+
+export const getPaginationOwnedStories = (
+  page: number,
+  pageSize: number
+): Promise<IApiResponse<IPaginationStory>> => {
+  return axios.get(`shelves/my_owned?page=${page}&pageSize=${pageSize}`);
+};
+
 export const likeStory = (id: string | number): Promise<IApiResponse<null>> => {
-  return axios.put(`interaction/story_like?storyid=${id}`);
+  return axios.put(`interaction/story_like?storyId=${id}`);
 };
 
 export const followStory = (
   id: string | number
 ): Promise<IApiResponse<null>> => {
-  return axios.put(`interaction/story_follow?storyid=${id}`);
+  return axios.put(`interaction/story_follow?storyId=${id}`);
+};
+
+export const commentStory = (
+  data: ISendCommentPayload
+): Promise<IApiResponse<null>> => {
+  return axios.post(`comments/send`, { ...data });
+};
+
+export const updateComment = (
+  id: number | string,
+  data: {
+    content: string;
+  }
+): Promise<IApiResponse<null>> => {
+  return axios.post(`comments/edit?commentId=${id}`, { ...data });
+};
+
+export const reportStory = (data: IReportForm): Promise<IApiResponse<null>> => {
+  return axios.post(`reports/send`, { ...data });
 };
 
 export const getChapterContent = (
@@ -84,4 +119,10 @@ export const getChapterContent = (
   chapterNumber: number
 ): Promise<IApiResponse<IChapterContent>> => {
   return axios.get(`chapters/chapter_content/${storyid}/${chapterNumber}`);
+};
+
+export const getStoryInformation = (
+  storyid: string | number
+): Promise<IApiResponse<IStory>> => {
+  return axios.get(`story/story_information?storyId=${storyid}`);
 };

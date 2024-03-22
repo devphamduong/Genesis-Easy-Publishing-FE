@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from "react";
 import "./ReadStory.scss";
-import { Button, Col, Descriptions, FloatButton, Modal, Row } from "antd";
+import { App, Button, Col, Descriptions, FloatButton, Modal, Row } from "antd";
 import {
   ExclamationCircleFilled,
   HeartOutlined,
@@ -10,29 +10,37 @@ import {
 } from "@ant-design/icons";
 import { Link, useParams } from "react-router-dom";
 import { getChapterNumber } from "./shared/function";
-import { kFormatter } from "../../shared/function";
-import EPModalReport from "../../components/EP-UI/Modal/Report";
+import { dayjsFrom, kFormatter } from "../../shared/function";
 import EPButton from "../../components/EP-UI/Button";
 import { IChapterContent } from "../../interfaces/story.interface";
-import { getChapterContent } from "../../services/story-api.service";
-import { useSelector } from "react-redux";
+import { getChapterContent } from "../../services/story-api-service";
+import { useDispatch, useSelector } from "react-redux";
 import { IRootState } from "../../redux/store";
-import { getStoryDetailURL } from "../../shared/generate-navigate-url";
-import relativeTime from "dayjs/plugin/relativeTime";
-import dayjs from "dayjs";
+import {
+  getAuthorDetailURL,
+  getStoryDetailURL,
+} from "../../shared/generate-navigate-url";
 import { FcVip } from "react-icons/fc";
 import { RiMoneyDollarCircleFill } from "react-icons/ri";
 import { IoMdDoneAll } from "react-icons/io";
 import { IoCheckmark } from "react-icons/io5";
-import EPModalBuyChapters from "../../components/EP-UI/Modal/BuyChapters";
-dayjs.extend(relativeTime);
+import EPModalReport from "../../components/EP-Common/Modal/Report";
+import EPModalBuyChapters from "../../components/EP-Common/Modal/BuyChapters";
+import EPModalTopUp from "../../components/EP-Common/Modal/TopUp";
+import { buySingleChapter } from "../../services/transaction-api-service";
+import { toast } from "react-toastify";
+import { updateAccountBalance } from "../../redux/account/accountSlice";
+import { EUpdateBalanceAction } from "../../enums/transaction.enum";
+import { IUpdateBalanceAction } from "../../interfaces/transaction.interface";
 const { confirm } = Modal;
 
 interface IProps {}
 
 const ReadStoryPage: FC<IProps> = (props: IProps) => {
+  const { modal } = App.useApp();
   const { id, chapter } = useParams();
-  const user = useSelector((state: IRootState) => state.account.user);
+  const dispatch = useDispatch();
+  const account = useSelector((state: IRootState) => state.account.user);
   const [currentChapter, setCurrentChapter] = useState<number>(
     getChapterNumber(chapter!)
   );
@@ -41,6 +49,7 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
     useState<boolean>(false);
   const [isSubmittedLike, setIsSubmittedLike] = useState<boolean>(false);
   const [chapterContent, setChapterContent] = useState<IChapterContent>();
+  const [isModalTopUpOpen, setIsModalTopUpOpen] = useState<boolean>(false);
 
   useEffect(() => {
     fetchChapterContent();
@@ -57,8 +66,8 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
     setIsSubmittedLike(true);
   };
 
-  const showConfirmBuyChapter = (price: number) => {
-    confirm({
+  const showConfirmBuyChapter = (storyId: number | string, price: number) => {
+    modal.confirm({
       title: (
         <span>
           Mua chương giá <strong>{price}</strong> TLT
@@ -66,14 +75,48 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
       ),
       icon: <ExclamationCircleFilled />,
       content: "Bạn có chắc không?",
+      okText: "Mua",
       cancelText: "Bỏ qua",
       onOk() {
-        console.log("OK");
+        handleBuySingleChapter(storyId, price);
       },
-      onCancel() {
-        console.log("Cancel");
-      },
+      onCancel() {},
     });
+  };
+
+  const handleNextChapter = () => {
+    const newEndPoint = window.location.pathname.replace(
+      `chapter-${chapterContent?.chapterNumber}`,
+      `chapter-${chapterContent?.nextChapterNumber}`
+    );
+    history.replaceState(null, "", newEndPoint);
+    chapterContent?.nextChapterNumber !== -1 &&
+      setCurrentChapter(chapterContent!.nextChapterNumber);
+  };
+
+  const handlePrevChapter = () => {
+    const newEndPoint = window.location.pathname.replace(
+      `chapter-${chapterContent?.chapterNumber}`,
+      `chapter-${currentChapter - 1}`
+    );
+    history.replaceState(null, "", newEndPoint);
+    currentChapter - 1 > 0 && setCurrentChapter(currentChapter - 1);
+  };
+
+  const handleBuySingleChapter = async (id: number | string, price: number) => {
+    const res = await buySingleChapter(id);
+    if (res && res.ec === 0) {
+      toast.success(res.em);
+      fetchChapterContent();
+      dispatch(
+        updateAccountBalance({
+          updateAction: EUpdateBalanceAction.BUY,
+          amount: price,
+        } as IUpdateBalanceAction)
+      );
+    } else {
+      toast.error(res.em);
+    }
   };
 
   return (
@@ -88,6 +131,7 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
                   type="primary"
                   size={"large"}
                   className="d-flex gap-1 align-items-center w-100 justify-content-center"
+                  onClick={() => handlePrevChapter()}
                 >
                   <LeftOutlined />
                   <span>Trước</span>
@@ -95,9 +139,11 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
               </Col>
               <Col span={12}>
                 <Button
+                  disabled={chapterContent?.nextChapterNumber === -1}
                   type="primary"
                   size={"large"}
                   className="d-flex gap-1 align-items-center w-100 justify-content-center"
+                  onClick={() => handleNextChapter()}
                 >
                   <span>Tiếp</span>
                   <RightOutlined />
@@ -105,61 +151,82 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
               </Col>
             </Row>
           </div>
-          {!chapterContent?.owned ? (
-            <div className="content">{chapterContent?.content}</div>
+          {chapterContent && chapterContent?.owned ? (
+            <div
+              className="content noselect"
+              dangerouslySetInnerHTML={{
+                __html: chapterContent?.content ?? "",
+              }}
+            />
           ) : (
-            <div className="d-flex flex-column gap-2 align-items-center justify-content-center">
-              <FcVip className="fs-1" />
-              <div>
-                Chương này là chương VIP, để xem nội dung bạn cần{" "}
-                <strong>{chapterContent?.chapterPrice}</strong> Tử Linh Thạch{" "}
-                (TLT).
+            chapterContent && (
+              <div className="d-flex flex-column gap-2 align-items-center justify-content-center">
+                <FcVip className="fs-1" />
+                <div>
+                  Chương này là chương VIP, để xem nội dung bạn cần{" "}
+                  <strong>{chapterContent?.chapterPrice}</strong> Tử Linh Thạch
+                  (TLT).
+                </div>
+                <div className="d-flex flex-column gap-2 text-center">
+                  <EPButton
+                    color="#09bb07"
+                    className="d-flex align-items-center justify-content-center"
+                    type="primary"
+                    icon={<IoCheckmark />}
+                    size={"large"}
+                    onClick={() =>
+                      showConfirmBuyChapter(
+                        chapterContent!.chapterId,
+                        chapterContent!.chapterPrice
+                      )
+                    }
+                  >
+                    Mua Chương Này
+                  </EPButton>
+                  <EPButton
+                    color="#09bb07"
+                    className="d-flex align-items-center justify-content-center"
+                    type="primary"
+                    icon={<IoMdDoneAll />}
+                    size={"large"}
+                    onClick={() => setIsModalBuyChaptersOpen(true)}
+                  >
+                    Mua Full
+                  </EPButton>
+                  <EPButton
+                    color="#09bb07"
+                    className="d-flex align-items-center justify-content-center"
+                    type="primary"
+                    icon={<RiMoneyDollarCircleFill />}
+                    size={"large"}
+                    onClick={() => setIsModalTopUpOpen(true)}
+                  >
+                    Nạp TLT
+                  </EPButton>
+                </div>
               </div>
-              <div className="d-flex flex-column gap-2 text-center">
-                <EPButton
-                  color="#09bb07"
-                  className="d-flex align-items-center justify-content-center"
-                  type="primary"
-                  icon={<IoCheckmark />}
-                  size={"large"}
-                  onClick={() =>
-                    showConfirmBuyChapter(chapterContent?.chapterPrice)
-                  }
-                >
-                  Mua Chương Này
-                </EPButton>
-                <EPButton
-                  color="#09bb07"
-                  className="d-flex align-items-center justify-content-center"
-                  type="primary"
-                  icon={<IoMdDoneAll />}
-                  size={"large"}
-                  onClick={() => setIsModalBuyChaptersOpen(true)}
-                >
-                  Mua Full
-                </EPButton>
-                <EPButton
-                  color="#09bb07"
-                  className="d-flex align-items-center justify-content-center"
-                  type="primary"
-                  icon={<RiMoneyDollarCircleFill />}
-                  size={"large"}
-                >
-                  Nạp TLT
-                </EPButton>
-              </div>
-            </div>
+            )
           )}
-          <div className="text-center">
-            <Button
-              type={isSubmittedLike ? "primary" : undefined}
-              danger
+          <div className="d-flex justify-content-center gap-3">
+            {chapterContent?.owned && (
+              <Button
+                type={isSubmittedLike ? "primary" : undefined}
+                danger
+                size="large"
+                icon={<HeartOutlined />}
+                onClick={() => handleLikeStory()}
+              >
+                <span>{isSubmittedLike ? "Đã thích" : "Ta thích"}</span>
+              </Button>
+            )}
+            <EPButton
+              icon={<WarningOutlined />}
               size="large"
-              icon={<HeartOutlined />}
-              onClick={() => handleLikeStory()}
+              warning
+              onClick={() => setIsModalReportOpen(true)}
             >
-              <span>{isSubmittedLike ? "Đã thích" : "Ta thích"}</span>
-            </Button>
+              Report
+            </EPButton>
           </div>
           <div className="sort-description">
             Bạn đang đọc
@@ -171,7 +238,10 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
               {chapterContent?.story.storyTitle}{" "}
             </Link>
             của
-            <Link to={""} className="author link-hover">
+            <Link
+              to={getAuthorDetailURL(chapterContent?.author.userId)}
+              className="author link-hover"
+            >
               {" "}
               {chapterContent?.author.userFullname}
             </Link>
@@ -184,6 +254,7 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
                   type="primary"
                   size={"large"}
                   className="d-flex gap-1 align-items-center w-100 justify-content-center"
+                  onClick={() => handlePrevChapter()}
                 >
                   <LeftOutlined />
                   <span>Trước</span>
@@ -191,9 +262,11 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
               </Col>
               <Col span={12}>
                 <Button
+                  disabled={chapterContent?.nextChapterNumber === -1}
                   type="primary"
                   size={"large"}
                   className="d-flex gap-1 align-items-center w-100 justify-content-center"
+                  onClick={() => handleNextChapter()}
                 >
                   <span>Tiếp</span>
                   <RightOutlined />
@@ -223,7 +296,7 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
                     </Col>{" "}
                     <Col span={22}>
                       {chapterContent?.updateTime &&
-                        dayjs(chapterContent?.updateTime).fromNow()}
+                        dayjsFrom(chapterContent?.updateTime)}
                     </Col>
                     <Col span={2} className="text-lighter">
                       Lượt mua
@@ -239,16 +312,6 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
             ]}
             size="small"
           />
-          <div>
-            <EPButton
-              icon={<WarningOutlined />}
-              size="large"
-              warning
-              onClick={() => setIsModalReportOpen(true)}
-            >
-              Report
-            </EPButton>
-          </div>
         </div>
       </div>
       <FloatButton.BackTop />
@@ -256,10 +319,15 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
         isModalOpen={isModalReportOpen}
         setIsModalOpen={setIsModalReportOpen}
         inChapter={currentChapter}
+        storyId={id}
       />
       <EPModalBuyChapters
         isModalOpen={isModalBuyChaptersOpen}
         setIsModalOpen={setIsModalBuyChaptersOpen}
+      />
+      <EPModalTopUp
+        isModalOpen={isModalTopUpOpen}
+        setIsModalOpen={setIsModalTopUpOpen}
       />
     </>
   );

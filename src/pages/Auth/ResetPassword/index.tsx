@@ -1,9 +1,9 @@
 import { FC, useEffect, useState } from "react";
 import "./ResetPassword.scss";
 import { Button, Form, Input } from "antd";
-import { Link } from "react-router-dom";
-import { forgotPassword } from "../../../services/auth-api.service";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import { resetPassword, verifyToken } from "../../../services/auth-api-service";
 
 interface IProps {}
 
@@ -14,9 +14,26 @@ type FieldType = {
 
 const ResetPasswordPage: FC<IProps> = (props: IProps) => {
   const [form] = Form.useForm();
+  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [submittable, setSubmittable] = useState<boolean>(false);
   const values = Form.useWatch([], form);
-  const [isDisableButton, setIsDisableButton] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isTokenExpired, setIsTokenExpired] = useState<boolean>(false);
+
+  useEffect(() => {
+    validateToken();
+  }, []);
+
+  const validateToken = async () => {
+    const token = searchParams.get("token");
+    async () => {
+      const res = await verifyToken({ token: !token ? "" : token });
+      if (res && res.ec !== 0) {
+        setIsTokenExpired(true);
+      }
+    };
+  };
 
   useEffect(() => {
     form.validateFields({ validateOnly: true }).then(
@@ -30,14 +47,24 @@ const ResetPasswordPage: FC<IProps> = (props: IProps) => {
   }, [values]);
 
   const onFinish = async (values: FieldType) => {
-    setIsDisableButton(true);
-    // const res = await forgotPassword(values);
-    // if (res && res.ec === 0) {
-    //   toast.success(res.em);
-    // } else {
-    //   toast.error(res.em);
-    //   setIsDisableButton(true);
-    // }
+    const token = searchParams.get("token");
+    setIsLoading(true);
+    if (token) {
+      const res = await resetPassword({ ...values, token });
+      if (res && res.ec === 0) {
+        toast.success(res.em);
+        form.resetFields();
+        // navigate("/auth/login", {
+        //   state: {
+        //     emailOrUsername: values.email,
+        //     password: values.password,
+        //   },
+        // });
+      } else {
+        toast.error(res.em);
+      }
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -54,7 +81,7 @@ const ResetPasswordPage: FC<IProps> = (props: IProps) => {
             <Form form={form} layout="vertical" onFinish={onFinish}>
               <Form.Item<FieldType>
                 name="password"
-                label="Password"
+                label="Mật khẩu"
                 rules={[
                   {
                     required: true,
@@ -94,7 +121,8 @@ const ResetPasswordPage: FC<IProps> = (props: IProps) => {
 
               <Form.Item>
                 <Button
-                  disabled={!submittable || isDisableButton}
+                  disabled={!submittable || isLoading || isTokenExpired}
+                  loading={isLoading}
                   size="large"
                   type="primary"
                   htmlType="submit"

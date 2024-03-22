@@ -5,6 +5,8 @@ export interface IStory {
   storyTitle: string;
   storyImage: string;
   storyDescription: string;
+  storyDescriptionMarkdown?: string;
+  storyDescriptionHtml?: string;
   storyCategories: ICategory[];
   storyAuthor: {
     userId: number | string;
@@ -15,6 +17,14 @@ export interface IStory {
   storyLatestChapter?: {
     chapterId: number | string;
     chapterTitle: string;
+    chapterNumber: number;
+    createTime: string;
+  };
+  storyReadChapter?: {
+    chapterId: number | string;
+    chapterTitle: string;
+    chapterNumber: number;
+    createTime: string;
   };
   userCount?: number;
   storyPrice: number;
@@ -29,8 +39,24 @@ export interface IStory {
     view: number;
   };
   userOwned: boolean;
+  authorOwned: boolean;
   userFollow: boolean;
   userLike: boolean;
+  storyCreateTime: string;
+  status?: number;
+}
+
+export interface IStoryInteraction {
+  follow?: number;
+  like?: number;
+  read?: number;
+  view?: number;
+  purchaseChapter?: number;
+  purchaseStory?: number;
+  reportStory?: number;
+  commentStory?: number;
+  commentChapter?: number;
+  reportChapter?: number;
 }
 
 export interface IAuthor {
@@ -38,11 +64,15 @@ export interface IAuthor {
   authorName: string;
   authorImage: string;
   authorStories: number;
+  authorDescriptionHtml?: string;
+  authorDescriptionMarkdown?: string;
   authorNewestStory: {
     storyId: number;
     storyTitle: string;
     storyImage: string;
     storyDescription: string;
+    storyDescriptionMarkdown?: string;
+    storyDescriptionHtml?: string;
   };
 }
 
@@ -64,6 +94,18 @@ export interface IChapter {
   userPurchaseChapter: number;
 }
 
+export interface IChapterInteraction {
+  interaction: {
+    chapterId: number;
+    chapterTitle: string;
+    chapterNumber: number;
+    purchaseChapter: number;
+    reportChapter: number;
+  }[];
+  min: number;
+  max: number;
+}
+
 export interface IComment {
   userComment: {
     userId: number;
@@ -73,6 +115,13 @@ export interface IComment {
   commentId: number;
   commentContent: string;
   commentDate: string;
+  commentWriter: boolean;
+}
+
+export interface ISendCommentPayload {
+  storyId: number | string;
+  chapterId?: number;
+  commentContent: string;
 }
 
 export interface IPaginationChapter {
@@ -92,12 +141,37 @@ export interface IPaginationComment {
 }
 
 export interface IWriteStoryForm {
-  title?: string;
+  storyTitle?: string;
   type?: string;
-  author?: string;
-  category?: string;
-  descriptionMarkdown?: string;
-  descriptionHTML?: string;
+  storyId: number | string;
+  authorId?: string | number;
+  storyPrice?: number;
+  storySale?: number;
+  storyImage?: string;
+  status?: number;
+  categoryIds?: string[];
+  storyDescription?: string;
+  storyDescriptionMarkdown?: string;
+  storyDescriptionHtml?: string;
+}
+
+export interface IWriteChapterForm {
+  storyId: number | string;
+  chapterId: number | string;
+  volumeId: number;
+  chapterTitle: string;
+  storyTitle: string;
+  chapterContentMarkdown: string;
+  chapterContentHtml: string;
+  chapterPrice: number;
+}
+
+export interface IReportForm {
+  reportTypeId: number;
+  storyId: number;
+  chapterId?: number;
+  commentId?: number;
+  reportContent?: string;
 }
 
 export interface IChapterContent {
@@ -122,4 +196,12 @@ export interface IChapterContent {
   nextChapterNumber: number;
   message: string;
   owned: boolean;
+}
+
+export interface IVolume {
+  volumeId: number;
+  volumeNumber: number;
+  volumeTitle: string;
+  createTime: string;
+  chapters: IChapter[];
 }

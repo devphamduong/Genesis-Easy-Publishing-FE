@@ -26,3 +26,8 @@ export interface IFilterOptions {
     }
   ];
 }
+
+export interface IPropsEPModal {
+  isModalOpen: boolean;
+  setIsModalOpen: (value: boolean) => void;
+}

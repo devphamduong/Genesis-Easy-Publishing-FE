@@ -2,7 +2,7 @@ import React, { FC, useEffect, useState } from "react";
 import "./AuthorLayout.scss";
 import "../../components/Header/Header.scss";
 import { ICategory } from "../../interfaces/category.interface";
-import { PieChartOutlined, UserOutlined } from "@ant-design/icons";
+import { UserOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Avatar, Button, Col, Layout, Menu, Popover, Row, theme } from "antd";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
@@ -10,12 +10,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { IRootState } from "../../redux/store";
 import { logoutAction } from "../../redux/account/accountSlice";
 import { toast } from "react-toastify";
-import { logout } from "../../services/auth-api.service";
-import { EMenuKey, EMenuLabel } from "../../components/Header/enum";
-import { RouteEndPointForAuthor } from "../../constants/route-end-point.constant";
+import { logout } from "../../services/auth-api-service";
+import { EMenuKey, EMenuLabel } from "../../enums/menu.enum";
+import {
+  ERouteEndPointForAuthor,
+  ERouteEndPointForUser,
+} from "../../enums/route-end-point.enum";
 import { GiBookshelf } from "react-icons/gi";
 import { TbBookUpload } from "react-icons/tb";
 import { GrChapterAdd } from "react-icons/gr";
+import { VscOpenPreview } from "react-icons/vsc";
 
 const { Content, Footer, Sider } = Layout;
 
@@ -74,20 +78,9 @@ const HeaderAuthor = (props: IProps) => {
     }
 
     const items: MenuProps["items"] = [
-      getItem(
-        <div onClick={() => navigate("/user/dashboard")}>
-          {EMenuLabel.PROFILE}
-        </div>,
-        EMenuKey.PROFILE,
-        null
-      ),
-      getItem(
-        <div onClick={() => navigate("/user/deposit")}>
-          {EMenuLabel.DEPOSIT}
-        </div>,
-        EMenuKey.DEPOSIT,
-        null
-      ),
+      getItem(<div>Home</div>, "home", null),
+      getItem(<div>{EMenuLabel.PROFILE}</div>, EMenuKey.PROFILE, null),
+      getItem(<div>{EMenuLabel.DEPOSIT}</div>, EMenuKey.DEPOSIT, null),
       getItem(
         <Button block onClick={() => handleLogout()}>
           Đăng xuất
@@ -101,14 +94,14 @@ const HeaderAuthor = (props: IProps) => {
       const { key } = e;
       setIPopoverOpen(false);
       switch (key) {
+        case "home":
+          navigate("/");
+          break;
         case EMenuKey.PROFILE:
-          navigate("/user/dashboard");
+          navigate(ERouteEndPointForUser.DASHBOARD);
           break;
         case EMenuKey.DEPOSIT:
-          navigate("/user/deposit");
-          break;
-        case EMenuKey.MANAGE:
-          navigate("/author/dashboard");
+          navigate(ERouteEndPointForUser.DEPOSIT);
           break;
       }
     };
@@ -135,7 +128,7 @@ const HeaderAuthor = (props: IProps) => {
   };
 
   return (
-    <div className="header-container">
+    <div className="header-container container-fluid px-5">
       <Row justify={"end"}>
         <Col>
           <div>Hi {account.username}</div>
@@ -162,8 +155,8 @@ const AuthorLayout: FC<IProps> = (props: IProps) => {
   const location = useLocation();
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState<boolean>(false);
-  const [currentParams, setCurrentParams] = useState(
-    RouteEndPointForAuthor.DASHBOARD
+  const [currentParams, setCurrentParams] = useState<string>(
+    ERouteEndPointForAuthor.DASHBOARD
   );
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -175,43 +168,43 @@ const AuthorLayout: FC<IProps> = (props: IProps) => {
 
   const items: MenuItem[] = [
     getItem(
-      <div onClick={() => navigate(RouteEndPointForAuthor.DASHBOARD)}>
-        {EMenuLabel.AUTHOR_DASHBOARD}
-      </div>,
-      RouteEndPointForAuthor.DASHBOARD,
-      <PieChartOutlined
-        className="fs-5"
-        onClick={() => navigate(RouteEndPointForAuthor.DASHBOARD)}
-      />
-    ),
-    getItem(
-      <div onClick={() => navigate(RouteEndPointForAuthor.POSTED_STORIES)}>
+      <div onClick={() => navigate(ERouteEndPointForAuthor.POSTED_STORIES)}>
         {EMenuLabel.AUTHOR_POSTED_STORY}
       </div>,
-      RouteEndPointForAuthor.POSTED_STORIES,
+      ERouteEndPointForAuthor.POSTED_STORIES,
       <GiBookshelf
         className="fs-5"
-        onClick={() => navigate(RouteEndPointForAuthor.POSTED_STORIES)}
+        onClick={() => navigate(ERouteEndPointForAuthor.POSTED_STORIES)}
       />
     ),
     getItem(
-      <div onClick={() => navigate(RouteEndPointForAuthor.WRITE_STORY)}>
+      <div onClick={() => navigate(ERouteEndPointForAuthor.WRITE_STORY)}>
         {EMenuLabel.AUTHOR_WRITE_STORY}
       </div>,
-      RouteEndPointForAuthor.WRITE_STORY,
+      ERouteEndPointForAuthor.WRITE_STORY,
       <TbBookUpload
         className="fs-5"
-        onClick={() => navigate(RouteEndPointForAuthor.WRITE_STORY)}
+        onClick={() => navigate(ERouteEndPointForAuthor.WRITE_STORY)}
       />
     ),
     getItem(
-      <div onClick={() => navigate(RouteEndPointForAuthor.WRITE_CHAPTER)}>
+      <div onClick={() => navigate(ERouteEndPointForAuthor.WRITE_CHAPTER)}>
         {EMenuLabel.AUTHOR_WRITE_CHAPTER}
       </div>,
-      RouteEndPointForAuthor.WRITE_CHAPTER,
+      ERouteEndPointForAuthor.WRITE_CHAPTER,
       <GrChapterAdd
         className="fs-5"
-        onClick={() => navigate(RouteEndPointForAuthor.WRITE_CHAPTER)}
+        onClick={() => navigate(ERouteEndPointForAuthor.WRITE_CHAPTER)}
+      />
+    ),
+    getItem(
+      <div onClick={() => navigate(ERouteEndPointForAuthor.REVIEW_STORY)}>
+        {EMenuLabel.AUTHOR_REVIEW_STORY}
+      </div>,
+      ERouteEndPointForAuthor.REVIEW_STORY,
+      <VscOpenPreview
+        className="fs-5"
+        onClick={() => navigate(ERouteEndPointForAuthor.REVIEW_STORY)}
       />
     ),
   ];

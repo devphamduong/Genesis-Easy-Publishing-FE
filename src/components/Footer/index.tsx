@@ -20,8 +20,7 @@ const Footer: FC<IProps> = (props: IProps) => {
               <div className="description">
                 Chào mừng bạn đến với{" "}
                 <strong>
-                  Chào mừng bạn đến với The Genesis - Thế Giới Truyện Tiên Hiệp
-                  Huyền Ảo
+                  The Genesis - Thế Giới Truyện Tiên Hiệp Huyền Ảo
                 </strong>
                 . The Genesis (hay gọi tắt "EP") là một nền tảng nội dung số
                 trên internet, nơi thành viên có thể tự do xuất bản những nội

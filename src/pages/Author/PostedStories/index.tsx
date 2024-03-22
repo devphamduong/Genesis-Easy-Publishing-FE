@@ -1,87 +1,200 @@
-import { ChangeEvent, FC, useState } from "react";
+import { ChangeEvent, FC, useEffect, useState } from "react";
 import "./PostedStories.scss";
-import { Input, Select, Table } from "antd";
+import { Drawer, Input, Select, Table, Tooltip } from "antd";
 import Highlighter from "react-highlight-words";
 import { SearchOutlined } from "@ant-design/icons";
+import EPStoryStatistics from "../../../components/EP-UI/StoryStatistics";
+import { BsInfoCircleFill } from "react-icons/bs";
+import { useSelector } from "react-redux";
+import { IRootState } from "../../../redux/store";
+import {
+  getAuthorPostedStories,
+  getChartChapters,
+  getChartStory,
+} from "../../../services/author-api-service";
+import {
+  IChapterInteraction,
+  IStory,
+  IStoryInteraction,
+} from "../../../interfaces/story.interface";
+import relativeTime from "dayjs/plugin/relativeTime";
+import dayjs from "dayjs";
+import { LiaUserEditSolid } from "react-icons/lia";
+import EPButton from "../../../components/EP-UI/Button";
+import { MdDeleteOutline } from "react-icons/md";
+import { GrChapterAdd } from "react-icons/gr";
+import { useNavigate } from "react-router-dom";
+import {
+  getEditStoryURL,
+  getWriteChapterURL,
+} from "../../../shared/generate-navigate-url";
+import { slugify } from "../../../shared/function";
+import PostedVolumesPage from "../PostedVolumes";
+dayjs.extend(relativeTime);
 
 interface IProps {}
 
 const PAGE_SIZE = 10;
 
 const PostedStoriesPage: FC<IProps> = (props: IProps) => {
+  const navigate = useNavigate();
+  const [stories, setStories] = useState<IStory[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(PAGE_SIZE);
   const [totalStories, setTotalStories] = useState<number>(0);
   const [sortQuery, setSortQuery] = useState<string>("");
   const [searchText, setSearchText] = useState<string>("");
+  const [openDrawer, setOpenDrawer] = useState(false);
+  const account = useSelector((state: IRootState) => state.account.user);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [currentStory, setCurrentStory] = useState<IStory>();
+  const [dataStoryInteraction, setDataStoryInteraction] =
+    useState<IStoryInteraction>();
+  const [dataChaptersInteraction, setDataChaptersInteraction] =
+    useState<IChapterInteraction>();
+
+  useEffect(() => {
+    fetchPostedStories();
+  }, [currentPage, pageSize, searchText, sortQuery]);
+
+  useEffect(() => {
+    if (openDrawer && currentStory) {
+      fetchChartStory();
+      fetchChartChapters();
+    }
+  }, [currentStory, openDrawer]);
+
+  const fetchPostedStories = async () => {
+    setIsLoading(true);
+    let query = `current=${currentPage}&pageSize=${pageSize}`;
+    if (searchText) {
+      query += "&title=" + searchText;
+    }
+    if (sortQuery) {
+      query += sortQuery;
+    }
+    window.history.replaceState(null, "", "?" + query);
+    const res = await getAuthorPostedStories(
+      `authorid=${account.userId}&` + query
+    );
+    if (res && res.ec === 0) {
+      setTotalStories(res.dt.totalStories);
+      setStories(res.dt.list);
+    }
+    setIsLoading(false);
+  };
+
+  const fetchChartStory = async () => {
+    const res = await getChartStory(currentStory!.storyId);
+    if (res && res.ec === 0) {
+      const payload = {
+        follow: res.dt.follow,
+        like: res.dt.like,
+        read: res.dt.read,
+        view: res.dt.view,
+        purchaseChapter: res.dt.purchaseChapter,
+        purchaseStory: res.dt.purchaseStory,
+        reportStory: res.dt.reportStory,
+        commentStory: res.dt.commentStory,
+        commentChapter: res.dt.commentChapter,
+        reportChapter: res.dt.reportChapter,
+      };
+      setDataStoryInteraction(payload);
+    }
+  };
+
+  const fetchChartChapters = async () => {
+    const res = await getChartChapters(`storyId=${currentStory!.storyId}`);
+    if (res && res.ec === 0) {
+      setDataChaptersInteraction(res.dt);
+    }
+  };
 
   const columns = [
     {
       title: "TRUYỆN",
-      dataIndex: "name",
-      render(value: string) {
+      dataIndex: "storyTitle",
+      render(value: string, record: IStory) {
         return (
-          <Highlighter
-            highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
-            searchWords={[searchText]}
-            autoEscape
-            textToHighlight={value ? value.toString() : ""}
+          <span
+            onClick={() => {
+              setCurrentStory(record);
+              setOpenDrawer(true);
+            }}
+            className="pointer custom-title-hover"
           >
-            {value}
-          </Highlighter>
+            <Highlighter
+              highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
+              searchWords={[searchText]}
+              autoEscape
+              textToHighlight={value ? value.toString() : ""}
+            >
+              {value}
+            </Highlighter>
+          </span>
         );
       },
-      sorter: {
-        compare: (a, b) => a.chinese - b.chinese,
-        multiple: 3,
-      },
+      sorter: true,
     },
     {
-      title: "MỚI XUẤT BẢN",
-      dataIndex: "chinese",
-      sorter: {
-        compare: (a, b) => a.chinese - b.chinese,
-        multiple: 3,
-      },
+      title: "SỐ NGƯỜI ĐÃ MUA",
+      dataIndex: "userPurchaseStory",
+      sorter: true,
     },
     {
-      title: "THỜI GIAN",
-      dataIndex: "math",
-      sorter: {
-        compare: (a, b) => a.math - b.math,
-        multiple: 2,
+      title: "NGÀY TẠO",
+      dataIndex: "storyCreateTime",
+      render(value: string) {
+        return (
+          <span>
+            {dayjs("2022-02-01T05:52:10.323").format("DD/MM/YYYY")}{" "}
+            <span className="time">
+              ({dayjs("2022-02-01T05:52:10.323").fromNow()})
+            </span>
+          </span>
+        );
       },
+      sorter: true,
     },
     {
       title: "",
-      dataIndex: "math",
-    },
-  ];
-
-  const data = [
-    {
-      key: "1",
-      name: "John Brown",
-      chinese: 98,
-      math: 60,
-    },
-    {
-      key: "2",
-      name: "Jim Green",
-      chinese: 98,
-      math: 66,
-    },
-    {
-      key: "3",
-      name: "Joe Black",
-      chinese: 98,
-      math: 90,
-    },
-    {
-      key: "4",
-      name: "Jim Red",
-      chinese: 88,
-      math: 99,
+      dataIndex: "actions",
+      render(value, record: IStory) {
+        return (
+          <div className="d-flex gap-2">
+            <Tooltip title="Sửa truyện">
+              <EPButton
+                icon={<LiaUserEditSolid className="fs-5" />}
+                onClick={() =>
+                  navigate(
+                    getEditStoryURL(record.storyId, slugify(record.storyTitle))
+                  )
+                }
+              />
+            </Tooltip>
+            <Tooltip title="Thêm chương mới">
+              <EPButton
+                icon={<GrChapterAdd className="fs-5" />}
+                onClick={() =>
+                  navigate(
+                    getWriteChapterURL(
+                      record.storyId,
+                      slugify(record.storyTitle)
+                    ),
+                    {
+                      state: {
+                        storyId: record.storyId,
+                        storyTitle: record.storyTitle,
+                      },
+                    }
+                  )
+                }
+              />
+            </Tooltip>
+            <EPButton danger icon={<MdDeleteOutline className="fs-5" />} />
+          </div>
+        );
+      },
     },
   ];
 
@@ -114,7 +227,6 @@ const PostedStoriesPage: FC<IProps> = (props: IProps) => {
     clearTimeout(timeout);
     timeout = setTimeout(() => {
       setSearchText(event.target.value);
-      console.log("object");
     }, 1000);
   };
 
@@ -175,25 +287,55 @@ const PostedStoriesPage: FC<IProps> = (props: IProps) => {
   };
 
   return (
-    <div className="posted-stories-container">
-      <div className="posted-stories-content">
-        <Table
-          title={renderHeader}
-          columns={columns}
-          dataSource={data}
-          onChange={onChangePagination}
-          rowKey={"name"}
-          pagination={{
-            current: currentPage,
-            total: totalStories,
-            pageSize: pageSize,
-            showSizeChanger: true,
-            showTotal: (total, range) =>
-              `${range[0]}-${range[1]} of ${total} items`,
-          }}
-        />
+    <>
+      <div className="posted-stories-container">
+        <div className="posted-stories-content">
+          <div className="fs-6 d-flex align-items-center gap-1">
+            <BsInfoCircleFill />
+            <span>
+              Click vào từng tên truyện để có thể xem chi tiết số liệu thống kê
+              của truyện đó.
+            </span>
+          </div>
+          <Table
+            title={renderHeader}
+            columns={columns}
+            dataSource={stories}
+            onChange={onChangePagination}
+            rowKey={"storyId"}
+            loading={isLoading}
+            pagination={{
+              current: currentPage,
+              total: totalStories,
+              pageSize: pageSize,
+              showSizeChanger: true,
+              showTotal: (total, range) =>
+                `${range[0]}-${range[1]} of ${total} items`,
+            }}
+          />
+        </div>
       </div>
-    </div>
+      <PostedVolumesPage />
+      <Drawer
+        className="drawer-posted-stories"
+        title={`Số liệu thống kê của truyện "${currentStory?.storyTitle}"`}
+        placement="right"
+        onClose={() => {
+          setOpenDrawer(false);
+          setDataStoryInteraction(undefined);
+          setDataChaptersInteraction(undefined);
+        }}
+        open={openDrawer}
+      >
+        <EPStoryStatistics
+          width={"100%"}
+          height={"65%"}
+          storyId={currentStory?.storyId}
+          storyInteraction={dataStoryInteraction}
+          chaptersInteraction={dataChaptersInteraction}
+        />
+      </Drawer>
+    </>
   );
 };
 

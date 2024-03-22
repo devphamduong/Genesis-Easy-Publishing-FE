@@ -20,18 +20,18 @@ import {
   getTopFamous,
   getTopNewestStories,
   getTopReadStories,
-} from "../../services/story-api.service";
+} from "../../services/story-api-service";
 import { IPaginationStory, IStory } from "../../interfaces/story.interface";
 import ListStories from "../../components/ListStories";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import VerticalImageHover from "../../components/VerticalImageHover";
 import {
-  getStoryCategoryURL,
+  getAuthorDetailURL,
+  getCategoryDetailURL,
   getStoryDetailURL,
 } from "../../shared/generate-navigate-url";
 import ListStoriesSkeleton from "../../components/ListStories/ListStoriesSkeleton";
 import Loading from "../../components/Loading";
-import { MdMoreVert } from "react-icons/md";
 import { PiDotsThreeCircleLight } from "react-icons/pi";
 import { useSelector } from "react-redux";
 import { IRootState } from "../../redux/store";
@@ -121,7 +121,7 @@ const HomePage: FC = (props) => {
                         key={`cate-${item.categoryId}-${item.categoryName}`}
                         onClick={() =>
                           navigate(
-                            getStoryCategoryURL(
+                            getCategoryDetailURL(
                               item.categoryId,
                               item.categoryName
                             )
@@ -247,7 +247,16 @@ const HomePage: FC = (props) => {
                                         </strong>
                                       </div>
                                       <div>
-                                        <span className="author-text">
+                                        <span
+                                          className="author-text"
+                                          onClick={() =>
+                                            navigate(
+                                              getAuthorDetailURL(
+                                                item.storyAuthor.userId
+                                              )
+                                            )
+                                          }
+                                        >
                                           {item.storyAuthor.userFullname}
                                         </span>
                                       </div>
@@ -363,7 +372,7 @@ const HomePage: FC = (props) => {
                       <ListStories
                         displayRank
                         displayRead
-                        urlToNavigate={getStoryCategoryURL(
+                        urlToNavigate={getCategoryDetailURL(
                           item.categoryId,
                           item.categoryName
                         )}
@@ -387,6 +396,7 @@ const HomePage: FC = (props) => {
         </div>
       </div>
       <Drawer
+        className="drawer-category-full"
         title={null}
         placement={"top"}
         closable={false}
@@ -394,9 +404,32 @@ const HomePage: FC = (props) => {
         open={isOpenDrawer}
         key={"top"}
       >
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
+        <Card>
+          {categories.map((item) => {
+            return (
+              <Card.Grid
+                key={`category-full-${item.categoryId}`}
+                className="pointer"
+                style={{ width: "16.6666667%", padding: 10 }}
+                onClick={() =>
+                  navigate(
+                    getCategoryDetailURL(item.categoryId, item.categoryName)
+                  )
+                }
+              >
+                <div className="d-flex align-items-center px-2 category gap-2">
+                  <div className="icon">{item.icon ?? "O"}</div>
+                  <div>
+                    <strong className="name">{item.categoryName}</strong>
+                    <div className="amount">
+                      {kFormatter(item.storiesNumber!)}
+                    </div>
+                  </div>
+                </div>
+              </Card.Grid>
+            );
+          })}
+        </Card>
       </Drawer>
     </>
   );

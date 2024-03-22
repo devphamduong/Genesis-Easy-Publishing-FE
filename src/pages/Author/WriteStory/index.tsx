@@ -9,18 +9,29 @@ import {
   Form,
   Image,
   Input,
+  Radio,
   Row,
+  Select,
   Tooltip,
   UploadProps,
   message,
 } from "antd";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import {
+  useNavigate,
+  useOutletContext,
+  useSearchParams,
+} from "react-router-dom";
 import { BsInfoCircleFill } from "react-icons/bs";
 import { CheckOutlined, InboxOutlined } from "@ant-design/icons";
 import Dragger from "antd/es/upload/Dragger";
 import { IRootState } from "../../../redux/store";
 import { IWriteStoryForm } from "../../../interfaces/story.interface";
+import { getPlainTextFromHTML } from "../../../shared/function";
+import { ICategory } from "../../../interfaces/category.interface";
+import { getStoryInformation } from "../../../services/story-api-service";
+import { toast } from "react-toastify";
+import { createStory, updateStory } from "../../../services/author-api-service";
 
 interface IProps {}
 
@@ -28,20 +39,32 @@ const mdParser = new MarkdownIt(/* Markdown-it options */);
 
 const WriteStoryPage: FC<IProps> = (props: IProps) => {
   const [form] = Form.useForm<IWriteStoryForm>();
+  const categories: ICategory[] = useOutletContext();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const mode = searchParams.get("mode");
+  const storyId = searchParams.get("storyId");
   const [descriptionMarkdown, setDescriptionMarkdown] = useState<string>(
     "**Phần tóm tắt viết ở đây!!**"
   );
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [descriptionHTML, setDescriptionHTML] = useState<string>("");
   const navigate = useNavigate();
   const isAuthenticated = useSelector(
     (state: IRootState) => state.account.isAuthenticated
   );
+  const account = useSelector((state: IRootState) => state.account.user);
 
   useEffect(() => {
     if (!isAuthenticated) {
       navigate("/");
     }
   }, []);
+
+  useEffect(() => {
+    if (storyId && mode === "edit") {
+      fetchStoryInformation();
+    }
+  }, [storyId]);
 
   const handleEditorChange = ({
     html,
@@ -54,20 +77,48 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
     setDescriptionHTML(html);
   };
 
+  const fetchStoryInformation = async () => {
+    const res = await getStoryInformation(storyId!);
+    if (res && res.ec === 0) {
+      form.setFieldsValue({
+        storyTitle: res.dt.storyTitle,
+        categoryIds: res.dt.storyCategories.map((item) => item.categoryId),
+        status: 1,
+      });
+      handleEditorChange({
+        html: res.dt.storyDescriptionHtml ?? "",
+        text: res.dt.storyDescriptionMarkdown ?? "",
+      });
+    } else {
+      toast.error(res.em);
+    }
+  };
+
   const onFinish = async (values: IWriteStoryForm) => {
-    console.log(values);
-    // setIsLoading(true);
-    // const res = await login(values);
-    // if (res && res.ec === 0) {
-    //   localStorage.setItem("access_token", res.dt.access_token);
-    //   dispatch(loginAction(res.dt.user));
-    //   toast.success(res.em);
-    //   navigate("/");
-    //   form.resetFields();
-    // } else {
-    //   toast.error(res.em);
-    // }
-    // setIsLoading(false);
+    const payload: IWriteStoryForm = {
+      ...values,
+      storyId: storyId!,
+      authorId: account.userId,
+      storyDescription: getPlainTextFromHTML(descriptionHTML),
+      storyDescriptionMarkdown: descriptionMarkdown,
+      storyDescriptionHtml: descriptionHTML,
+    };
+    setIsLoading(true);
+    let res;
+    if (mode === "add") {
+      res = await createStory(payload);
+    } else {
+      res = await updateStory(payload);
+    }
+    if (res && res.ec === 0) {
+      toast.success(res.em);
+      form.resetFields();
+      setDescriptionMarkdown("");
+      setDescriptionHTML("");
+    } else {
+      toast.error(res.em);
+    }
+    setIsLoading(false);
   };
 
   const propsUpLoad: UploadProps = {
@@ -98,14 +149,14 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
             <Form
               form={form}
               layout="vertical"
-              initialValues={{ remember: false }}
               onFinish={onFinish}
+              initialValues={{ status: form.getFieldValue("status") ?? 0 }}
             >
               <Row>
                 <Col span={7}>
                   <Form.Item<IWriteStoryForm>
                     label="Tựa Đề"
-                    name="title"
+                    name="storyTitle"
                     rules={[
                       {
                         required: true,
@@ -130,49 +181,98 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
                       </div>
                     }
                     name="type"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Loại truyện không được để trống!",
-                      },
-                    ]}
+                    // rules={[
+                    //   {
+                    //     required: true,
+                    //     message: "Loại truyện không được để trống!",
+                    //   },
+                    // ]}
                   >
                     <Input
                       size="large"
                       placeholder="Loại truyện mà bạn sắp viết"
                     />
                   </Form.Item>
-                  <span></span>
-                </Col>
-                <Col span={7}>
-                  <Form.Item<IWriteStoryForm>
-                    label="Tác giả"
-                    name="author"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Tác giả không được để trống!",
-                      },
-                    ]}
-                  >
-                    <Input size="large" placeholder="Truyện của tác giả" />
-                  </Form.Item>
                 </Col>
                 <Col span={7}>
                   <Form.Item<IWriteStoryForm>
                     label="Thể loại"
-                    name="category"
+                    name="categoryIds"
                     rules={[
                       {
                         required: true,
-                        message: "Thể loại không được để trống!",
+                        message: "Ít nhất 1 thể loại được chọn!",
                       },
                     ]}
                   >
-                    <Input
+                    <Select
+                      mode="multiple"
                       size="large"
-                      placeholder="Truyện Lựa chọn thể loại truyện"
+                      placeholder="Thể loại"
+                      options={
+                        categories &&
+                        categories?.map((item) => {
+                          return {
+                            value: item.categoryId,
+                            label: item.categoryName,
+                          };
+                        })
+                      }
                     />
+                  </Form.Item>
+                </Col>
+                <Col>
+                  <Form.Item<IWriteStoryForm>
+                    label={
+                      <div className="d-flex align-items-center gap-1">
+                        <span>Trạng thái của truyện</span>
+                        <Tooltip
+                          title={
+                            <span>
+                              "Truyện của bạn chỉ có thể đổi trạng thái khi đã
+                              đạt đủ điều kiện (mặc định truyện chưa đủ điều
+                              kiện sẽ có trạng thái "Chưa đủ điều kiện")
+                            </span>
+                          }
+                        >
+                          <BsInfoCircleFill className="pointer" />
+                        </Tooltip>
+                      </div>
+                    }
+                    name="status"
+                    // rules={[
+                    //   {
+                    //     required: true,
+                    //     message: "Ít nhất 1 thể loại được chọn!",
+                    //   },
+                    // ]}
+                  >
+                    <Radio.Group buttonStyle="solid">
+                      <Radio.Button
+                        value={0}
+                        disabled={form.getFieldValue("status") > 0}
+                      >
+                        Chưa đủ điều kiện
+                      </Radio.Button>
+                      <Radio.Button
+                        value={1}
+                        disabled={
+                          !form.getFieldValue("status") ||
+                          form.getFieldValue("status") === 0
+                        }
+                      >
+                        Chưa hoàn thành
+                      </Radio.Button>
+                      <Radio.Button
+                        value={2}
+                        disabled={
+                          !form.getFieldValue("status") ||
+                          form.getFieldValue("status") === 0
+                        }
+                      >
+                        Hoàn thành
+                      </Radio.Button>
+                    </Radio.Group>
                   </Form.Item>
                 </Col>
               </Row>
@@ -191,9 +291,15 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
                 <Button
                   icon={<CheckOutlined />}
                   type="primary"
+                  loading={isLoading}
+                  disabled={isLoading}
                   onClick={() => form.submit()}
                 >
-                  Lưu truyện mới
+                  {mode === "edit" ? (
+                    <span>Lưu thay đổi</span>
+                  ) : (
+                    <span>Lưu truyện mới</span>
+                  )}
                 </Button>
               </Form.Item>
             </Form>

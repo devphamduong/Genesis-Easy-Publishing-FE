@@ -4,13 +4,13 @@ import { Route, Routes } from "react-router-dom";
 import { FC, useEffect, useState } from "react";
 import RankStories from "../pages/RankStories";
 import MostReadInWeek from "../pages/RankStories/MostReadInWeek";
-import { RouteEndPointForUser } from "../constants/route-end-point.constant";
+import { ERouteEndPointForUser } from "../enums/route-end-point.enum";
 import StoriesWithMostFan from "../pages/RankStories/StoriesWithMostFan";
 import TopFullStories from "../pages/RankStories/TopFullStories";
 import MostVIPStoriesRead from "../pages/RankStories/MostVIPStoriesRead";
 import RankStoriesLayout from "../layouts/RankStories";
 import { ICategory } from "../interfaces/category.interface";
-import { getAllCategories } from "../services/category-api.service";
+import { getAllCategories } from "../services/category-api-service";
 import DetailStoryPage from "../pages/DetailStory";
 import ReadStoryPage from "../pages/ReadStory";
 import CategoryPage from "../pages/Category";
@@ -25,15 +25,26 @@ import ResetPasswordPage from "../pages/Auth/ResetPassword";
 import ProfilePage from "../pages/Profile";
 import ProfileLayout from "../layouts/User/Dashboard";
 import DepositPage from "../pages/Profile/Deposit";
-import DashboardPage from "../pages/Author/Dashboard";
 import WriteStoryPage from "../pages/Author/WriteStory";
 import WriteChapterPage from "../pages/Author/WriteStory/WriteChapter";
 import PostedStoriesPage from "../pages/Author/PostedStories";
+import ChangePasswordPage from "../pages/Auth/ChangePassword";
+import PaymentConfirmPage from "../pages/PaymentConfirm";
+import FollowingPage from "../pages/Profile/Following";
+import ReadHistoryPage from "../pages/Profile/ReadHistory";
+import OwnedStoriesPage from "../pages/Profile/OwnedStories";
+import ReviewStoryPage from "../pages/Author/ReviewStory";
+import ProtectedRoute from "../components/ProtectedRoute";
+import { IRootState } from "../redux/store";
+import { useSelector } from "react-redux";
 
 interface IProps {}
 
 const AppRoutes: FC<IProps> = (props: IProps) => {
   const [categories, setCategories] = useState<ICategory[]>([]);
+  const isAuthenticated = useSelector(
+    (state: IRootState) => state.account.isAuthenticated
+  );
 
   useEffect(() => {
     fetchAllCategories();
@@ -51,36 +62,46 @@ const AppRoutes: FC<IProps> = (props: IProps) => {
       <Routes>
         {/* main */}
         <Route path="/" element={<UserLayout categories={categories} />}>
+          <Route
+            path="payment-confirm"
+            element={<PaymentConfirmPage />}
+          ></Route>
           <Route index element={<HomePage />} />
           <Route
-            path={RouteEndPointForUser.RANK_STORIES}
+            path={ERouteEndPointForUser.RANK_STORIES}
             element={<RankStoriesLayout categories={categories} />}
           >
             <Route index element={<RankStories />} />
             <Route
-              path={RouteEndPointForUser.MOST_READ_IN_WEEK}
+              path={ERouteEndPointForUser.MOST_READ_IN_WEEK}
               element={<MostReadInWeek />}
             />
             <Route
-              path={RouteEndPointForUser.MOST_VIP_STORIES_READ}
+              path={ERouteEndPointForUser.MOST_VIP_STORIES_READ}
               element={<MostVIPStoriesRead />}
             />
             <Route
-              path={RouteEndPointForUser.TOP_FULL_STORIES}
+              path={ERouteEndPointForUser.TOP_FULL_STORIES}
               element={<TopFullStories />}
             />
             <Route
-              path={RouteEndPointForUser.STORIES_WITH_MOST_FAN}
+              path={ERouteEndPointForUser.STORIES_WITH_MOST_FAN}
               element={<StoriesWithMostFan />}
             />
           </Route>
-          <Route path="story/:id/:slug" element={<DetailStoryPage />}></Route>
+          <Route
+            path="story/detail/:id/:slug"
+            element={<DetailStoryPage />}
+          ></Route>
           <Route
             path="story/read/:id/:chapter"
             element={<ReadStoryPage />}
           ></Route>
-          <Route path="category/:id/:slug" element={<CategoryPage />}></Route>
-          <Route path="author/:id/:slug" element={<AuthorPage />}></Route>
+          <Route
+            path="category/detail/:id/:slug"
+            element={<CategoryPage />}
+          ></Route>
+          <Route path="author/detail" element={<AuthorPage />}></Route>
         </Route>
 
         {/* auth */}
@@ -95,20 +116,34 @@ const AppRoutes: FC<IProps> = (props: IProps) => {
         </Route>
 
         {/* profile */}
-        <Route path="/user" element={<ProfileLayout categories={categories} />}>
-          <Route path="dashboard" element={<ProfilePage />}></Route>
-          <Route path="deposit" element={<DepositPage />}></Route>
+        <Route element={<ProtectedRoute isAuthenticated={isAuthenticated} />}>
+          <Route
+            path="/user"
+            element={<ProfileLayout categories={categories} />}
+          >
+            <Route path="dashboard" element={<ProfilePage />}></Route>
+            <Route path="deposit" element={<DepositPage />}></Route>
+            <Route path="owned-stories" element={<OwnedStoriesPage />}></Route>
+            <Route path="following" element={<FollowingPage />}></Route>
+            <Route path="read-history" element={<ReadHistoryPage />}></Route>
+            <Route
+              path="change-password"
+              element={<ChangePasswordPage />}
+            ></Route>
+          </Route>
         </Route>
 
         {/* author */}
-        <Route
-          path="/author"
-          element={<AuthorLayout categories={categories} />}
-        >
-          <Route path="dashboard" element={<DashboardPage />} />
-          <Route path="posted-stories" element={<PostedStoriesPage />} />
-          <Route path="write-story" element={<WriteStoryPage />}></Route>
-          <Route path="write-chapter" element={<WriteChapterPage />}></Route>
+        <Route element={<ProtectedRoute isAuthenticated={isAuthenticated} />}>
+          <Route
+            path="/author"
+            element={<AuthorLayout categories={categories} />}
+          >
+            <Route path="posted-stories" element={<PostedStoriesPage />} />
+            <Route path="write-story" element={<WriteStoryPage />}></Route>
+            <Route path="write-chapter" element={<WriteChapterPage />}></Route>
+            <Route path="review-story" element={<ReviewStoryPage />}></Route>
+          </Route>
         </Route>
         <Route path="*" element={<NotFoundPage />}></Route>
       </Routes>

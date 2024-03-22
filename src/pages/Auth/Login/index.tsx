@@ -2,7 +2,7 @@ import { FC, useEffect, useState } from "react";
 import "./Login.scss";
 import { Button, Checkbox, Form, Input } from "antd";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { login } from "../../../services/auth-api.service";
+import { login } from "../../../services/auth-api-service";
 import { ILoginForm } from "../../../interfaces/auth.interface";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
@@ -41,7 +41,6 @@ const LoginPage: FC<IProps> = (props: IProps) => {
       if (location.state) {
         form.setFieldValue("emailOrUsername", location.state.emailOrUsername);
         form.setFieldValue("password", location.state.password);
-        window.history.replaceState({}, "");
       }
     }
   }, []);
@@ -77,7 +76,7 @@ const LoginPage: FC<IProps> = (props: IProps) => {
               layout="vertical"
               initialValues={{
                 emailOrUsername: "pduong244@gmail.com",
-                password: "123456",
+                password: "123",
                 remember: false,
               }}
               onFinish={onFinish}
@@ -98,7 +97,7 @@ const LoginPage: FC<IProps> = (props: IProps) => {
                 />
               </Form.Item>
               <Form.Item<ILoginForm>
-                label="Password"
+                label="Mật khẩu"
                 name="password"
                 rules={[
                   {

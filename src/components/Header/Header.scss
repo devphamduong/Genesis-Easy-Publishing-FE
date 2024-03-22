@@ -24,6 +24,7 @@
 
             &.ant-menu-item-selected {
                 background-color: unset;
+                color           : unset;
             }
 
             &:last-child {
@@ -39,4 +40,8 @@
             }
         }
     }
+}
+
+.ant-drawer-content-wrapper:has(.drawer-header) {
+    width: 30vw !important;
 }

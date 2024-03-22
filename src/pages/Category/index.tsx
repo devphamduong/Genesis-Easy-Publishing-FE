@@ -1,7 +1,6 @@
 import { FC, useEffect, useState } from "react";
 import "./Category.scss";
 import { useParams } from "react-router-dom";
-import Cover from "../../components/Cover";
 import { Col, Divider, Pagination, Row } from "antd";
 import EPBook3D from "../../components/EP-UI/Book3D";
 import ListStories from "../../components/ListStories";
@@ -11,8 +10,9 @@ import {
   getPaginationStoriesByCategoryId,
   getStoriesByCategoryId,
   getStoriesMostReadByCategoryId,
-} from "../../services/category-api.service";
+} from "../../services/category-api-service";
 import { IStory } from "../../interfaces/story.interface";
+import EPCover from "../../components/EP-UI/Cover";
 
 interface IProps {}
 
@@ -108,7 +108,7 @@ const CategoryPage: FC<IProps> = (props: IProps) => {
 
   return (
     <div className="category-container">
-      <Cover
+      <EPCover
         imgUrl="https://yymedia.codeprime.net/media/genre_cover/bg01.jpeg"
         title="Truyện Huyền Huyễn"
       />
@@ -194,7 +194,7 @@ const CategoryPage: FC<IProps> = (props: IProps) => {
             <Divider />
             <Row gutter={[16, 16]}>
               <Col span={12}>
-                <RowStory
+                {/* <RowStory
                   size={"small"}
                   displayUpdatedAt
                   story={{
@@ -212,10 +212,10 @@ const CategoryPage: FC<IProps> = (props: IProps) => {
                     userFollow: false,
                     userLike: false,
                   }}
-                />
+                /> */}
               </Col>
               <Col span={12}>
-                <RowStory
+                {/* <RowStory
                   size={"small"}
                   displayUpdatedAt
                   story={{
@@ -233,7 +233,7 @@ const CategoryPage: FC<IProps> = (props: IProps) => {
                     userFollow: false,
                     userLike: false,
                   }}
-                />
+                /> */}
               </Col>
             </Row>
             <Col className="text-center mt-2">

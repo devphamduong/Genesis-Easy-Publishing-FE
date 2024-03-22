@@ -1,21 +1,20 @@
 import { FC, useEffect, useState } from "react";
 import "./EPModalReport.scss";
 import { Form, Input, InputNumber, Modal, Select } from "antd";
-import { IReportOption } from "../../../../interfaces/global.interface";
-import { getReportOptions } from "../../../../services/common-api.service";
+import {
+  IPropsEPModal,
+  IReportOption,
+} from "../../../../interfaces/global.interface";
+import { getReportOptions } from "../../../../services/common-api-service";
+import { IReportForm } from "../../../../interfaces/story.interface";
+import { reportStory } from "../../../../services/story-api-service";
+import { toast } from "react-toastify";
 const { Option } = Select;
 const { TextArea } = Input;
 
-interface IProps {
-  isModalOpen: boolean;
-  setIsModalOpen: (value: boolean) => void;
+interface IProps extends IPropsEPModal {
   inChapter?: number;
-}
-
-interface IFormReport {
-  problem: string;
-  description?: string;
-  inChapter?: number;
+  storyId?: string | number;
 }
 
 const formItemLayout = {
@@ -30,8 +29,8 @@ const formItemLayout = {
 };
 
 const EPModalReport: FC<IProps> = (props: IProps) => {
-  const { isModalOpen, setIsModalOpen, inChapter } = props;
-  const [form] = Form.useForm<IFormReport>();
+  const { isModalOpen, setIsModalOpen, inChapter, storyId } = props;
+  const [form] = Form.useForm<IReportForm>();
   const [reportOptions, setReportOptions] = useState<IReportOption[]>([]);
 
   const handleCancel = () => {
@@ -40,18 +39,29 @@ const EPModalReport: FC<IProps> = (props: IProps) => {
   };
 
   useEffect(() => {
-    fetchTop6PurchaseStories();
+    fetchReportOptions();
   }, []);
 
-  const fetchTop6PurchaseStories = async () => {
+  const fetchReportOptions = async () => {
     const res = await getReportOptions();
     if (res && res.ec === 0) {
       setReportOptions(res.dt);
     }
   };
 
-  const onFinish = (values: IFormReport) => {
-    console.log(values);
+  const onFinish = async (values: IReportForm) => {
+    const payload = {
+      ...values,
+      storyId: +storyId!,
+    };
+    const res = await reportStory(payload);
+    if (res && res.ec === 0) {
+      toast.success(res.em);
+      form.resetFields();
+      setIsModalOpen(false);
+    } else {
+      toast.error(res.em);
+    }
   };
 
   return (
@@ -68,13 +78,15 @@ const EPModalReport: FC<IProps> = (props: IProps) => {
       <Form
         {...formItemLayout}
         form={form}
-        name="control-hooks"
         onFinish={onFinish}
+        initialValues={{
+          chapterId: inChapter,
+        }}
       >
-        <Form.Item<IFormReport>
-          name="problem"
+        <Form.Item<IReportForm>
+          name="reportTypeId"
           label="Vấn đề"
-          rules={[{ required: true, message: "Bắt buộc!" }]}
+          rules={[{ required: true, message: "Không được để trống!" }]}
         >
           <Select placeholder="Chọn vấn đề" allowClear>
             {reportOptions?.map((item, index) => {
@@ -86,11 +98,7 @@ const EPModalReport: FC<IProps> = (props: IProps) => {
             })}
           </Select>
         </Form.Item>
-        <Form.Item<IFormReport>
-          name="description"
-          label="Mô tả"
-          rules={[{ required: true }]}
-        >
+        <Form.Item<IReportForm> name="reportContent" label="Mô tả">
           <TextArea
             showCount
             maxLength={100}
@@ -98,15 +106,24 @@ const EPModalReport: FC<IProps> = (props: IProps) => {
           />
         </Form.Item>
         {inChapter && (
-          <Form.Item<IFormReport>
-            name="inChapter"
+          <Form.Item<IReportForm>
+            name="chapterId"
             label="Trong chương"
-            rules={[{ required: true }]}
-            initialValue={inChapter}
+            rules={[{ required: true, message: "Không được để trống! " }]}
           >
             <InputNumber min={1} max={10} />
           </Form.Item>
         )}
+        {/* {inChapter && (
+          <Form.Item<IReportForm>
+            name="commentId"
+            label="Trong chương"
+            rules={[{ required: true, message: "Không được để trống! " }]}
+            initialValue={inChapter}
+          >
+            <InputNumber min={1} max={10} />
+          </Form.Item>
+        )} */}
       </Form>
     </Modal>
   );

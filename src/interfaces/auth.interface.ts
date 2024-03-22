@@ -11,6 +11,7 @@ export interface IUser {
   userImage: string;
   descriptionMarkdown?: string;
   descriptionHTML?: string;
+  tlt: number;
 }
 
 export interface ILoginResponse {
@@ -35,7 +36,7 @@ export interface IRegisterForm {
 export interface IEditProfileForm {
   email?: string;
   userFullname?: string;
-  gender?: string;
+  gender?: boolean;
   dob?: string;
   phone?: string;
   address?: string;

@@ -1,5 +1,5 @@
 import { FC } from "react";
-import "./Cover.scss";
+import "./EPCover.scss";
 
 interface IProps {
   imgUrl: string;
@@ -8,12 +8,12 @@ interface IProps {
   style?: React.CSSProperties;
 }
 
-const Cover: FC<IProps> = (props: IProps) => {
+const EPCover: FC<IProps> = (props: IProps) => {
   const { imgUrl, title, subTitle, style } = props;
 
   return (
     <div
-      className="cover d-flex flex-column align-items-center justify-content-center"
+      className="ep-cover d-flex flex-column align-items-center justify-content-center"
       style={{ ...style, backgroundImage: `url(${imgUrl})` }}
     >
       <div className="title">
@@ -26,4 +26,4 @@ const Cover: FC<IProps> = (props: IProps) => {
   );
 };
 
-export default Cover;
+export default EPCover;

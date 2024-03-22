@@ -4,7 +4,7 @@ import { FC } from "react";
 
 interface IProps {
   isAuthenticated: boolean;
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }
 
 const ProtectedRoute: FC<IProps> = (props) => {

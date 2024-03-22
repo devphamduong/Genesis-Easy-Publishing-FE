@@ -69,7 +69,7 @@ interface IProps {
 const RankStoriesLayout: FC<IProps> = (props: IProps) => {
   const { categories } = props;
   const location = useLocation();
-  const [currentParams, setCurrentParams] = useState(
+  const [currentParams, setCurrentParams] = useState<string>(
     ERouteEndPointForUser.RANK_STORIES
   );
 

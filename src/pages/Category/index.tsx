@@ -194,7 +194,7 @@ const CategoryPage: FC<IProps> = (props: IProps) => {
             <Divider />
             <Row gutter={[16, 16]}>
               <Col span={12}>
-                <RowStory
+                {/* <RowStory
                   size={"small"}
                   displayUpdatedAt
                   story={{
@@ -212,10 +212,10 @@ const CategoryPage: FC<IProps> = (props: IProps) => {
                     userFollow: false,
                     userLike: false,
                   }}
-                />
+                /> */}
               </Col>
               <Col span={12}>
-                <RowStory
+                {/* <RowStory
                   size={"small"}
                   displayUpdatedAt
                   story={{
@@ -233,7 +233,7 @@ const CategoryPage: FC<IProps> = (props: IProps) => {
                     userFollow: false,
                     userLike: false,
                   }}
-                />
+                /> */}
               </Col>
             </Row>
             <Col className="text-center mt-2">

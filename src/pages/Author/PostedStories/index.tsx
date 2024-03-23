@@ -146,12 +146,12 @@ const PostedStoriesPage: FC<IProps> = (props: IProps) => {
     {
       title: "NGÀY TẠO",
       dataIndex: "storyCreateTime",
-      render(value: string) {
+      render(value: string, record: IStory) {
         return (
           <span>
-            {dayjs("2022-02-01T05:52:10.323").format("DD/MM/YYYY")}{" "}
+            {dayjs(record.storyCreateTime).format("DD/MM/YYYY")}{" "}
             <span className="time">
-              ({dayjs("2022-02-01T05:52:10.323").fromNow()})
+              ({dayjs(record.storyCreateTime).fromNow()})
             </span>
           </span>
         );

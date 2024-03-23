@@ -1,13 +1,23 @@
 import { FC, useEffect, useState } from "react";
 import "./PostedVolumes.scss";
-import { Popconfirm, Select, Table, TableColumnsType, Tooltip } from "antd";
+import {
+  Button,
+  Input,
+  Modal,
+  Popconfirm,
+  Select,
+  Table,
+  TableColumnsType,
+  Tooltip,
+} from "antd";
 import { useSelector } from "react-redux";
 import { IRootState } from "../../../redux/store";
 import {
+  addVolume,
   deleteChapter,
   getStoryVolume,
+  updateVolume,
 } from "../../../services/author-api-service";
-import { IChapter, IStory, IVolume } from "../../../interfaces/story.interface";
 import relativeTime from "dayjs/plugin/relativeTime";
 import dayjs from "dayjs";
 import EPButton from "../../../components/EP-UI/Button";
@@ -47,6 +57,10 @@ const PostedVolumesPage: FC<IProps> = (props: IProps) => {
   const [sortQuery, setSortQuery] = useState<string>("");
   const account = useSelector((state: IRootState) => state.account.user);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [volumeTitle, setVolumeTitle] = useState<string>("");
+  const [isEditMode, setIsEditMode] = useState<boolean>(false);
+  const [volumeId, setVolumeId] = useState<number | string>();
 
   useEffect(() => {
     fetchStoryVolume();
@@ -59,7 +73,7 @@ const PostedVolumesPage: FC<IProps> = (props: IProps) => {
       query += sortQuery;
     }
     const res = await getStoryVolume(
-      1
+      17
       // `authorid=${account.userId}&` + query
     );
     if (res && res.ec === 0) {
@@ -114,13 +128,11 @@ const PostedVolumesPage: FC<IProps> = (props: IProps) => {
     {
       title: "NGÀY TẠO",
       dataIndex: "createTime",
-      render(value: string) {
+      render(value: string, record) {
         return (
           <span>
-            {dayjs("2022-02-01T05:52:10.323").format("DD/MM/YYYY")}{" "}
-            <span className="time">
-              ({dayjs("2022-02-01T05:52:10.323").fromNow()})
-            </span>
+            {dayjs(record.createTime).format("DD/MM/YYYY")}{" "}
+            <span className="time">({dayjs(record.createTime).fromNow()})</span>
           </span>
         );
       },
@@ -131,14 +143,14 @@ const PostedVolumesPage: FC<IProps> = (props: IProps) => {
       render(value, record) {
         return (
           <div className="d-flex gap-2">
-            {record.type === "chapter" && (
+            {record.type === "chapter" ? (
               <>
                 <Tooltip title="Sửa chương">
                   <EPButton
                     icon={<LuFileEdit className="fs-5" />}
                     onClick={() =>
                       navigate(
-                        getEditChapterURL(1, record.id, slugify(record.name))
+                        getEditChapterURL(17, record.id, slugify(record.name))
                       )
                     }
                   />
@@ -163,6 +175,18 @@ const PostedVolumesPage: FC<IProps> = (props: IProps) => {
                   />
                 </Tooltip>
               </>
+            ) : (
+              <Tooltip title="Sửa tiêu đề">
+                <EPButton
+                  icon={<LuFileEdit className="fs-5" />}
+                  onClick={() => {
+                    setVolumeTitle(record.name);
+                    setVolumeId(record.id);
+                    setIsEditMode(true);
+                    setIsModalOpen(true);
+                  }}
+                />
+              </Tooltip>
             )}
             {record.type === "chapter" && (
               <Popconfirm
@@ -172,11 +196,7 @@ const PostedVolumesPage: FC<IProps> = (props: IProps) => {
                 cancelText="Hủy"
                 onConfirm={() => handleDeleteChapter(record.id)}
               >
-                <EPButton
-                  danger
-                  icon={<MdDeleteOutline className="fs-5" />}
-                  onClick={() => handleDeleteChapter(record.id)}
-                />
+                <EPButton danger icon={<MdDeleteOutline className="fs-5" />} />
               </Popconfirm>
             )}
           </div>
@@ -212,46 +232,7 @@ const PostedVolumesPage: FC<IProps> = (props: IProps) => {
     return (
       <div className="d-flex gap-3 justify-content-between">
         <div className="d-flex gap-3">
-          <Select
-            size="large"
-            placeholder="Select a person"
-            optionFilterProp="children"
-            onChange={onChangeSelect}
-            options={[
-              {
-                value: "jack",
-                label: "Jack",
-              },
-              {
-                value: "lucy",
-                label: "Lucy",
-              },
-              {
-                value: "tom",
-                label: "Tom",
-              },
-            ]}
-          />
-          <Select
-            size="large"
-            placeholder="Select a person"
-            optionFilterProp="children"
-            onChange={onChangeSelect}
-            options={[
-              {
-                value: "jack",
-                label: "Jack",
-              },
-              {
-                value: "lucy",
-                label: "Lucy",
-              },
-              {
-                value: "tom",
-                label: "Tom",
-              },
-            ]}
-          />
+          <Button onClick={() => setIsModalOpen(true)}>Thêm tập mới</Button>
         </div>
       </div>
     );
@@ -261,6 +242,30 @@ const PostedVolumesPage: FC<IProps> = (props: IProps) => {
     const res = await deleteChapter(id);
     if (res && res.ec === 0) {
       toast.success(res.em);
+      fetchStoryVolume();
+    } else {
+      toast.error(res.em);
+    }
+  };
+
+  const handleVolumeActions = async () => {
+    let res;
+    if (isEditMode) {
+      res = await updateVolume({
+        volumeId: volumeId!,
+        volumeTitle,
+      });
+    } else {
+      res = await addVolume({
+        storyId: 17,
+        volumeTitle,
+      });
+    }
+    if (res && res.ec === 0) {
+      toast.success(res.em);
+      setIsModalOpen(false);
+      setVolumeTitle("");
+      isEditMode && setIsEditMode(false);
       fetchStoryVolume();
     } else {
       toast.error(res.em);
@@ -289,6 +294,20 @@ const PostedVolumesPage: FC<IProps> = (props: IProps) => {
           />
         </div>
       </div>
+      <Modal
+        title="Tạo tập mới cho truyện"
+        open={isModalOpen}
+        okText={isEditMode ? "Lưu thay đổi" : "Tạo"}
+        cancelText="Hủy"
+        onOk={() => handleVolumeActions()}
+        onCancel={() => setIsModalOpen(false)}
+      >
+        <Input
+          placeholder="Tên của tập"
+          value={volumeTitle}
+          onChange={(e) => setVolumeTitle(e.target.value)}
+        />
+      </Modal>
     </>
   );
 };

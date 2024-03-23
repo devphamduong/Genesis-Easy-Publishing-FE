@@ -153,7 +153,7 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
           </div>
           {chapterContent && chapterContent?.owned ? (
             <div
-              className="content noselect"
+              className="content no-select"
               dangerouslySetInnerHTML={{
                 __html: chapterContent?.content ?? "",
               }}

@@ -1,6 +1,7 @@
 import { IApiResponse } from "../interfaces/global.interface";
 import {
   IAuthor,
+  IChapter,
   IChapterInteraction,
   IPaginationStory,
   IStory,
@@ -59,6 +60,18 @@ export const getStoryVolume = (
   return axios.get(`chapters/story_volume?storyId=${id}`);
 };
 
+export const getStoryInformation = (
+  id: string | number
+): Promise<IApiResponse<IStory>> => {
+  return axios.get(`story/story_information?storyId=${id}`);
+};
+
+export const getChapterInformation = (
+  id: string | number
+): Promise<IApiResponse<IChapter>> => {
+  return axios.get(`chapters/chapter_information?chapterId=${id}`);
+};
+
 export const createStory = (
   data: IWriteStoryForm
 ): Promise<IApiResponse<null>> => {
@@ -74,7 +87,7 @@ export const updateStory = (
 export const deleteStory = (
   id: number | string
 ): Promise<IApiResponse<null>> => {
-  return axios.delete(`story/delete_story?storyId=${id}`);
+  return axios.put(`story/delete_story?storyId=${id}`);
 };
 
 export const addChapter = (
@@ -92,5 +105,19 @@ export const updateChapter = (
 export const deleteChapter = (
   id: number | string
 ): Promise<IApiResponse<null>> => {
-  return axios.delete(`chapters/delete_chapter?chapterId=${id}`);
+  return axios.put(`chapters/delete_chapter?chapterId=${id}`);
+};
+
+export const addVolume = (data: {
+  storyId: number;
+  volumeTitle: string;
+}): Promise<IApiResponse<null>> => {
+  return axios.post(`chapters/add_volume`, { ...data });
+};
+
+export const updateVolume = (data: {
+  volumeId: number | string;
+  volumeTitle: string;
+}): Promise<IApiResponse<null>> => {
+  return axios.put(`chapters/update_volume`, { ...data });
 };

@@ -126,9 +126,3 @@ export const getChapterContent = (
 ): Promise<IApiResponse<IChapterContent>> => {
   return axios.get(`chapters/chapter_content/${storyid}/${chapterNumber}`);
 };
-
-export const getStoryInformation = (
-  storyid: string | number
-): Promise<IApiResponse<IStory>> => {
-  return axios.get(`story/story_information?storyId=${storyid}`);
-};

@@ -86,12 +86,16 @@ export interface IPaginationStory {
 
 export interface IChapter {
   chapterId: number;
+  volumeId: number;
+  storyTitle: string;
   chapterNumber: number;
   chapterTitle: string;
   chapterPrice: number;
   createTime: string;
   comment: number;
   userPurchaseChapter: number;
+  chapterContentMarkdown: string;
+  chapterContentHtml: string;
 }
 
 export interface IChapterInteraction {

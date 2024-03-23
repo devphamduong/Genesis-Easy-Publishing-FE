@@ -71,9 +71,9 @@ const EPFilter: FC<IProps> = (props: IProps) => {
           values[key].forEach((element, index) => {
             if (key === "price") {
               if (index === 0) {
-                query += `downLimit=` + element + "&";
+                query += `from=` + element + "&";
               } else {
-                query += `upLimit=` + element + "&";
+                query += `to=` + element + "&";
               }
             } else {
               query += key + `=` + element + "&";

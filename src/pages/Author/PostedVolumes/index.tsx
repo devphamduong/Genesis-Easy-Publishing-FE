@@ -1,9 +1,12 @@
 import { FC, useEffect, useState } from "react";
 import "./PostedVolumes.scss";
-import { Select, Table, TableColumnsType, Tooltip } from "antd";
+import { Popconfirm, Select, Table, TableColumnsType, Tooltip } from "antd";
 import { useSelector } from "react-redux";
 import { IRootState } from "../../../redux/store";
-import { getStoryVolume } from "../../../services/author-api-service";
+import {
+  deleteChapter,
+  getStoryVolume,
+} from "../../../services/author-api-service";
 import { IChapter, IStory, IVolume } from "../../../interfaces/story.interface";
 import relativeTime from "dayjs/plugin/relativeTime";
 import dayjs from "dayjs";
@@ -18,6 +21,7 @@ import { slugify } from "../../../shared/function";
 dayjs.extend(relativeTime);
 import { v4 as uuidv4 } from "uuid";
 import { LuFileEdit } from "react-icons/lu";
+import { toast } from "react-toastify";
 
 interface IProps {}
 
@@ -25,6 +29,7 @@ const PAGE_SIZE = 10;
 
 interface DataType {
   key: number;
+  id: number;
   name: string;
   number: string;
   createTime: string;
@@ -38,7 +43,7 @@ const PostedVolumesPage: FC<IProps> = (props: IProps) => {
   const [volumes, setVolumes] = useState<DataType[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(PAGE_SIZE);
-  const [totalStories, setTotalStories] = useState<number>(0);
+  const [totalVolumes, setTotalVolumes] = useState<number>(0);
   const [sortQuery, setSortQuery] = useState<string>("");
   const account = useSelector((state: IRootState) => state.account.user);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -63,6 +68,7 @@ const PostedVolumesPage: FC<IProps> = (props: IProps) => {
       const data = res.dt.map((itemV) => {
         return {
           key: uuidv4(),
+          id: itemV.volumeId,
           name: itemV.volumeTitle,
           number: "Tập " + itemV.volumeNumber + ": ",
           createTime: itemV.createTime,
@@ -71,6 +77,7 @@ const PostedVolumesPage: FC<IProps> = (props: IProps) => {
           children: itemV.chapters.map((itemC) => {
             return {
               key: uuidv4(),
+              id: itemC.chapterId,
               name: itemC.chapterTitle,
               number: "Chương " + itemC.chapterNumber + ": ",
               createTime: itemC.createTime,
@@ -131,7 +138,7 @@ const PostedVolumesPage: FC<IProps> = (props: IProps) => {
                     icon={<LuFileEdit className="fs-5" />}
                     onClick={() =>
                       navigate(
-                        getEditChapterURL(1, record.key, slugify(record.name))
+                        getEditChapterURL(1, record.id, slugify(record.name))
                       )
                     }
                   />
@@ -157,7 +164,21 @@ const PostedVolumesPage: FC<IProps> = (props: IProps) => {
                 </Tooltip>
               </>
             )}
-            <EPButton danger icon={<MdDeleteOutline className="fs-5" />} />
+            {record.type === "chapter" && (
+              <Popconfirm
+                title="Xóa chương"
+                description="Bạn có muốn xóa chương này không?"
+                okText="Xóa"
+                cancelText="Hủy"
+                onConfirm={() => handleDeleteChapter(record.id)}
+              >
+                <EPButton
+                  danger
+                  icon={<MdDeleteOutline className="fs-5" />}
+                  onClick={() => handleDeleteChapter(record.id)}
+                />
+              </Popconfirm>
+            )}
           </div>
         );
       },
@@ -234,6 +255,16 @@ const PostedVolumesPage: FC<IProps> = (props: IProps) => {
         </div>
       </div>
     );
+  };
+
+  const handleDeleteChapter = async (id: number | string) => {
+    const res = await deleteChapter(id);
+    if (res && res.ec === 0) {
+      toast.success(res.em);
+      fetchStoryVolume();
+    } else {
+      toast.error(res.em);
+    }
   };
 
   return (

@@ -35,3 +35,13 @@ export const buySingleChapter = (
 export const buyStory = (id: number | string): Promise<IApiResponse<null>> => {
   return axios.post(`transaction/add_transaction_buy_story?storyId=${id}`);
 };
+
+export const getTransactionBuyMultipleChapters = (
+  start: number,
+  end: number,
+  id: number | string
+): Promise<IApiResponse<null>> => {
+  return axios.post(
+    `transaction/get_transaction_buy_many_chapters?chapterStart=${start}&chapterEnd=${end}&storyId=${id}`
+  );
+};

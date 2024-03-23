@@ -1,0 +1,20 @@
+.search-message-empty-container {
+    display        : flex;
+    flex-direction : row;
+    align-items    : center;
+    justify-content: flex-start;
+    padding-left   : 4.5em;
+}
+
+.search-message-empty-decal {
+    margin-right: 2rem;
+    font-size   : 6rem;
+    transform   : rotate(90deg);
+}
+
+.search-message-empty-message {
+    font-size     : 1.5em;
+    text-rendering: optimizeLegibility;
+    text-overflow : ellipsis;
+    overflow      : hidden;
+}

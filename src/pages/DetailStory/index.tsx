@@ -78,6 +78,7 @@ import {
   MdOutlinedFlag,
 } from "react-icons/md";
 import EPButton from "../../components/EP-UI/Button";
+import CommentItem from "./CommentItem";
 const { TextArea } = Input;
 
 const { Paragraph, Text } = Typography;
@@ -131,10 +132,6 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
   const [totalComment, setTotalComment] = useState<number>(0);
   const [pageSizeComment, setPageSizeComment] =
     useState<number>(PAGE_SIZE_COMMENT);
-  const [isDisplayButtonComment, setIsDisplayButtonComment] =
-    useState<boolean>(false);
-  const [commentContent, setCommentContent] = useState<string>("");
-  const [isEditingComment, setIsEditingComment] = useState<boolean>(false);
 
   const itemTabs: TabsProps["items"] = [
     {
@@ -320,15 +317,13 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
     );
   };
 
-  const handleComment = async () => {
+  const handleComment = async (content: string) => {
     if (id) {
       const res = await commentStory({
         storyId: id,
-        commentContent,
+        commentContent: content,
       });
       if (res && res.ec === 0) {
-        setCommentContent("");
-        setIsDisplayButtonComment(false);
         fetchPaginationComments();
       } else {
         toast.error(res.em);
@@ -336,9 +331,13 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
     }
   };
 
-  const handleUpdateComment = async (id: number, mode: string) => {
+  const handleUpdateComment = async (
+    id: number,
+    content: string,
+    mode: string
+  ) => {
     const res = await updateComment(id, {
-      content: mode === "edit" ? commentContent : "",
+      commentContent: mode === "edit" ? content : "",
     });
     if (res && res.ec === 0) {
       fetchPaginationComments();
@@ -350,152 +349,21 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
   const renderListComment = () => {
     return (
       <>
-        <Flex gap={"small"} vertical>
-          <Row>
-            <Col span={1}>
-              <Avatar icon={<UserOutlined />} />
-            </Col>
-            <Col span={23}>
-              <TextArea
-                variant="filled"
-                placeholder="Bạn đang nghĩ gì?"
-                autoSize
-                value={commentContent}
-                onChange={(e) => setCommentContent(e.target.value)}
-                onFocus={() => setIsDisplayButtonComment(true)}
-              />
-            </Col>
-          </Row>
-          {isDisplayButtonComment && (
-            <Flex gap="small" justify="end">
-              <Button
-                onClick={() => {
-                  setCommentContent("");
-                  setIsDisplayButtonComment(false);
-                }}
-              >
-                Hủy
-              </Button>
-              <Button type="primary" onClick={() => handleComment()}>
-                Bình luận
-              </Button>
-            </Flex>
-          )}
-        </Flex>
+        <CommentItem
+          createComment
+          handleComment={handleComment}
+          handleUpdateComment={handleUpdateComment}
+        />
         <List
           className="mt-3"
           dataSource={comments}
           renderItem={(item, index) => (
-            <List.Item key={index}>
-              <List.Item.Meta
-                avatar={
-                  <Avatar
-                    src={`https://api.dicebear.com/7.x/miniavs/svg?seed=${index}`}
-                  />
-                }
-                title={
-                  !isEditingComment ? (
-                    <div className="d-flex align-items-center justify-content-between">
-                      <div className="d-flex align-items-center gap-2">
-                        <strong>{item.userComment.userFullname}</strong>
-                        <span className="time text-small">
-                          {dayjsFrom(item.commentDate)}
-                        </span>
-                      </div>
-                      <Popover
-                        content={
-                          <div className="d-flex flex-column align-items-center gap-2">
-                            {item.commentWriter ? (
-                              <>
-                                <EPButton
-                                  type="text"
-                                  icon={<MdOutlineModeEdit className="fs-5" />}
-                                  onClick={
-                                    () => setIsEditingComment(true)
-                                    // handleUpdateComment(item.commentId, "edit")
-                                  }
-                                >
-                                  Sửa
-                                </EPButton>
-                                <Popconfirm
-                                  title="Xóa bình luận"
-                                  description="Bạn có muốn xóa vĩnh viễn không?"
-                                  okText="Xóa"
-                                  cancelText="Hủy"
-                                  onConfirm={() =>
-                                    handleUpdateComment(
-                                      item.commentId,
-                                      "delete"
-                                    )
-                                  }
-                                >
-                                  <EPButton
-                                    type="text"
-                                    icon={<MdDeleteOutline className="fs-5" />}
-                                  >
-                                    Xóa
-                                  </EPButton>
-                                </Popconfirm>
-                              </>
-                            ) : (
-                              <EPButton
-                                type="text"
-                                icon={<MdOutlinedFlag className="fs-5" />}
-                              >
-                                Report
-                              </EPButton>
-                            )}
-                          </div>
-                        }
-                        trigger={"click"}
-                      >
-                        <EPButton shape="circle" type="text">
-                          <BsThreeDotsVertical />
-                        </EPButton>
-                      </Popover>
-                    </div>
-                  ) : (
-                    item.commentWriter && (
-                      <Flex gap={"small"} vertical>
-                        <Row>
-                          <Col span={23}>
-                            <TextArea
-                              variant="filled"
-                              placeholder="Bạn đang nghĩ gì?"
-                              autoSize
-                              value={commentContent}
-                              onChange={(e) =>
-                                setCommentContent(e.target.value)
-                              }
-                              onFocus={() => setIsDisplayButtonComment(true)}
-                            />
-                          </Col>
-                        </Row>
-                        {isDisplayButtonComment && (
-                          <Flex gap="small" justify="end">
-                            <Button
-                              onClick={() => {
-                                setCommentContent("");
-                                setIsEditingComment(false);
-                              }}
-                            >
-                              Hủy
-                            </Button>
-                            <Button
-                              type="primary"
-                              onClick={() => handleComment()}
-                            >
-                              Lưu thay đổi
-                            </Button>
-                          </Flex>
-                        )}
-                      </Flex>
-                    )
-                  )
-                }
-                description={!isEditingComment && item.commentContent}
-              />
-            </List.Item>
+            <CommentItem
+              key={index}
+              comment={item}
+              handleComment={handleComment}
+              handleUpdateComment={handleUpdateComment}
+            />
           )}
         />
         {comments.length > 0 && (
@@ -589,6 +457,7 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
     <>
       <div className="detail-story-container">
         <div className="detail-story-content container py-3">
+          {/* <Badge.Ribbon text="Hippies" color="cyan"> */}
           <Row align={"middle"} className="top mb-3">
             <Col span={12}>
               <Row gutter={[12, 10]}>
@@ -655,20 +524,20 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
                       >
                         Đọc Từ Đầu
                       </Button>
-                      {!story?.userOwned ||
-                        (!story?.authorOwned && (
-                          <Button
-                            size="large"
-                            onClick={() =>
-                              showConfirmBuyStory(
-                                story.storyId,
-                                NEW_PRICE as number
-                              )
-                            }
-                          >
-                            Mua Trọn Bộ
-                          </Button>
-                        ))}
+                      {((!story?.userOwned && !story?.authorOwned) ||
+                        !isAuthenticated) && (
+                        <Button
+                          size="large"
+                          onClick={() =>
+                            showConfirmBuyStory(
+                              story!.storyId,
+                              NEW_PRICE as number
+                            )
+                          }
+                        >
+                          Mua Trọn Bộ
+                        </Button>
+                      )}
                       <Space.Compact block size="large">
                         <>
                           <Tooltip title="Like">
@@ -753,6 +622,7 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
               <div></div>
             </Col>
           </Row>
+          {/* </Badge.Ribbon> */}
           <div className="bottom">
             <Tabs
               defaultActiveKey={currentTab}

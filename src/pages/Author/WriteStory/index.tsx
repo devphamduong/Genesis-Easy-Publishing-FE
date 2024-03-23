@@ -105,10 +105,10 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
     };
     setIsLoading(true);
     let res;
-    if (mode === "add") {
-      res = await createStory(payload);
-    } else {
+    if (mode === "edit") {
       res = await updateStory(payload);
+    } else {
+      res = await createStory(payload);
     }
     if (res && res.ec === 0) {
       toast.success(res.em);

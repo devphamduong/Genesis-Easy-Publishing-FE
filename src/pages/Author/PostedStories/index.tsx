@@ -1,6 +1,6 @@
 import { ChangeEvent, FC, useEffect, useState } from "react";
 import "./PostedStories.scss";
-import { Drawer, Input, Select, Table, Tooltip } from "antd";
+import { Drawer, Input, Popconfirm, Select, Table, Tooltip } from "antd";
 import Highlighter from "react-highlight-words";
 import { SearchOutlined } from "@ant-design/icons";
 import EPStoryStatistics from "../../../components/EP-UI/StoryStatistics";
@@ -8,6 +8,7 @@ import { BsInfoCircleFill } from "react-icons/bs";
 import { useSelector } from "react-redux";
 import { IRootState } from "../../../redux/store";
 import {
+  deleteStory,
   getAuthorPostedStories,
   getChartChapters,
   getChartStory,
@@ -30,6 +31,7 @@ import {
 } from "../../../shared/generate-navigate-url";
 import { slugify } from "../../../shared/function";
 import PostedVolumesPage from "../PostedVolumes";
+import { toast } from "react-toastify";
 dayjs.extend(relativeTime);
 
 interface IProps {}
@@ -191,7 +193,15 @@ const PostedStoriesPage: FC<IProps> = (props: IProps) => {
                 }
               />
             </Tooltip>
-            <EPButton danger icon={<MdDeleteOutline className="fs-5" />} />
+            <Popconfirm
+              title="Xóa truyện"
+              description="Bạn có muốn xóa truyện này không?"
+              okText="Xóa"
+              cancelText="Hủy"
+              onConfirm={() => handleDeleteStory(record.storyId)}
+            >
+              <EPButton danger icon={<MdDeleteOutline className="fs-5" />} />
+            </Popconfirm>
           </div>
         );
       },
@@ -284,6 +294,16 @@ const PostedStoriesPage: FC<IProps> = (props: IProps) => {
         </div>
       </div>
     );
+  };
+
+  const handleDeleteStory = async (id: number | string) => {
+    const res = await deleteStory(id);
+    if (res && res.ec === 0) {
+      toast.success(res.em);
+      fetchPostedStories();
+    } else {
+      toast.error(res.em);
+    }
   };
 
   return (

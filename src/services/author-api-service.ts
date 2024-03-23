@@ -59,16 +59,22 @@ export const getStoryVolume = (
   return axios.get(`chapters/story_volume?storyId=${id}`);
 };
 
+export const createStory = (
+  data: IWriteStoryForm
+): Promise<IApiResponse<null>> => {
+  return axios.post(`story/save_story`, { ...data });
+};
+
 export const updateStory = (
   data: IWriteStoryForm
 ): Promise<IApiResponse<IStory>> => {
   return axios.put(`story/update_story`, { ...data });
 };
 
-export const createStory = (
-  data: IWriteStoryForm
+export const deleteStory = (
+  id: number | string
 ): Promise<IApiResponse<null>> => {
-  return axios.post(`story/save_story`, { ...data });
+  return axios.delete(`story/delete_story?storyId=${id}`);
 };
 
 export const addChapter = (
@@ -81,4 +87,10 @@ export const updateChapter = (
   data: IWriteChapterForm
 ): Promise<IApiResponse<null>> => {
   return axios.put(`chapters/update_chapter`, { ...data });
+};
+
+export const deleteChapter = (
+  id: number | string
+): Promise<IApiResponse<null>> => {
+  return axios.delete(`chapters/delete_chapter?chapterId=${id}`);
 };

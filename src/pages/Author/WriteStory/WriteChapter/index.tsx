@@ -50,9 +50,6 @@ const WriteChapterPage: FC<IProps> = (props: IProps) => {
   const [contentHTML, setContentHTML] = useState<string>("");
 
   useEffect(() => {
-    // if (location.state) {
-    //   storyTitle = location.state.storyTitle;
-    // }
     storyId && fetchVolumes();
   }, [storyId]);
 

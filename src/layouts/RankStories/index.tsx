@@ -69,6 +69,7 @@ interface IProps {
 const RankStoriesLayout: FC<IProps> = (props: IProps) => {
   const { categories } = props;
   const location = useLocation();
+  const [searchTerm, setSearchTerm] = useState<string>("");
   const [currentParams, setCurrentParams] = useState<string>(
     ERouteEndPointForUser.RANK_STORIES
   );
@@ -91,17 +92,22 @@ const RankStoriesLayout: FC<IProps> = (props: IProps) => {
         <Row gutter={[16, 10]}>
           <Col span={5} className="left">
             <Affix offsetTop={70}>
-              <Menu
-                defaultSelectedKeys={[currentParams]}
-                selectedKeys={[currentParams]}
-                mode="inline"
-                items={items}
-              />
-              <EPFilter />
+              <div>
+                <Menu
+                  defaultSelectedKeys={[currentParams]}
+                  selectedKeys={[currentParams]}
+                  mode="inline"
+                  items={items}
+                />
+                <EPFilter
+                  searchTerm={searchTerm}
+                  setSearchTerm={setSearchTerm}
+                />
+              </div>
             </Affix>
           </Col>
           <Col span={19} className="right">
-            <Outlet context={categories} />
+            <Outlet context={[searchTerm, setSearchTerm]} />
           </Col>
         </Row>
       </div>

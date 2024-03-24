@@ -324,6 +324,8 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
       <EPModalBuyChapters
         isModalOpen={isModalBuyChaptersOpen}
         setIsModalOpen={setIsModalBuyChaptersOpen}
+        fetchChapterContent={fetchChapterContent}
+        storyId={id}
       />
       <EPModalTopUp
         isModalOpen={isModalTopUpOpen}

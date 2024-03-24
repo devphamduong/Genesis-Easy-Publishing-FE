@@ -3,10 +3,18 @@ export interface IUpdateBalanceAction {
   amount: number;
 }
 
-export interface IDataTransactionChapters {
-  chapter_buy: number;
-  amount: number;
+export interface IInformationBuyChapters {
+  chapter_story_max: number;
   user_chapter: number;
+  user_wallet: number;
+}
+
+export interface IDataTransactionChapters {
+  chapter_buy: {
+    chapterNumber: number;
+  }[];
+  amount: number;
+  number_chapter_buy: number;
   transaction: {
     transactionId: number;
     walletId: number;

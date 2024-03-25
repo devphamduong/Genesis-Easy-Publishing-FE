@@ -9,6 +9,7 @@ import { ClockCircleOutlined } from "@ant-design/icons";
 
 import {
   getAuthorDetailURL,
+  getCategoryDetailURL,
   getStoryDetailURL,
 } from "../../shared/generate-navigate-url";
 import { dayjsFrom } from "../../shared/function";
@@ -57,7 +58,18 @@ const RowStory: FC<IProps> = (props: IProps) => {
             <FaPenFancy />
             <strong>{story.storyAuthor.userFullname}</strong>
           </div>
-          <Button size="small" className="category">
+          <Button
+            size="small"
+            className="category"
+            onClick={() =>
+              navigate(
+                getCategoryDetailURL(
+                  story.storyCategories[0].categoryId,
+                  story.storyCategories[0]?.categoryName
+                )
+              )
+            }
+          >
             {story.storyCategories[0]?.categoryName}
           </Button>
         </Col>

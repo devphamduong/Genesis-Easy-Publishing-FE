@@ -7,12 +7,15 @@ import ListStories from "../../components/ListStories";
 import RowStory from "../../components/RowStory";
 import RowStorySkeleton from "../../components/RowStory/RowStorySkeleton";
 import {
+  getCategoryDetail,
   getPaginationStoriesByCategoryId,
+  getPaginationStoriesCompletedByCategory,
   getStoriesByCategoryId,
   getStoriesMostReadByCategoryId,
 } from "../../services/category-api-service";
 import { IStory } from "../../interfaces/story.interface";
 import EPCover from "../../components/EP-UI/Cover";
+import { ICategory } from "../../interfaces/category.interface";
 
 interface IProps {}
 
@@ -23,25 +26,26 @@ enum ECategory {}
 
 const CategoryPage: FC<IProps> = (props: IProps) => {
   const { id, slug } = useParams();
+  const [categoryDetail, setCategoryDetail] = useState<ICategory>();
   const [stories, setStories] = useState<IStory[]>([]);
   const [storiesUpdate, setStoriesUpdate] = useState<IStory[]>([]);
   const [storiesMostRead, setStoriesMostRead] = useState<IStory[]>([]);
+  const [storiesCompleted, setStoriesCompleted] = useState<IStory[]>([]);
   const [currentPageStoriesUpdate, setCurrentPageStoriesUpdate] =
     useState<number>(1);
-  const [totalPageStoriesUpdate, setTotalPageStoriesUpdate] =
-    useState<number>(0);
+  const [totalStoriesUpdate, setTotalStoriesUpdate] = useState<number>(0);
   const [pageSizeStoriesUpdate, setPageSizeStoriesUpdate] = useState<number>(
     PAGE_SIZE_STORIES_UPDATE
   );
   const [currentPageStoriesCompleted, setCurrentPageStoriesCompleted] =
     useState<number>(1);
-  const [totalPageStoriesCompleted, setTotalPageStoriesCompleted] =
-    useState<number>(0);
+  const [totalStoriesCompleted, setTotalStoriesCompleted] = useState<number>(0);
   const [pageSizeStoriesCompleted, setPageSizeStoriesCompleted] =
     useState<number>(PAGE_SIZE_STORIES_COMPLETE);
 
   useEffect(() => {
     if (id) {
+      fetchCategoryDetail(id);
       fetchStoriesByCategoriesId(id);
       fetchStoriesMostReadByCategoryId(id);
     }
@@ -58,12 +62,19 @@ const CategoryPage: FC<IProps> = (props: IProps) => {
 
   useEffect(() => {
     if (id)
-      fetchPaginationStoriesUpdateByCategoryId(
+      fetchPaginationStoriesFinish(
         id,
         currentPageStoriesCompleted,
         pageSizeStoriesCompleted
       );
   }, [id, currentPageStoriesCompleted, pageSizeStoriesCompleted]);
+
+  const fetchCategoryDetail = async (id: string) => {
+    const res = await getCategoryDetail(id);
+    if (res && res.ec === 0) {
+      setCategoryDetail(res.dt);
+    }
+  };
 
   const fetchStoriesByCategoriesId = async (id: string) => {
     const res = await getStoriesByCategoryId(id);
@@ -87,6 +98,23 @@ const CategoryPage: FC<IProps> = (props: IProps) => {
     const res = await getPaginationStoriesByCategoryId(id, page, pageSize);
     if (res && res.ec === 0) {
       setStoriesUpdate(res.dt.list);
+      setTotalStoriesUpdate(res.dt.totalStories);
+    }
+  };
+
+  const fetchPaginationStoriesFinish = async (
+    id: string,
+    page: number,
+    pageSize: number
+  ) => {
+    const res = await getPaginationStoriesCompletedByCategory(
+      id,
+      page,
+      pageSize
+    );
+    if (res && res.ec === 0) {
+      setStoriesCompleted(res.dt.list);
+      setTotalStoriesCompleted(res.dt.totalStories);
     }
   };
 
@@ -109,8 +137,12 @@ const CategoryPage: FC<IProps> = (props: IProps) => {
   return (
     <div className="category-container">
       <EPCover
-        imgUrl="https://yymedia.codeprime.net/media/genre_cover/bg01.jpeg"
-        title="Truyện Huyền Huyễn"
+        imgUrl={categoryDetail?.categoryBanner ?? ""}
+        title={
+          <span className="capitalize">
+            Truyện {categoryDetail ? categoryDetail?.categoryName : null}
+          </span>
+        }
       />
       <div className="category-content container py-3">
         <Row gutter={[16, 16]}>
@@ -174,7 +206,7 @@ const CategoryPage: FC<IProps> = (props: IProps) => {
             <Col className="text-center mt-2">
               <Pagination
                 defaultCurrent={currentPageStoriesUpdate}
-                total={totalPageStoriesUpdate}
+                total={totalStoriesUpdate}
                 onChange={handleChangePageUpdate}
               />
             </Col>
@@ -193,60 +225,35 @@ const CategoryPage: FC<IProps> = (props: IProps) => {
             <div className="fs-5">Truyện Kiếm Hiệp Hoàn Thành</div>
             <Divider />
             <Row gutter={[16, 16]}>
-              <Col span={12}>
-                {/* <RowStory
-                  size={"small"}
-                  displayUpdatedAt
-                  story={{
-                    storyId: 1,
-                    storyImage:
-                      "https://yymedia.codeprime.net/media/novels/2019-06/ef2d9a2625.jpg",
-                    storyTitle: "abc",
-                    storyDescription: "abc",
-                    storyCategories: [],
-                    storyAuthor: { userId: 1, userFullname: "abc" },
-                    storyChapterNumber: 10,
-                    storyPrice: 1,
-                    storySale: 1,
-                    userOwned: false,
-                    userFollow: false,
-                    userLike: false,
-                  }}
-                /> */}
-              </Col>
-              <Col span={12}>
-                {/* <RowStory
-                  size={"small"}
-                  displayUpdatedAt
-                  story={{
-                    storyId: 1,
-                    storyImage:
-                      "https://yymedia.codeprime.net/media/novels/2019-06/ef2d9a2625.jpg",
-                    storyTitle: "abc",
-                    storyDescription: "abc",
-                    storyCategories: [],
-                    storyAuthor: { userId: 1, userFullname: "abc" },
-                    storyChapterNumber: 10,
-                    storyPrice: 1,
-                    storySale: 1,
-                    userOwned: false,
-                    userFollow: false,
-                    userLike: false,
-                  }}
-                /> */}
-              </Col>
+              {storiesCompleted && storiesCompleted.length > 0
+                ? storiesCompleted.map((item, index) => {
+                    return (
+                      <Col span={12} key={index}>
+                        <RowStory
+                          key={`category-${id}-story-completed-${item.storyId}`}
+                          size={"small"}
+                          displayUpdatedAt
+                          story={item}
+                        />
+                      </Col>
+                    );
+                  })
+                : amountRowStorySkeleton(4)}
             </Row>
             <Col className="text-center mt-2">
               <Pagination
-                defaultCurrent={1}
-                total={50}
+                defaultCurrent={currentPageStoriesCompleted}
+                total={totalStoriesCompleted}
                 onChange={handleChangePageCompleted}
               />
             </Col>
           </Col>
           <Col span={6}>
             <ListStories
-              stories={[]}
+              stories={storiesCompleted.slice(0, 10)}
+              displayRead
+              displayRank
+              showDetailFirstStory
               showMore={false}
               title="Top Truyện Kiếm Hiệp Hoàn Thành"
             />

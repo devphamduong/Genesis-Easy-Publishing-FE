@@ -6,4 +6,5 @@ export interface ICategory {
   icon?: string;
   stories?: [];
   storiesNumber?: number;
+  categoryBanner?: string;
 }

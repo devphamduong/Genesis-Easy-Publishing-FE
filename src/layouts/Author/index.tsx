@@ -33,13 +33,15 @@ function getItem(
   label: React.ReactNode,
   key: React.Key,
   icon?: React.ReactNode,
-  children?: MenuItem[]
+  children?: MenuItem[],
+  disabled?: boolean
 ): MenuItem {
   return {
     key,
     icon,
     children,
     label,
+    disabled,
   } as MenuItem;
 }
 
@@ -188,14 +190,11 @@ const AuthorLayout: FC<IProps> = (props: IProps) => {
       />
     ),
     getItem(
-      <div onClick={() => navigate(ERouteEndPointForAuthor.WRITE_CHAPTER)}>
-        {EMenuLabel.AUTHOR_WRITE_CHAPTER}
-      </div>,
+      <div>{EMenuLabel.AUTHOR_WRITE_CHAPTER}</div>,
       ERouteEndPointForAuthor.WRITE_CHAPTER,
-      <GrChapterAdd
-        className="fs-5"
-        onClick={() => navigate(ERouteEndPointForAuthor.WRITE_CHAPTER)}
-      />
+      <GrChapterAdd className="fs-5" />,
+      undefined,
+      true
     ),
     getItem(
       <div onClick={() => navigate(ERouteEndPointForAuthor.REVIEW_STORY)}>

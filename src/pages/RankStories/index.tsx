@@ -1,67 +1,63 @@
 import { FC, useEffect, useState } from "react";
 import "./RankStories.scss";
-import { Col, Row, Spin, Tabs, TabsProps } from "antd";
+import { Spin } from "antd";
 import { useOutletContext } from "react-router-dom";
-import { ICategory } from "../../interfaces/category.interface";
-import { getTopFamous } from "../../services/story-api-service";
-import { IPaginationStory, IStory } from "../../interfaces/story.interface";
+import {
+  getFilteredStories,
+  getTopFamous,
+} from "../../services/story-api-service";
+import { IStory } from "../../interfaces/story.interface";
 import RowStory from "../../components/RowStory";
+import EPNoResultFound from "../../components/EP-UI/NoResultFound";
 
 interface IProps {}
 
 const RankStories: FC<IProps> = (props: IProps) => {
-  const categories: ICategory[] = useOutletContext();
-  const [currentCategoriesId, setCurrentCategoriesId] = useState<string>("all");
-  const [famousStories, setFamousStories] = useState<IPaginationStory>();
+  const [searchTerm, setSearchTerm] = useOutletContext() as [
+    string,
+    (value: string) => void
+  ];
+  const [famousStories, setFamousStories] = useState<IStory[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     fetchTopFamous();
   }, []);
 
-  const fetchTopFamous = async () => {
+  useEffect(() => {
+    fetchFilteredStories();
+  }, [searchTerm]);
+
+  const fetchFilteredStories = async () => {
+    let query = "";
+    if (searchTerm) {
+      query += searchTerm;
+    }
     setIsLoading(true);
-    const res = await getTopFamous();
+    const res = await getFilteredStories(query);
     if (res && res.ec === 0) {
-      setFamousStories(res.dt);
+      setFamousStories(res.dt.list);
     }
     setIsLoading(false);
   };
 
-  const onChange = (key: string) => {
-    setCurrentCategoriesId(key);
+  const fetchTopFamous = async () => {
+    setIsLoading(true);
+    const res = await getTopFamous();
+    if (res && res.ec === 0) {
+      setFamousStories(res.dt.list);
+    }
+    setIsLoading(false);
   };
-
-  const itemTabs: TabsProps["items"] = [
-    {
-      key: "all",
-      label: "Tất cả thể loại",
-      children: <></>,
-    },
-    ...categories.map((item, index) => {
-      return {
-        key: "" + item.categoryId,
-        label: item.categoryName,
-        children: <></>,
-      };
-    }),
-  ];
 
   return (
     <div className="rank-stories-container">
       <div className="rank-stories-content">
-        <div className="top">
-          <Tabs
-            defaultActiveKey={currentCategoriesId}
-            items={itemTabs}
-            onChange={onChange}
-          />
-        </div>
         <div className="bottom">
           <Spin spinning={isLoading}>
-            {famousStories?.list &&
-              famousStories.list.length > 0 &&
-              famousStories.list?.map((item, index) => (
+            {famousStories &&
+              famousStories.length > 0 &&
+              famousStories?.map((item, index) => (
                 <RowStory
                   key={`famous-story-${item.storyId}`}
                   story={item}
@@ -69,6 +65,7 @@ const RankStories: FC<IProps> = (props: IProps) => {
                 />
               ))}
           </Spin>
+          {searchTerm && !famousStories.length && <EPNoResultFound />}
         </div>
       </div>
     </div>

@@ -1,10 +1,23 @@
 import { FC, useEffect, useState } from "react";
 import "./PostedVolumes.scss";
-import { Select, Table, TableColumnsType, Tooltip } from "antd";
+import {
+  Button,
+  Input,
+  Modal,
+  Popconfirm,
+  Select,
+  Table,
+  TableColumnsType,
+  Tooltip,
+} from "antd";
 import { useSelector } from "react-redux";
 import { IRootState } from "../../../redux/store";
-import { getStoryVolume } from "../../../services/author-api-service";
-import { IChapter, IStory, IVolume } from "../../../interfaces/story.interface";
+import {
+  addVolume,
+  deleteChapter,
+  getStoryVolume,
+  updateVolume,
+} from "../../../services/author-api-service";
 import relativeTime from "dayjs/plugin/relativeTime";
 import dayjs from "dayjs";
 import EPButton from "../../../components/EP-UI/Button";
@@ -18,6 +31,7 @@ import { slugify } from "../../../shared/function";
 dayjs.extend(relativeTime);
 import { v4 as uuidv4 } from "uuid";
 import { LuFileEdit } from "react-icons/lu";
+import { toast } from "react-toastify";
 
 interface IProps {}
 
@@ -25,6 +39,7 @@ const PAGE_SIZE = 10;
 
 interface DataType {
   key: number;
+  id: number;
   name: string;
   number: string;
   createTime: string;
@@ -38,10 +53,14 @@ const PostedVolumesPage: FC<IProps> = (props: IProps) => {
   const [volumes, setVolumes] = useState<DataType[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(PAGE_SIZE);
-  const [totalStories, setTotalStories] = useState<number>(0);
+  const [totalVolumes, setTotalVolumes] = useState<number>(0);
   const [sortQuery, setSortQuery] = useState<string>("");
   const account = useSelector((state: IRootState) => state.account.user);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [volumeTitle, setVolumeTitle] = useState<string>("");
+  const [isEditMode, setIsEditMode] = useState<boolean>(false);
+  const [volumeId, setVolumeId] = useState<number | string>();
 
   useEffect(() => {
     fetchStoryVolume();
@@ -54,7 +73,7 @@ const PostedVolumesPage: FC<IProps> = (props: IProps) => {
       query += sortQuery;
     }
     const res = await getStoryVolume(
-      1
+      17
       // `authorid=${account.userId}&` + query
     );
     if (res && res.ec === 0) {
@@ -63,6 +82,7 @@ const PostedVolumesPage: FC<IProps> = (props: IProps) => {
       const data = res.dt.map((itemV) => {
         return {
           key: uuidv4(),
+          id: itemV.volumeId,
           name: itemV.volumeTitle,
           number: "Tập " + itemV.volumeNumber + ": ",
           createTime: itemV.createTime,
@@ -71,6 +91,7 @@ const PostedVolumesPage: FC<IProps> = (props: IProps) => {
           children: itemV.chapters.map((itemC) => {
             return {
               key: uuidv4(),
+              id: itemC.chapterId,
               name: itemC.chapterTitle,
               number: "Chương " + itemC.chapterNumber + ": ",
               createTime: itemC.createTime,
@@ -107,13 +128,11 @@ const PostedVolumesPage: FC<IProps> = (props: IProps) => {
     {
       title: "NGÀY TẠO",
       dataIndex: "createTime",
-      render(value: string) {
+      render(value: string, record) {
         return (
           <span>
-            {dayjs("2022-02-01T05:52:10.323").format("DD/MM/YYYY")}{" "}
-            <span className="time">
-              ({dayjs("2022-02-01T05:52:10.323").fromNow()})
-            </span>
+            {dayjs(record.createTime).format("DD/MM/YYYY")}{" "}
+            <span className="time">({dayjs(record.createTime).fromNow()})</span>
           </span>
         );
       },
@@ -124,14 +143,14 @@ const PostedVolumesPage: FC<IProps> = (props: IProps) => {
       render(value, record) {
         return (
           <div className="d-flex gap-2">
-            {record.type === "chapter" && (
+            {record.type === "chapter" ? (
               <>
                 <Tooltip title="Sửa chương">
                   <EPButton
                     icon={<LuFileEdit className="fs-5" />}
                     onClick={() =>
                       navigate(
-                        getEditChapterURL(1, record.key, slugify(record.name))
+                        getEditChapterURL(17, record.id, slugify(record.name))
                       )
                     }
                   />
@@ -156,8 +175,30 @@ const PostedVolumesPage: FC<IProps> = (props: IProps) => {
                   />
                 </Tooltip>
               </>
+            ) : (
+              <Tooltip title="Sửa tiêu đề">
+                <EPButton
+                  icon={<LuFileEdit className="fs-5" />}
+                  onClick={() => {
+                    setVolumeTitle(record.name);
+                    setVolumeId(record.id);
+                    setIsEditMode(true);
+                    setIsModalOpen(true);
+                  }}
+                />
+              </Tooltip>
             )}
-            <EPButton danger icon={<MdDeleteOutline className="fs-5" />} />
+            {record.type === "chapter" && (
+              <Popconfirm
+                title="Xóa chương"
+                description="Bạn có muốn xóa chương này không?"
+                okText="Xóa"
+                cancelText="Hủy"
+                onConfirm={() => handleDeleteChapter(record.id)}
+              >
+                <EPButton danger icon={<MdDeleteOutline className="fs-5" />} />
+              </Popconfirm>
+            )}
           </div>
         );
       },
@@ -191,49 +232,44 @@ const PostedVolumesPage: FC<IProps> = (props: IProps) => {
     return (
       <div className="d-flex gap-3 justify-content-between">
         <div className="d-flex gap-3">
-          <Select
-            size="large"
-            placeholder="Select a person"
-            optionFilterProp="children"
-            onChange={onChangeSelect}
-            options={[
-              {
-                value: "jack",
-                label: "Jack",
-              },
-              {
-                value: "lucy",
-                label: "Lucy",
-              },
-              {
-                value: "tom",
-                label: "Tom",
-              },
-            ]}
-          />
-          <Select
-            size="large"
-            placeholder="Select a person"
-            optionFilterProp="children"
-            onChange={onChangeSelect}
-            options={[
-              {
-                value: "jack",
-                label: "Jack",
-              },
-              {
-                value: "lucy",
-                label: "Lucy",
-              },
-              {
-                value: "tom",
-                label: "Tom",
-              },
-            ]}
-          />
+          <Button onClick={() => setIsModalOpen(true)}>Thêm tập mới</Button>
         </div>
       </div>
     );
+  };
+
+  const handleDeleteChapter = async (id: number | string) => {
+    const res = await deleteChapter(id);
+    if (res && res.ec === 0) {
+      toast.success(res.em);
+      fetchStoryVolume();
+    } else {
+      toast.error(res.em);
+    }
+  };
+
+  const handleVolumeActions = async () => {
+    let res;
+    if (isEditMode) {
+      res = await updateVolume({
+        volumeId: volumeId!,
+        volumeTitle,
+      });
+    } else {
+      res = await addVolume({
+        storyId: 17,
+        volumeTitle,
+      });
+    }
+    if (res && res.ec === 0) {
+      toast.success(res.em);
+      setIsModalOpen(false);
+      setVolumeTitle("");
+      isEditMode && setIsEditMode(false);
+      fetchStoryVolume();
+    } else {
+      toast.error(res.em);
+    }
   };
 
   return (
@@ -258,6 +294,20 @@ const PostedVolumesPage: FC<IProps> = (props: IProps) => {
           />
         </div>
       </div>
+      <Modal
+        title="Tạo tập mới cho truyện"
+        open={isModalOpen}
+        okText={isEditMode ? "Lưu thay đổi" : "Tạo"}
+        cancelText="Hủy"
+        onOk={() => handleVolumeActions()}
+        onCancel={() => setIsModalOpen(false)}
+      >
+        <Input
+          placeholder="Tên của tập"
+          value={volumeTitle}
+          onChange={(e) => setVolumeTitle(e.target.value)}
+        />
+      </Modal>
     </>
   );
 };

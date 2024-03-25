@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import "./EPModalBuyChapters.scss";
 import {
   Form,
@@ -18,8 +18,21 @@ import { IoCheckmark } from "react-icons/io5";
 import { useSelector } from "react-redux";
 import { IRootState } from "../../../../redux/store";
 import { IPropsEPModal } from "../../../../interfaces/global.interface";
+import {
+  IDataTransactionChapters,
+  IInformationBuyChapters,
+} from "../../../../interfaces/transaction.interface";
+import {
+  buyChapters,
+  getInformationBuyMultipleChapters,
+  getTransactionBuyMultipleChapters,
+} from "../../../../services/transaction-api-service";
+import { toast } from "react-toastify";
 
-interface IProps extends IPropsEPModal {}
+interface IProps extends IPropsEPModal {
+  storyId?: number | string;
+  fetchChapterContent: () => void;
+}
 
 interface IFormBuyChapters {
   from: number;
@@ -44,11 +57,67 @@ const steps = [
 const items = steps.map((item) => ({ key: item.title, title: item.title }));
 
 const EPModalBuyChapters: FC<IProps> = (props: IProps) => {
-  const { isModalOpen, setIsModalOpen } = props;
+  const { isModalOpen, setIsModalOpen, storyId, fetchChapterContent } = props;
+  const [dataTransactionChapters, setDataTransactionChapters] =
+    useState<IDataTransactionChapters>();
+  const [informationBuyChapters, setInformationBuyChapters] =
+    useState<IInformationBuyChapters>();
   const { token } = theme.useToken();
   const account = useSelector((state: IRootState) => state.account.user);
   const [current, setCurrent] = useState<number>(0);
   const [form] = Form.useForm<IFormBuyChapters>();
+
+  useEffect(() => {
+    isModalOpen === true && fetchInformationBuyMultipleChapters();
+  }, [isModalOpen]);
+
+  useEffect(() => {
+    switch (current) {
+      case 1:
+        fetchTransactionBuyMultipleChapters();
+        break;
+      case 2:
+        buyMultipleChapters();
+        break;
+      default:
+        fetchInformationBuyMultipleChapters();
+        break;
+    }
+  }, [current]);
+
+  const fetchInformationBuyMultipleChapters = async () => {
+    const res = await getInformationBuyMultipleChapters(storyId!);
+    if (res && res.ec === 0) {
+      setInformationBuyChapters(res.dt);
+      form.setFieldValue("to", res.dt.chapter_story_max);
+    }
+  };
+
+  const fetchTransactionBuyMultipleChapters = async () => {
+    const res = await getTransactionBuyMultipleChapters(
+      form.getFieldValue("from"),
+      form.getFieldValue("to"),
+      storyId!
+    );
+    if (res && res.ec === 0) {
+      setDataTransactionChapters(res.dt);
+    }
+  };
+
+  const buyMultipleChapters = async () => {
+    const res = await buyChapters(
+      form.getFieldValue("from"),
+      form.getFieldValue("to"),
+      storyId!
+    );
+    if (res && res.ec === 0) {
+      setIsModalOpen(false);
+      toast.success(res.em);
+      fetchChapterContent();
+    } else {
+      toast.error(res.em);
+    }
+  };
 
   const next = () => {
     setCurrent(current + 1);
@@ -84,14 +153,21 @@ const EPModalBuyChapters: FC<IProps> = (props: IProps) => {
           </div>
           <div>
             Hệ thống sẽ tự lọc bỏ những chương đã mua, nên bạn cứ thoải mái chọn
-            khoảng đầu và cuối. <strong>Đã mua: 0 chương</strong>.
+            khoảng đầu và cuối.{" "}
+            <strong>
+              Đã mua: {informationBuyChapters?.user_chapter} chương
+            </strong>
+            .
           </div>
           <Form
             form={form}
             className="mt-3"
             layout="inline"
             onFinish={onFinish}
-            initialValues={{ from: 1 }}
+            initialValues={{
+              from: 1,
+              to: form.getFieldValue("to"),
+            }}
           >
             <Row className="w-100" gutter={[16, 16]}>
               <Col span={12}>
@@ -104,7 +180,7 @@ const EPModalBuyChapters: FC<IProps> = (props: IProps) => {
                     size="large"
                     className="w-100"
                     min={1}
-                    max={10}
+                    max={form.getFieldValue("to")}
                   />
                 </Form.Item>
               </Col>
@@ -112,13 +188,13 @@ const EPModalBuyChapters: FC<IProps> = (props: IProps) => {
                 <Form.Item<IFormBuyChapters>
                   name="to"
                   label="Đến chương"
-                  rules={[{ required: true }]}
+                  rules={[{ required: true, message: "Không được để trống" }]}
                 >
                   <InputNumber
                     size="large"
                     className="w-100"
                     min={1}
-                    max={10}
+                    max={form.getFieldValue("to")}
                   />
                 </Form.Item>
               </Col>
@@ -147,7 +223,7 @@ const EPModalBuyChapters: FC<IProps> = (props: IProps) => {
                 <MdShoppingCart className="fs-3" color="rgba(0, 0, 0, 0.54)" />
                 <span>Số chương mua</span>
               </div>
-              <strong>2</strong>
+              <strong>{dataTransactionChapters?.number_chapter_buy}</strong>
             </div>
             <div className="d-flex align-items-center justify-content-between fs-4">
               <div className="d-flex align-items-center gap-3">
@@ -157,11 +233,11 @@ const EPModalBuyChapters: FC<IProps> = (props: IProps) => {
                 />
                 <span>TLT tiêu phí</span>
               </div>
-              <strong>2</strong>
+              <strong>{dataTransactionChapters?.amount}</strong>
             </div>
             <div className="d-flex align-items-center justify-content-between fs-4">
               <span>TLT Tổng thanh toán</span>
-              <strong>2</strong>
+              <strong>{dataTransactionChapters?.amount}</strong>
             </div>
           </div>
           <Button
@@ -175,8 +251,11 @@ const EPModalBuyChapters: FC<IProps> = (props: IProps) => {
           </Button>
           <div className="fs-6">
             <i>
-              Bạn đang có <strong>0 TLT</strong> trong tài khoản{" "}
-              <strong>{account.username}</strong>.
+              Bạn đang có{" "}
+              <strong>
+                {dataTransactionChapters?.transaction.fundBefore} TLT
+              </strong>{" "}
+              trong tài khoản <strong>{account.username}</strong>.
             </i>
           </div>
           <Card

@@ -23,6 +23,12 @@ export const getTopFamous = (): Promise<IApiResponse<IPaginationStory>> => {
   return axios.get("shelves/top_famous");
 };
 
+export const getFilteredStories = (
+  query?: string
+): Promise<IApiResponse<IPaginationStory>> => {
+  return axios.get(`shelves/filter?${query}`);
+};
+
 export const getStoriesByCategory = (): Promise<IApiResponse<ICategory[]>> => {
   return axios.get("shelves/cate_stories");
 };
@@ -104,7 +110,7 @@ export const commentStory = (
 export const updateComment = (
   id: number | string,
   data: {
-    content: string;
+    commentContent: string;
   }
 ): Promise<IApiResponse<null>> => {
   return axios.post(`comments/edit?commentId=${id}`, { ...data });
@@ -119,10 +125,4 @@ export const getChapterContent = (
   chapterNumber: number
 ): Promise<IApiResponse<IChapterContent>> => {
   return axios.get(`chapters/chapter_content/${storyid}/${chapterNumber}`);
-};
-
-export const getStoryInformation = (
-  storyid: string | number
-): Promise<IApiResponse<IStory>> => {
-  return axios.get(`story/story_information?storyId=${storyid}`);
 };

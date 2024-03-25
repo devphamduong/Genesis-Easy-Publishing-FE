@@ -3,7 +3,7 @@ import "./EPCover.scss";
 
 interface IProps {
   imgUrl: string;
-  title: string;
+  title: string | React.ReactNode;
   subTitle?: string;
   style?: React.CSSProperties;
 }

@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import MdEditor from "react-markdown-editor-lite";
 import MarkdownIt from "markdown-it";
 import "react-markdown-editor-lite/lib/index.css";
@@ -22,9 +22,12 @@ import { CheckOutlined } from "@ant-design/icons";
 import { useLocation, useSearchParams } from "react-router-dom";
 import {
   addChapter,
+  getChapterInformation,
   getVolumes,
+  updateChapter,
 } from "../../../../services/author-api-service";
 import { toast } from "react-toastify";
+import generatePDF, { Margin, Options, Resolution } from "react-to-pdf";
 
 interface IProps {}
 
@@ -48,12 +51,35 @@ const WriteChapterPage: FC<IProps> = (props: IProps) => {
   const [volumes, setVolumes] = useState<IVolume[]>([]);
   const [contentMarkdown, setContentMarkdown] = useState<string>("");
   const [contentHTML, setContentHTML] = useState<string>("");
+  const targetRef = useRef<HTMLInputElement>(null);
+
+  const options: Options = {
+    filename: "advanced-example.pdf",
+    method: "save",
+    resolution: Resolution.HIGH,
+    page: {
+      margin: Margin.SMALL,
+      orientation: "landscape",
+    },
+    canvas: {
+      mimeType: "image/jpeg",
+      qualityRatio: 1,
+    },
+    overrides: {
+      pdf: {
+        compress: true,
+      },
+      canvas: {
+        useCORS: true,
+      },
+    },
+  };
 
   useEffect(() => {
-    // if (location.state) {
-    //   storyTitle = location.state.storyTitle;
-    // }
     storyId && fetchVolumes();
+    if (mode === "edit") {
+      fetchChapterInformation();
+    }
   }, [storyId]);
 
   const fetchVolumes = async () => {
@@ -66,22 +92,23 @@ const WriteChapterPage: FC<IProps> = (props: IProps) => {
     }
   };
 
-  // const fetchStoryInformation = async () => {
-  //   const res = await getStoryInformation(storyId!);
-  //   if (res && res.ec === 0) {
-  //     form.setFieldsValue({
-  //       storyTitle: res.dt.storyTitle,
-  //       categoryIds: res.dt.storyCategories.map((item) => item.categoryId),
-  //       status: 1,
-  //     });
-  //     handleEditorChange({
-  //       html: res.dt.storyDescriptionHtml ?? "",
-  //       text: res.dt.storyDescriptionMarkdown ?? "",
-  //     });
-  //   } else {
-  //     toast.error(res.em);
-  //   }
-  // };
+  const fetchChapterInformation = async () => {
+    const res = await getChapterInformation(chapterId!);
+    if (res && res.ec === 0) {
+      form.setFieldsValue({
+        storyTitle: res.dt.storyTitle,
+        chapterTitle: res.dt.chapterTitle,
+        volumeId: res.dt.volumeId,
+        chapterPrice: res.dt.chapterPrice,
+      });
+      handleEditorChange({
+        html: res.dt.chapterContentHtml ?? "",
+        text: res.dt.chapterContentMarkdown ?? "",
+      });
+    } else {
+      toast.error(res.em);
+    }
+  };
 
   const handleEditorChange = ({
     html,
@@ -105,20 +132,18 @@ const WriteChapterPage: FC<IProps> = (props: IProps) => {
     let res;
     if (mode === "add") {
       res = await addChapter(payload);
+    } else {
+      res = await updateChapter({ ...payload, chapterId: chapterId! });
     }
-    // else {
-
-    // }
     if (res && res.ec === 0) {
       toast.success(res.em);
-      form.resetFields();
-      setContentMarkdown("");
-      setContentHTML("");
     } else {
       toast.error(res.em);
     }
     setIsLoading(false);
   };
+
+  const downloadPdf = () => generatePDF(targetRef, options);
 
   return (
     <div className="write-chapter-container my-3">
@@ -130,7 +155,9 @@ const WriteChapterPage: FC<IProps> = (props: IProps) => {
               layout="vertical"
               onFinish={onFinish}
               initialValues={{
-                status: form.getFieldValue("status") ?? 0,
+                chapterTitle: form.getFieldValue("chapterTitle"),
+                volumeId: form.getFieldValue("volumeId"),
+                chapterPrice: form.getFieldValue("chapterPrice"),
                 storyTitle,
               }}
             >
@@ -236,7 +263,7 @@ const WriteChapterPage: FC<IProps> = (props: IProps) => {
                   {mode === "edit" ? (
                     <span>Lưu thay đổi</span>
                   ) : (
-                    <span>Lưu truyện mới</span>
+                    <span>Lưu chương mới</span>
                   )}
                 </Button>
               </Form.Item>
@@ -244,6 +271,15 @@ const WriteChapterPage: FC<IProps> = (props: IProps) => {
           </Col>
         </Row>
       </div>
+
+      <Button onClick={downloadPdf}>Download PDF</Button>
+      <div
+        ref={targetRef}
+        className="content no-select"
+        dangerouslySetInnerHTML={{
+          __html: contentHTML ?? "",
+        }}
+      />
     </div>
   );
 };

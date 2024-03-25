@@ -29,9 +29,12 @@ import { IRootState } from "../../../redux/store";
 import { IWriteStoryForm } from "../../../interfaces/story.interface";
 import { getPlainTextFromHTML } from "../../../shared/function";
 import { ICategory } from "../../../interfaces/category.interface";
-import { getStoryInformation } from "../../../services/story-api-service";
 import { toast } from "react-toastify";
-import { createStory, updateStory } from "../../../services/author-api-service";
+import {
+  createStory,
+  getStoryInformation,
+  updateStory,
+} from "../../../services/author-api-service";
 
 interface IProps {}
 
@@ -105,10 +108,10 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
     };
     setIsLoading(true);
     let res;
-    if (mode === "add") {
-      res = await createStory(payload);
-    } else {
+    if (mode === "edit") {
       res = await updateStory(payload);
+    } else {
+      res = await createStory(payload);
     }
     if (res && res.ec === 0) {
       toast.success(res.em);

@@ -54,12 +54,6 @@ const ResetPasswordPage: FC<IProps> = (props: IProps) => {
       if (res && res.ec === 0) {
         toast.success(res.em);
         form.resetFields();
-        // navigate("/auth/login", {
-        //   state: {
-        //     emailOrUsername: values.email,
-        //     password: values.password,
-        //   },
-        // });
       } else {
         toast.error(res.em);
       }

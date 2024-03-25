@@ -13,7 +13,10 @@ import EPNoResultFound from "../../components/EP-UI/NoResultFound";
 interface IProps {}
 
 const RankStories: FC<IProps> = (props: IProps) => {
-  const [searchTerm, setSearchTerm] = useOutletContext();
+  const [searchTerm, setSearchTerm] = useOutletContext() as [
+    string,
+    (value: string) => void
+  ];
   const [famousStories, setFamousStories] = useState<IStory[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 

@@ -1,8 +1,9 @@
 import axios from "../utils/axios-customize";
 import { IApiResponse } from "../interfaces/global.interface";
 import {
-  IDataTransactionChapters,
+  IDataTransactionBuyChapters,
   IInformationBuyChapters,
+  IResponseTransactionBuyChapters,
 } from "../interfaces/transaction.interface";
 
 export const VNPayTopUp = (data: {
@@ -21,13 +22,10 @@ export const momoTopUp = (data: {
   });
 };
 
-export const addTransactionTopUp = (data: {
-  userId: number | string;
-  amount: number;
-}): Promise<IApiResponse<{ paymentUrl: string }>> => {
-  return axios.post(
-    `transaction/add_transaction_top_up?userId=${data.userId}&number_recharge=${data.amount}`
-  );
+export const addTransactionTopUp = (
+  amount: number
+): Promise<IApiResponse<{ amount: number }>> => {
+  return axios.post(`transaction/top_up?amount=${amount}`);
 };
 
 export const getTransactionHistory = (
@@ -49,7 +47,7 @@ export const buyChapters = (
   start: number,
   end: number,
   id: number | string
-): Promise<IApiResponse<null>> => {
+): Promise<IApiResponse<IResponseTransactionBuyChapters>> => {
   return axios.post(
     `transaction/add_transaction_buy_many_chapters?chapterStart=${start}&chapterEnd=${end}&storyId=${id}`
   );
@@ -63,7 +61,7 @@ export const getTransactionBuyMultipleChapters = (
   start: number,
   end: number,
   id: number | string
-): Promise<IApiResponse<IDataTransactionChapters>> => {
+): Promise<IApiResponse<IDataTransactionBuyChapters>> => {
   return axios.get(
     `transaction/get_transaction_buy_many_chapters?chapterStart=${start}&chapterEnd=${end}&storyId=${id}`
   );

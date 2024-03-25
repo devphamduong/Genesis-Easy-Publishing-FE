@@ -44,4 +44,10 @@
 
 .ant-drawer-content-wrapper:has(.drawer-header) {
     width: 30vw !important;
+
+    .ant-drawer-content {
+        .ant-drawer-body {
+            overflow-x: hidden;
+        }
+    }
 }

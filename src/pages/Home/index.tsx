@@ -35,6 +35,7 @@ import Loading from "../../components/Loading";
 import { PiDotsThreeCircleLight } from "react-icons/pi";
 import { useSelector } from "react-redux";
 import { IRootState } from "../../redux/store";
+import { ERouteEndPointForAuthor } from "../../enums/route-end-point.enum";
 const { Paragraph } = Typography;
 
 const HomePage: FC = (props) => {
@@ -178,7 +179,13 @@ const HomePage: FC = (props) => {
                 <Button size="large" type="primary">
                   Hướng dẫn đăng truyện
                 </Button>
-                <Button size="large" type="primary">
+                <Button
+                  size="large"
+                  type="primary"
+                  onClick={() =>
+                    navigate(ERouteEndPointForAuthor.POSTED_STORIES)
+                  }
+                >
                   Trung tâm xuất bản
                 </Button>
                 {!isAuthenticated && <i>(Cần đăng nhập để xem thông tin)</i>}

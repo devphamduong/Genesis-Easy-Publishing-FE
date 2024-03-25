@@ -4,8 +4,11 @@ import { IStory } from "../../../interfaces/story.interface";
 import { getStoryDetailURL } from "../../../shared/generate-navigate-url";
 import { useNavigate } from "react-router-dom";
 import { getPaginationOwnedStories } from "../../../services/story-api-service";
-import { Card, Pagination } from "antd";
+import { Badge, Card, Pagination } from "antd";
 import Meta from "antd/es/card/Meta";
+import { AiOutlineLike } from "react-icons/ai";
+import { FaRegHeart } from "react-icons/fa6";
+import { GrView } from "react-icons/gr";
 
 interface IProps {}
 
@@ -41,20 +44,37 @@ const OwnedStoriesPage: FC<IProps> = (props: IProps) => {
           stories.length > 0 &&
           stories.map((item, index) => {
             return (
-              <Card
-                key={`owned-story-${item.storyId}`}
-                hoverable
-                style={{ width: 240 }}
-                cover={<img alt={item.storyTitle} src={item.storyImage} />}
-                onClick={() =>
-                  navigate(getStoryDetailURL(item.storyId, item.storyTitle))
-                }
-              >
-                <Meta
-                  title={item.storyTitle}
-                  description={item.storyAuthor.userFullname}
-                />
-              </Card>
+              <Badge.Ribbon text={item.storyPrice + " TLT"} color="red">
+                <Card
+                  key={`owned-story-${item.storyId}`}
+                  hoverable
+                  style={{ width: 180 }}
+                  cover={<img alt={item.storyTitle} src={item.storyImage} />}
+                  onClick={() =>
+                    navigate(getStoryDetailURL(item.storyId, item.storyTitle))
+                  }
+                >
+                  <Meta
+                    title={item.storyTitle}
+                    description={
+                      <div className="d-flex align-items-center justify-content-between flex-wrap">
+                        <div className="d-flex align-items-center">
+                          <AiOutlineLike />
+                          <span>{item.storyInteraction?.like}</span>
+                        </div>
+                        <div className="d-flex align-items-center">
+                          <FaRegHeart />
+                          <span>{item.storyInteraction?.follow}</span>
+                        </div>
+                        <div className="d-flex align-items-center">
+                          <GrView />
+                          <span>{item.storyInteraction?.view}</span>
+                        </div>
+                      </div>
+                    }
+                  />
+                </Card>
+              </Badge.Ribbon>
             );
           })}
       </div>

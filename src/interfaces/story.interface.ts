@@ -14,13 +14,13 @@ export interface IStory {
   };
   storyChapterNumber: number;
   storyChapters?: IChapter[];
-  storyLatestChapter?: {
+  storyLatestChapter: {
     chapterId: number | string;
     chapterTitle: string;
     chapterNumber: number;
     createTime: string;
   };
-  storyReadChapter?: {
+  storyReadChapter: {
     chapterId: number | string;
     chapterTitle: string;
     chapterNumber: number;

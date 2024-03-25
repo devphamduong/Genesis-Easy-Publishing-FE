@@ -5,22 +5,23 @@ import {
   Button,
   Modal,
   Steps,
-  message,
   theme,
   InputNumber,
   Row,
   Col,
   Card,
+  Result,
 } from "antd";
 import { MdShoppingCart } from "react-icons/md";
 import { RiMoneyDollarCircleFill } from "react-icons/ri";
 import { IoCheckmark } from "react-icons/io5";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { IRootState } from "../../../../redux/store";
 import { IPropsEPModal } from "../../../../interfaces/global.interface";
 import {
-  IDataTransactionChapters,
+  IDataTransactionBuyChapters,
   IInformationBuyChapters,
+  IUpdateBalanceAction,
 } from "../../../../interfaces/transaction.interface";
 import {
   buyChapters,
@@ -28,6 +29,8 @@ import {
   getTransactionBuyMultipleChapters,
 } from "../../../../services/transaction-api-service";
 import { toast } from "react-toastify";
+import { updateAccountBalance } from "../../../../redux/account/accountSlice";
+import { EUpdateBalanceAction } from "../../../../enums/transaction.enum";
 
 interface IProps extends IPropsEPModal {
   storyId?: number | string;
@@ -59,13 +62,16 @@ const items = steps.map((item) => ({ key: item.title, title: item.title }));
 const EPModalBuyChapters: FC<IProps> = (props: IProps) => {
   const { isModalOpen, setIsModalOpen, storyId, fetchChapterContent } = props;
   const [dataTransactionChapters, setDataTransactionChapters] =
-    useState<IDataTransactionChapters>();
+    useState<IDataTransactionBuyChapters>();
   const [informationBuyChapters, setInformationBuyChapters] =
     useState<IInformationBuyChapters>();
   const { token } = theme.useToken();
+  const dispatch = useDispatch();
   const account = useSelector((state: IRootState) => state.account.user);
   const [current, setCurrent] = useState<number>(0);
   const [form] = Form.useForm<IFormBuyChapters>();
+  const [numberOfChaptersSucceed, setNumberOfChaptersSucceed] =
+    useState<number>(0);
 
   useEffect(() => {
     isModalOpen === true && fetchInformationBuyMultipleChapters();
@@ -111,9 +117,18 @@ const EPModalBuyChapters: FC<IProps> = (props: IProps) => {
       storyId!
     );
     if (res && res.ec === 0) {
-      setIsModalOpen(false);
-      toast.success(res.em);
-      fetchChapterContent();
+      setNumberOfChaptersSucceed(res.dt.chapter_buy);
+      toast.success(`Bạn đã mua ${res.dt.chapter_buy} chương thành công`);
+      dispatch(
+        updateAccountBalance({
+          updateAction: EUpdateBalanceAction.BUY,
+          amount: res.dt.amount,
+        } as IUpdateBalanceAction)
+      );
+      setTimeout(() => {
+        setIsModalOpen(false);
+        fetchChapterContent();
+      }, 3000);
     } else {
       toast.error(res.em);
     }
@@ -144,7 +159,25 @@ const EPModalBuyChapters: FC<IProps> = (props: IProps) => {
         form.resetFields();
       }}
     >
-      <Steps labelPlacement={"vertical"} current={current} items={items} />
+      <div>
+        <Steps labelPlacement={"vertical"} current={current}>
+          <Steps.Step
+            title="Step 1"
+            description=""
+            // status={current === 1 ? "finish" : "process"}
+          />
+          <Steps.Step
+            title="Step 2"
+            description=""
+            // status={current === 2 ? "finish" : "process"}
+          />
+          <Steps.Step
+            title="Step 3"
+            description=""
+            // status={current === 2 ? "finish" : "process"}
+          />
+        </Steps>
+      </div>
       {current === 0 ? (
         <div className="mt-3">
           <div>
@@ -274,22 +307,16 @@ const EPModalBuyChapters: FC<IProps> = (props: IProps) => {
                 phụ trách.
               </li>
             </ul>
-            {/* <p>Tùy theo truyện, nhóm dịch sẽ có số chữ trên chương khác nhau. Hãy xem kỹ trước khi mua.</p> */}
           </Card>
         </div>
       ) : (
-        ""
+        <Result
+          status="success"
+          title={<p>Mua thành công {numberOfChaptersSucceed} chương</p>}
+        />
       )}
       <div className="text-end" style={{ marginTop: 24 }}>
-        {current === steps.length - 1 && (
-          <Button
-            type="primary"
-            onClick={() => message.success("Processing complete!")}
-          >
-            Done
-          </Button>
-        )}
-        {current > 0 && (
+        {current > 0 && current <= 1 && (
           <Button style={{ margin: "0 8px" }} onClick={() => prev()}>
             Quay lại
           </Button>

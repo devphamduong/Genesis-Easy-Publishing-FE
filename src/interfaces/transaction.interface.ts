@@ -9,7 +9,7 @@ export interface IInformationBuyChapters {
   user_wallet: number;
 }
 
-export interface IDataTransactionChapters {
+export interface IDataTransactionBuyChapters {
   chapter_buy: {
     chapterNumber: number;
   }[];
@@ -29,4 +29,11 @@ export interface IDataTransactionChapters {
     status: boolean;
     description: string;
   };
+}
+
+export interface IResponseTransactionBuyChapters {
+  chapter_buy: number;
+  amount: number;
+  fund: number;
+  user_chapter: number;
 }

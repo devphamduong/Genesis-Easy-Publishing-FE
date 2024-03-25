@@ -1,10 +1,16 @@
 import { FC, useEffect, useState } from "react";
 import "./Following.scss";
 import { Button, Table, TableProps } from "antd";
-import { getPaginationStoriesFollowing } from "../../../services/story-api-service";
+import {
+  followStory,
+  getPaginationStoriesFollowing,
+} from "../../../services/story-api-service";
 import { IStory } from "../../../interfaces/story.interface";
 import { dayjsFrom } from "../../../shared/function";
 import { AiOutlineClose } from "react-icons/ai";
+import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
+import { getStoryReadURL } from "../../../shared/generate-navigate-url";
 
 interface IProps {}
 
@@ -29,12 +35,22 @@ const FollowingPage: FC<IProps> = (props: IProps) => {
     }
   };
 
+  const handleStoryInteraction = async (id: number | string) => {
+    const res = await followStory(id);
+    if (res && res.ec === 0) {
+      const newArr = followingStories.filter((item) => item.storyId !== id);
+      setFollowingStories(newArr);
+    } else {
+      toast.error(res.em);
+    }
+  };
+
   const columns: TableProps["columns"] = [
     {
       title: "Tên truyện",
       dataIndex: "storyTitle",
       key: "storyTitle",
-      render: (text) => (
+      render: (text, record: IStory) => (
         <>
           <div>{text}</div>
           <Button
@@ -43,6 +59,7 @@ const FollowingPage: FC<IProps> = (props: IProps) => {
             type="dashed"
             className="d-flex align-items-center"
             danger
+            onClick={() => handleStoryInteraction(record.storyId)}
           >
             Bỏ theo dõi
           </Button>
@@ -56,7 +73,16 @@ const FollowingPage: FC<IProps> = (props: IProps) => {
       render(value, record: IStory, index) {
         return (
           <>
-            <div>Chương {record.storyReadChapter?.chapterNumber}</div>
+            <Link
+              className="link-hover"
+              to={getStoryReadURL(
+                record.storyId,
+                record.storyTitle,
+                record.storyReadChapter?.chapterNumber
+              )}
+            >
+              Chương {record.storyReadChapter?.chapterNumber}
+            </Link>
             <div className="time">
               {record.storyReadChapter &&
                 dayjsFrom(record.storyReadChapter?.createTime)}
@@ -72,7 +98,16 @@ const FollowingPage: FC<IProps> = (props: IProps) => {
       render(value, record: IStory, index) {
         return (
           <>
-            <div>Chương {record.storyLatestChapter?.chapterNumber}</div>
+            <Link
+              className="link-hover"
+              to={getStoryReadURL(
+                record.storyId,
+                record.storyTitle,
+                record.storyLatestChapter?.chapterNumber
+              )}
+            >
+              Chương {record.storyLatestChapter?.chapterNumber}
+            </Link>
             <div className="time">
               {record.storyLatestChapter &&
                 dayjsFrom(record.storyLatestChapter?.createTime)}

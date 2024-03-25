@@ -4,6 +4,8 @@ import { Table, TableProps } from "antd";
 import { getPaginationStoriesFollowing } from "../../../services/story-api-service";
 import { IStory } from "../../../interfaces/story.interface";
 import { dayjsFrom } from "../../../shared/function";
+import { Link } from "react-router-dom";
+import { getStoryReadURL } from "../../../shared/generate-navigate-url";
 
 interface IProps {}
 
@@ -46,7 +48,16 @@ const ReadHistoryPage: FC<IProps> = (props: IProps) => {
       render(value, record: IStory, index) {
         return (
           <>
-            <div>Chương {record.storyReadChapter?.chapterNumber}</div>
+            <Link
+              className="link-hover"
+              to={getStoryReadURL(
+                record.storyId,
+                record.storyTitle,
+                record.storyReadChapter?.chapterNumber
+              )}
+            >
+              Chương {record.storyReadChapter?.chapterNumber}
+            </Link>
             <div className="time">
               {record.storyReadChapter &&
                 dayjsFrom(record.storyReadChapter?.createTime)}
@@ -62,7 +73,16 @@ const ReadHistoryPage: FC<IProps> = (props: IProps) => {
       render(value, record: IStory, index) {
         return (
           <>
-            <div>Chương {record.storyLatestChapter?.chapterNumber}</div>
+            <Link
+              className="link-hover"
+              to={getStoryReadURL(
+                record.storyId,
+                record.storyTitle,
+                record.storyLatestChapter?.chapterNumber
+              )}
+            >
+              Chương {record.storyLatestChapter?.chapterNumber}
+            </Link>
             <div className="time">
               {record.storyLatestChapter &&
                 dayjsFrom(record.storyLatestChapter?.createTime)}

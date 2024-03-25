@@ -76,6 +76,7 @@ export const accountSlice = createSlice({
           state.user.tlt -= amount;
           break;
         case EUpdateBalanceAction.TOPUP:
+          state.user.tlt += amount;
           break;
       }
     },

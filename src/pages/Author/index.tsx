@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from "react";
 import "./Author.scss";
-import { Avatar, Card } from "antd";
+import { Avatar, Badge, Card, Tabs } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import { IAuthor, IStory } from "../../interfaces/story.interface";
 import {
@@ -10,6 +10,9 @@ import {
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Meta from "antd/es/card/Meta";
 import { getStoryDetailURL } from "../../shared/generate-navigate-url";
+import { AiOutlineLike } from "react-icons/ai";
+import { FaRegHeart } from "react-icons/fa6";
+import { GrView } from "react-icons/gr";
 
 interface IProps {}
 
@@ -19,6 +22,29 @@ const AuthorPage: FC<IProps> = (props: IProps) => {
   const authorId = searchParams.get("authorId");
   const [author, setAuthor] = useState<IAuthor>();
   const [stories, setStories] = useState<IStory[]>([]);
+
+  const tabs = [
+    {
+      label: `Truyện đã viết`,
+      key: "written",
+      children: <></>,
+    },
+    {
+      label: `Truyện nổi bật`,
+      key: "top_famous",
+      children: <></>,
+    },
+    {
+      label: `Truyện nhiều lượt mua`,
+      key: "top_purchase",
+      children: <></>,
+    },
+    {
+      label: `Truyện mới nhất`,
+      key: "top_newest_by_chapter",
+      children: <></>,
+    },
+  ];
 
   useEffect(() => {
     if (authorId) {
@@ -34,11 +60,15 @@ const AuthorPage: FC<IProps> = (props: IProps) => {
     }
   };
 
-  const fetchAuthorStories = async () => {
-    const res = await getAuthorStoriesById(authorId!);
+  const fetchAuthorStories = async (status: string = "written") => {
+    const res = await getAuthorStoriesById(authorId!, status);
     if (res && res.ec === 0) {
       setStories(res.dt);
     }
+  };
+
+  const handleChangeTab = (status) => {
+    fetchAuthorStories(status);
   };
 
   return (
@@ -69,27 +99,48 @@ const AuthorPage: FC<IProps> = (props: IProps) => {
           </Card>
         </div>
       </div>
-      <div className="author-stories-content container">
-        <p>Danh Sách Truyện Của Tác Giả {author?.authorName}</p>
-        <div className="mt-3 d-flex gap-5 flex-wrap justify-content-evenly">
+      <div className="author-stories-content container d-flex">
+        <Tabs
+          tabPosition={"left"}
+          items={tabs}
+          onChange={(e) => handleChangeTab(e)}
+        />
+        <div className="d-flex gap-5 flex-wrap">
           {stories &&
             stories.length > 0 &&
             stories.map((item, index) => {
               return (
-                <Card
-                  key={`author-story-${item.storyId}`}
-                  hoverable
-                  style={{ width: 240 }}
-                  cover={<img alt={item.storyTitle} src={item.storyImage} />}
-                  onClick={() =>
-                    navigate(getStoryDetailURL(item.storyId, item.storyTitle))
-                  }
-                >
-                  <Meta
-                    title={item.storyTitle}
-                    description={item?.storyAuthor?.userFullname}
-                  />
-                </Card>
+                <Badge.Ribbon text={item.storyPrice + " TLT"} color="red">
+                  <Card
+                    key={`author-story-${item.storyId}`}
+                    hoverable
+                    style={{ width: 180 }}
+                    cover={<img alt={item.storyTitle} src={item.storyImage} />}
+                    onClick={() =>
+                      navigate(getStoryDetailURL(item.storyId, item.storyTitle))
+                    }
+                  >
+                    <Meta
+                      title={item.storyTitle}
+                      description={
+                        <div className="d-flex align-items-center justify-content-between flex-wrap">
+                          <div className="d-flex align-items-center">
+                            <AiOutlineLike />
+                            <span>{item.storyInteraction?.like}</span>
+                          </div>
+                          <div className="d-flex align-items-center">
+                            <FaRegHeart />
+                            <span>{item.storyInteraction?.follow}</span>
+                          </div>
+                          <div className="d-flex align-items-center">
+                            <GrView />
+                            <span>{item.storyInteraction?.view}</span>
+                          </div>
+                        </div>
+                      }
+                    />
+                  </Card>
+                </Badge.Ribbon>
               );
             })}
         </div>

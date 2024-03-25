@@ -16,7 +16,7 @@ import {
   Popover,
   Row,
 } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import "./Header.scss";
 import { FC } from "react";
@@ -33,6 +33,9 @@ import {
 import EPButton from "../EP-UI/Button";
 import { PiBookmarks } from "react-icons/pi";
 import { kFormatter } from "../../shared/function";
+import { getPaginationStoriesFollowing } from "../../services/story-api-service";
+import { IStory } from "../../interfaces/story.interface";
+import RowStory from "../RowStory";
 interface IProps {}
 
 const Header: FC<IProps> = (props: IProps) => {
@@ -44,6 +47,7 @@ const Header: FC<IProps> = (props: IProps) => {
   const account = useSelector((state: IRootState) => state.account?.user);
   const [current, setCurrent] = useState<string>("mail");
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
+  const [followingStories, setFollowingStories] = useState<IStory[]>([]);
   const items: MenuProps["items"] = [
     {
       label: <NavLink to={"/"}>Truyện chất lượng cao</NavLink>,
@@ -61,6 +65,17 @@ const Header: FC<IProps> = (props: IProps) => {
     },
   ];
   const [isPopoverOpen, setIsPopoverOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    openDrawer && fetchStoriesFollowing();
+  }, [openDrawer]);
+
+  const fetchStoriesFollowing = async () => {
+    const res = await getPaginationStoriesFollowing(1, 10);
+    if (res && res.ec === 0) {
+      setFollowingStories(res.dt.list);
+    }
+  };
 
   const popoverTitle = () => {
     return (
@@ -238,9 +253,19 @@ const Header: FC<IProps> = (props: IProps) => {
           </Button>
         }
       >
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
+        <div className="d-flex flex-column gap-3">
+          {followingStories &&
+            followingStories.length > 0 &&
+            followingStories.map((item) => {
+              return (
+                <RowStory
+                  key={`header-story-following-${item.storyId}`}
+                  size="small"
+                  story={item}
+                />
+              );
+            })}
+        </div>
       </Drawer>
     </>
   );

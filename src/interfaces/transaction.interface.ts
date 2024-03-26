@@ -10,25 +10,9 @@ export interface IInformationBuyChapters {
 }
 
 export interface IDataTransactionBuyChapters {
-  chapter_buy: {
-    chapterNumber: number;
-  }[];
-  amount: number;
   number_chapter_buy: number;
-  transaction: {
-    transactionId: number;
-    walletId: number;
-    storyId: number;
-    chapterId: number | string;
-    amount: number;
-    fundBefore: number;
-    fundAfter: number;
-    refundBefore: number;
-    refundAfter: number;
-    transactionTime: string;
-    status: boolean;
-    description: string;
-  };
+  amount: number;
+  balance: number;
 }
 
 export interface IResponseTransactionBuyChapters {

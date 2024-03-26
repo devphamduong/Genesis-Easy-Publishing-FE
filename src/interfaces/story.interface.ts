@@ -149,8 +149,8 @@ export interface IWriteStoryForm {
   type?: string;
   storyId: number | string;
   authorId?: string | number;
-  storyPrice?: number;
-  storySale?: number;
+  storyPrice: number;
+  storySale: number;
   storyImage?: string;
   status?: number;
   categoryIds?: string[];

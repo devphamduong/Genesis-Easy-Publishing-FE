@@ -9,6 +9,7 @@ import {
   Form,
   Image,
   Input,
+  InputNumber,
   Radio,
   Row,
   Select,
@@ -86,7 +87,9 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
       form.setFieldsValue({
         storyTitle: res.dt.storyTitle,
         categoryIds: res.dt.storyCategories.map((item) => item.categoryId),
-        status: 1,
+        status: res.dt.status,
+        storyPrice: +res.dt.storyPrice,
+        storySale: res.dt.storySale,
       });
       handleEditorChange({
         html: res.dt.storyDescriptionHtml ?? "",
@@ -98,6 +101,10 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
   };
 
   const onFinish = async (values: IWriteStoryForm) => {
+    if (values.storyPrice <= -1 || values.storySale <= -1) {
+      toast.error("Giá truyện hoặc SALE không được chứa giá trị âm");
+      return;
+    }
     const payload: IWriteStoryForm = {
       ...values,
       storyId: storyId!,
@@ -106,6 +113,8 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
       storyDescriptionMarkdown: descriptionMarkdown,
       storyDescriptionHtml: descriptionHTML,
     };
+    console.log(getPlainTextFromHTML(descriptionHTML));
+    return;
     setIsLoading(true);
     let res;
     if (mode === "edit") {
@@ -153,7 +162,7 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
               form={form}
               layout="vertical"
               onFinish={onFinish}
-              initialValues={{ status: form.getFieldValue("status") ?? 0 }}
+              initialValues={{ status: 0 }}
             >
               <Row>
                 <Col span={7}>
@@ -224,7 +233,7 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
                     />
                   </Form.Item>
                 </Col>
-                <Col>
+                <Col span={8}>
                   <Form.Item<IWriteStoryForm>
                     label={
                       <div className="d-flex align-items-center gap-1">
@@ -243,12 +252,6 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
                       </div>
                     }
                     name="status"
-                    // rules={[
-                    //   {
-                    //     required: true,
-                    //     message: "Ít nhất 1 thể loại được chọn!",
-                    //   },
-                    // ]}
                   >
                     <Radio.Group buttonStyle="solid">
                       <Radio.Button
@@ -278,6 +281,48 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
                     </Radio.Group>
                   </Form.Item>
                 </Col>
+                {mode === "edit" && (
+                  <>
+                    <Col span={7}>
+                      <Form.Item<IWriteStoryForm>
+                        label="Giá gốc của truyện"
+                        name="storyPrice"
+                        rules={[
+                          {
+                            required: true,
+                            message: "Giá không được để trống",
+                          },
+                        ]}
+                      >
+                        <InputNumber
+                          addonBefore={"TLT"}
+                          size="large"
+                          formatter={(value) =>
+                            `${value}`.replace(/\B(?=(\d{2})+(?!\d))/g, ",")
+                          }
+                          parser={(value) => value!.replace(/\$\s?|(,*)/g, "")}
+                          className="w-100"
+                        />
+                      </Form.Item>
+                    </Col>
+                    <Col span={7}>
+                      <Form.Item<IWriteStoryForm>
+                        label="Giá SALE"
+                        name="storySale"
+                      >
+                        <InputNumber
+                          addonBefore={"%"}
+                          size="large"
+                          formatter={(value) =>
+                            `${value}`.replace(/\B(?=(\d{2})+(?!\d))/g, ",")
+                          }
+                          parser={(value) => value!.replace(/\$\s?|(,*)/g, "")}
+                          className="w-100"
+                        />
+                      </Form.Item>
+                    </Col>
+                  </>
+                )}
               </Row>
               <Form.Item
                 help="Tóm tắt cho truyện không nên quá dài mà nên ngắn gọn, tập trung, thú

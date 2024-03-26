@@ -40,7 +40,7 @@ export const getTransactionHistory = (
 export const buySingleChapter = (
   id: number | string
 ): Promise<IApiResponse<null>> => {
-  return axios.post(`transaction/add_transaction_buy_chapter?chapterId=${id}`);
+  return axios.post(`transaction/purchase_chapter?chapterId=${id}`);
 };
 
 export const buyChapters = (
@@ -49,12 +49,12 @@ export const buyChapters = (
   id: number | string
 ): Promise<IApiResponse<IResponseTransactionBuyChapters>> => {
   return axios.post(
-    `transaction/add_transaction_buy_many_chapters?chapterStart=${start}&chapterEnd=${end}&storyId=${id}`
+    `transaction/purchase_many_chapters?chapterStart=${start}&chapterEnd=${end}&storyId=${id}`
   );
 };
 
 export const buyStory = (id: number | string): Promise<IApiResponse<null>> => {
-  return axios.post(`transaction/add_transaction_buy_story?storyId=${id}`);
+  return axios.post(`transaction/purchase_story?storyId=${id}`);
 };
 
 export const getTransactionBuyMultipleChapters = (

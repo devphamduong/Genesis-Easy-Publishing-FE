@@ -285,10 +285,8 @@ const EPModalBuyChapters: FC<IProps> = (props: IProps) => {
           <div className="fs-6">
             <i>
               Bạn đang có{" "}
-              <strong>
-                {dataTransactionChapters?.transaction.fundBefore} TLT
-              </strong>{" "}
-              trong tài khoản <strong>{account.username}</strong>.
+              <strong>{dataTransactionChapters?.balance} TLT</strong> trong tài
+              khoản <strong>{account.username}</strong>.
             </i>
           </div>
           <Card

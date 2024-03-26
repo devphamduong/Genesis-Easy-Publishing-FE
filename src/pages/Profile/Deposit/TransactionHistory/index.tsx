@@ -77,14 +77,14 @@ const TransactionHistoryPage: FC<IProps> = (props: IProps) => {
           color="success"
           className="fs-5 d-flex align-items-center"
         >
-          <p>Tiền vào: $9,758.23</p>
+          <p>Tiền vào: 9,758.23 TLT</p>
         </Tag>
         <Tag
           icon={<GoArrowUp className="fs-4" />}
           color="success"
           className="fs-5 d-flex align-items-center"
         >
-          <p>Tiền ra: $961.23</p>
+          <p>Tiền ra: 961.23 TLT</p>
         </Tag>
       </div>
     );

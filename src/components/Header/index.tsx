@@ -1,23 +1,17 @@
-import {
-  AppstoreOutlined,
-  MailOutlined,
-  SearchOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
+import { UserOutlined } from "@ant-design/icons";
 import {
   Affix,
   Avatar,
   Button,
   Col,
   Drawer,
-  Input,
   Menu,
   MenuProps,
   Popover,
   Row,
 } from "antd";
 import { useEffect, useState } from "react";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./Header.scss";
 import { FC } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -36,6 +30,8 @@ import { kFormatter } from "../../shared/function";
 import { getPaginationStoriesFollowing } from "../../services/story-api-service";
 import { IStory } from "../../interfaces/story.interface";
 import RowStory from "../RowStory";
+import GlobalSearch from "./GlobalSearch";
+
 interface IProps {}
 
 const Header: FC<IProps> = (props: IProps) => {
@@ -48,22 +44,7 @@ const Header: FC<IProps> = (props: IProps) => {
   const [current, setCurrent] = useState<string>("mail");
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const [followingStories, setFollowingStories] = useState<IStory[]>([]);
-  const items: MenuProps["items"] = [
-    {
-      label: <NavLink to={"/"}>Truyện chất lượng cao</NavLink>,
-      key: "mail",
-      icon: <MailOutlined />,
-    },
-    {
-      label: <NavLink to={"/"}>Truyện mới đăng</NavLink>,
-      key: "app",
-      icon: <AppstoreOutlined />,
-    },
-    {
-      label: <NavLink to={"/vl"}>Truyện đề xuất</NavLink>,
-      key: "alipay",
-    },
-  ];
+
   const [isPopoverOpen, setIsPopoverOpen] = useState<boolean>(false);
 
   useEffect(() => {
@@ -179,26 +160,12 @@ const Header: FC<IProps> = (props: IProps) => {
                       The Genesis
                     </Link>
                   </Col>
-                  <Col span={20}>
-                    <Menu
-                      style={{ backgroundColor: "transparent" }}
-                      onClick={(e) => setCurrent(e.key)}
-                      selectedKeys={[current]}
-                      mode="horizontal"
-                      items={items}
-                    />
-                  </Col>
                 </Row>
               </Col>
               <Col span={11}>
                 <Row align={"middle"} justify={"space-between"}>
                   <Col span={12}>
-                    <Input
-                      variant="borderless"
-                      size="large"
-                      placeholder="Tìm tên truyện, tác giả"
-                      prefix={<SearchOutlined />}
-                    />
+                    <GlobalSearch />
                   </Col>
                   {!isAuthenticated ? (
                     <Col>
@@ -227,8 +194,8 @@ const Header: FC<IProps> = (props: IProps) => {
                         </strong>
                       </div>
                       <span>
-                        Bạn đang có: {kFormatter(account.tlt)}{" "}
-                        <strong>TLT</strong>
+                        Bạn đang có: <strong>{kFormatter(account.tlt)}</strong>{" "}
+                        TLT
                       </span>
                     </Col>
                   )}

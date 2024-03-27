@@ -23,10 +23,7 @@ import dayjs from "dayjs";
 import EPButton from "../../../components/EP-UI/Button";
 import { MdDeleteOutline, MdPublic } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
-import {
-  getChapterEditURL,
-  getEditChapterURL,
-} from "../../../shared/generate-navigate-url";
+import { getEditChapterURL } from "../../../shared/generate-navigate-url";
 import { slugify } from "../../../shared/function";
 dayjs.extend(relativeTime);
 import { v4 as uuidv4 } from "uuid";

@@ -90,4 +90,10 @@ body {
   .capitalize {
     text-transform: capitalize;
   }
+
+  .eclipse {
+    white-space  : nowrap;
+    overflow     : hidden;
+    text-overflow: ellipsis;
+  }
 }

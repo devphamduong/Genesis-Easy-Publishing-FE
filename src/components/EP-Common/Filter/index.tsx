@@ -17,7 +17,7 @@ const EPFilter: FC<IProps> = (props: IProps) => {
   const { searchTerm, setSearchTerm } = props;
   const [form] = Form.useForm();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [priceRange, setPriceRange] = useState<number[]>([0, MAX_PRICE]);
+  const [priceRange, setPriceRange] = useState<number[]>();
   const [filterOptions, setFilterOptions] = useState<IFilterOptions>();
 
   useEffect(() => {
@@ -117,12 +117,13 @@ const EPFilter: FC<IProps> = (props: IProps) => {
         </Form.Item> */}
         <Form.Item name="price">
           <div>
-            From: {priceRange[0]} To: {priceRange[1]}
+            From: {priceRange && priceRange[0]} To:{" "}
+            {priceRange && priceRange[1]}
           </div>
           <Slider
             range
             defaultValue={priceRange}
-            max={MAX_PRICE}
+            max={priceRange && priceRange[1]}
             onChangeComplete={onChangePriceRange}
           />
         </Form.Item>

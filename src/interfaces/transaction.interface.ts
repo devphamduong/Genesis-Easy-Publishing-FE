@@ -21,3 +21,14 @@ export interface IResponseTransactionBuyChapters {
   fund: number;
   user_chapter: number;
 }
+
+export interface IWalletInfor {
+  walletId: number;
+  userId: number;
+  fund: number;
+  refund: number;
+  amount_received: number;
+  amount_spent: number;
+  amount_top_up: number;
+  amount_withdrawn: number;
+}

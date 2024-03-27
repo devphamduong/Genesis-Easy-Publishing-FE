@@ -1,3 +1,4 @@
+import { ERouteEndPointForAuthor } from "../enums/route-end-point.enum";
 import { slugify } from "./function";
 
 export const getStoryDetailURL = (
@@ -27,14 +28,14 @@ export const getStoryReadURL = (
 };
 
 export const getEditStoryURL = (id: number | string, slug: string): string => {
-  return `/author/write-story?mode=edit&storyId=${id}&storyTitle=${slug}`;
+  return `${ERouteEndPointForAuthor.WRITE_STORY}?mode=edit&storyId=${id}&storyTitle=${slug}`;
 };
 
 export const getWriteChapterURL = (
   id: number | string,
   slug: string
 ): string => {
-  return `/author/write-chapter?mode=add&storyId=${id}&storyTitle=${slug}`;
+  return `${ERouteEndPointForAuthor.WRITE_CHAPTER}?mode=add&storyId=${id}&storyTitle=${slug}`;
 };
 
 export const getEditChapterURL = (
@@ -42,9 +43,5 @@ export const getEditChapterURL = (
   chapterId: number | string,
   slug: string
 ): string => {
-  return `/author/write-chapter?mode=edit&storyId=${storyId}&chapterId=${chapterId}&storyTitle=${slug}`;
-};
-
-export const getChapterEditURL = (id: number | string): string => {
-  return `/author/write-chapter?edit-chapter-id=${id}`;
+  return `${ERouteEndPointForAuthor.WRITE_CHAPTER}?mode=edit&storyId=${storyId}&chapterId=${chapterId}&storyTitle=${slug}`;
 };

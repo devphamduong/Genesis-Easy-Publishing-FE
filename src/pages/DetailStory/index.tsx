@@ -495,7 +495,7 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
                                 shape="round"
                                 size="large"
                                 content={item.categoryName}
-                              ></EPTag>
+                              />
                             );
                           })}
                       </Space>

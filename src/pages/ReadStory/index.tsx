@@ -174,7 +174,7 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
                     color="#09bb07"
                     className="d-flex align-items-center justify-content-center"
                     type="primary"
-                    icon={<IoCheckmark />}
+                    icon={<IoCheckmark className="fs-5" />}
                     size={"large"}
                     onClick={() =>
                       showConfirmBuyChapter(
@@ -189,7 +189,7 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
                     color="#09bb07"
                     className="d-flex align-items-center justify-content-center"
                     type="primary"
-                    icon={<IoMdDoneAll />}
+                    icon={<IoMdDoneAll className="fs-5" />}
                     size={"large"}
                     onClick={() => setIsModalBuyChaptersOpen(true)}
                   >
@@ -199,7 +199,7 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
                     color="#09bb07"
                     className="d-flex align-items-center justify-content-center"
                     type="primary"
-                    icon={<RiMoneyDollarCircleFill />}
+                    icon={<RiMoneyDollarCircleFill className="fs-5" />}
                     size={"large"}
                     onClick={() => setIsModalTopUpOpen(true)}
                   >

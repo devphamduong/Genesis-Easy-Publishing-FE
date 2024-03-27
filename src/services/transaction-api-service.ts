@@ -4,6 +4,7 @@ import {
   IDataTransactionBuyChapters,
   IInformationBuyChapters,
   IResponseTransactionBuyChapters,
+  IWalletInfor,
 } from "../interfaces/transaction.interface";
 
 export const VNPayTopUp = (data: {
@@ -71,4 +72,8 @@ export const getInformationBuyMultipleChapters = (
   id: number | string
 ): Promise<IApiResponse<IInformationBuyChapters>> => {
   return axios.get(`transaction/get_information_to_buy_chapters?storyId=${id}`);
+};
+
+export const getWallet = (): Promise<IApiResponse<IWalletInfor>> => {
+  return axios.get(`transaction/get_user_wallet`);
 };

@@ -1,0 +1,15 @@
+.custom-global-search-dropdown {
+    width: 50vw !important;
+
+    &>div>div {
+        gap: 10px
+    }
+
+    .rc-virtual-list {
+        width: 70%;
+    }
+
+    .ant-divider {
+        height: inherit;
+    }
+}

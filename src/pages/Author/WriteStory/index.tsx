@@ -36,6 +36,7 @@ import {
   getStoryInformation,
   updateStory,
 } from "../../../services/author-api-service";
+import { ERouteEndPointForAuthor } from "../../../enums/route-end-point.enum";
 
 interface IProps {}
 
@@ -61,6 +62,7 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
   useEffect(() => {
     if (!isAuthenticated) {
       navigate("/");
+      return;
     }
   }, []);
 
@@ -113,8 +115,6 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
       storyDescriptionMarkdown: descriptionMarkdown,
       storyDescriptionHtml: descriptionHTML,
     };
-    console.log(getPlainTextFromHTML(descriptionHTML));
-    return;
     setIsLoading(true);
     let res;
     if (mode === "edit") {
@@ -127,6 +127,8 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
       form.resetFields();
       setDescriptionMarkdown("");
       setDescriptionHTML("");
+      if (mode === "edit")
+        navigate(`${ERouteEndPointForAuthor.WRITE_STORY}?mode=add`);
     } else {
       toast.error(res.em);
     }

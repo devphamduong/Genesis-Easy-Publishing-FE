@@ -12,10 +12,12 @@ const GlobalSearch: FC<IProps> = (props: IProps) => {
   const [result, setResult] = useState<
     { storyId: number; storyTitle: string }[]
   >([]);
-  const [searchText, setSearchText] = useState<string>();
+  const [searchText, setSearchText] = useState<string>("");
+  const [isFocused, setIsFocused] = useState<boolean>(false);
 
   let timeout: any = null;
   const handleSearch = (newValue: string) => {
+    setIsFocused(true);
     clearTimeout(timeout);
     timeout = setTimeout(() => {
       setSearchText(newValue);
@@ -32,15 +34,21 @@ const GlobalSearch: FC<IProps> = (props: IProps) => {
     }, 0);
   };
 
+  const handleBlur = () => {
+    setIsFocused(false);
+  };
+
   return (
     <>
       <Select
         className="w-100"
         popupClassName="custom-global-search-dropdown"
         size="large"
+        mode="multiple"
         showSearch
+        searchValue={searchText}
         allowClear
-        virtual={false}
+        virtual={true}
         placeholder={"Tìm tên truyện"}
         defaultActiveFirstOption={false}
         suffixIcon={null}
@@ -49,8 +57,11 @@ const GlobalSearch: FC<IProps> = (props: IProps) => {
         notFoundContent={null}
         options={result}
         open={true}
-        optionRender={(option) => {
-          const { data } = option;
+        onFocus={() => !!searchText && setIsFocused(true)}
+        onBlur={() => handleBlur()}
+        autoClearSearchValue={false}
+        optionRender={(props) => {
+          const { data } = props;
           return (
             <>
               <div className="d-flex justify-content-between">
@@ -62,7 +73,7 @@ const GlobalSearch: FC<IProps> = (props: IProps) => {
               <div>
                 <strong>{data.storyTitle}</strong>
               </div>
-              <div className="eclipse">
+              <div className="text-eclipse">
                 Marriage can be a real killer. On a warm summer morning in North
                 Carthage, Missouri, it is Nick and Amy Dunne’s fifth wedding
                 anniversary. Presents are being wrapped and reservations are

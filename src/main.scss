@@ -87,11 +87,11 @@ body {
     z-index: 1030;
   }
 
-  .capitalize {
+  .text-capitalize {
     text-transform: capitalize;
   }
 
-  .eclipse {
+  .text-eclipse {
     white-space  : nowrap;
     overflow     : hidden;
     text-overflow: ellipsis;

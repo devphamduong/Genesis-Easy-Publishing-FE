@@ -1,42 +1,62 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import "./GlobalSearch.scss";
 import SearchFilter from "./SearchFilter";
 import { Divider, Select } from "antd";
 import { IStory } from "../../../interfaces/story.interface";
 import dayjs from "dayjs";
 import EPTag from "../../EP-UI/Tag";
+import { getGlobalSearchStories } from "../../../services/story-api-service";
+import { useOutsideClick } from "../../../hooks/customHooks";
+// import List from "react-virtualized/List";
 
 interface IProps {}
 
 const GlobalSearch: FC<IProps> = (props: IProps) => {
-  const [result, setResult] = useState<
-    { storyId: number; storyTitle: string }[]
-  >([]);
+  const [result, setResult] = useState<IStory[]>([]);
   const [searchText, setSearchText] = useState<string>("");
   const [isFocused, setIsFocused] = useState<boolean>(false);
+  const [isExpand, setIsExpand] = useState<boolean>(false);
+  const [isTriggerSearch, setIsTriggerSearch] = useState<boolean>(false);
+
+  useEffect(() => {
+    isTriggerSearch && fetchGlobalSearchStories();
+  }, [isTriggerSearch]);
+
+  const fetchGlobalSearchStories = async () => {
+    let query = "";
+    if (searchText) {
+      query += "search=" + searchText;
+    }
+    const res = await getGlobalSearchStories();
+    if (res && res.ec === 0) {
+      setResult(res.dt);
+      setIsTriggerSearch(false);
+    }
+  };
 
   let timeout: any = null;
   const handleSearch = (newValue: string) => {
     setIsFocused(true);
+    setIsExpand(true);
+    setSearchText(newValue);
     clearTimeout(timeout);
     timeout = setTimeout(() => {
-      setSearchText(newValue);
-      setResult([
-        {
-          storyId: 1,
-          storyTitle: "Dị Thế Tà Quân",
-        },
-        {
-          storyId: 2,
-          storyTitle: "Gone Girl",
-        },
-      ]);
-    }, 0);
+      setIsTriggerSearch(true);
+    }, 1500);
   };
 
   const handleBlur = () => {
-    setIsFocused(false);
+    !isExpand && setIsFocused(false);
   };
+
+  const handleFocus = () => {
+    if (!searchText) {
+      setIsFocused(true);
+      setIsExpand(true);
+    }
+  };
+
+  const ref = useOutsideClick(() => setIsExpand(false));
 
   return (
     <>
@@ -56,16 +76,17 @@ const GlobalSearch: FC<IProps> = (props: IProps) => {
         onSearch={handleSearch}
         notFoundContent={null}
         options={result}
-        open={true}
-        onFocus={() => !!searchText && setIsFocused(true)}
+        open={isExpand}
+        onFocus={() => handleFocus()}
         onBlur={() => handleBlur()}
+        onClear={() => setResult([])}
         autoClearSearchValue={false}
         optionRender={(props) => {
           const { data } = props;
           return (
             <>
               <div className="d-flex justify-content-between">
-                <span>Tác giả: DuongPC</span>
+                <span>Tác giả: {data.storyAuthor.userFullname}</span>
                 <i className="time">
                   {dayjs("03-27-2024").format("DD/MM/YYYY")}
                 </i>
@@ -89,7 +110,7 @@ const GlobalSearch: FC<IProps> = (props: IProps) => {
         }}
         dropdownRender={(menu) => {
           return (
-            <div className="d-flex">
+            <div className="d-flex" ref={ref}>
               {menu}
               <Divider type="vertical" />
               <SearchFilter />

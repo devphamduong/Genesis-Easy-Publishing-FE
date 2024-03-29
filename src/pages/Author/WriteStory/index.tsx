@@ -37,6 +37,7 @@ import {
   updateStory,
 } from "../../../services/author-api-service";
 import { ERouteEndPointForAuthor } from "../../../enums/route-end-point.enum";
+import { EStoryStatusKey, EStoryStatusLabel } from "../../../enums/story.enum";
 
 interface IProps {}
 
@@ -257,28 +258,33 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
                   >
                     <Radio.Group buttonStyle="solid">
                       <Radio.Button
-                        value={0}
-                        disabled={form.getFieldValue("status") > 0}
-                      >
-                        Chưa đủ điều kiện
-                      </Radio.Button>
-                      <Radio.Button
-                        value={1}
+                        value={EStoryStatusKey.NOT_QUALIFY}
                         disabled={
-                          !form.getFieldValue("status") ||
-                          form.getFieldValue("status") === 0
+                          form.getFieldValue("status") >
+                          EStoryStatusKey.NOT_QUALIFY
                         }
                       >
-                        Chưa hoàn thành
+                        {EStoryStatusLabel.NOT_QUALIFY}
                       </Radio.Button>
                       <Radio.Button
-                        value={2}
+                        value={EStoryStatusKey.NOT_COMPLETED}
                         disabled={
                           !form.getFieldValue("status") ||
-                          form.getFieldValue("status") === 0
+                          form.getFieldValue("status") ===
+                            EStoryStatusKey.NOT_QUALIFY
                         }
                       >
-                        Hoàn thành
+                        {EStoryStatusLabel.NOT_COMPLETED}
+                      </Radio.Button>
+                      <Radio.Button
+                        value={EStoryStatusKey.COMPLETED}
+                        disabled={
+                          !form.getFieldValue("status") ||
+                          form.getFieldValue("status") ===
+                            EStoryStatusKey.NOT_QUALIFY
+                        }
+                      >
+                        {EStoryStatusLabel.COMPLETED}
                       </Radio.Button>
                     </Radio.Group>
                   </Form.Item>

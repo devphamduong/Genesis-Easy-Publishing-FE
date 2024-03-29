@@ -20,18 +20,20 @@ import {
 } from "../../../interfaces/story.interface";
 import relativeTime from "dayjs/plugin/relativeTime";
 import dayjs from "dayjs";
-import { LiaUserEditSolid } from "react-icons/lia";
+import { LiaCommentSolid, LiaUserEditSolid } from "react-icons/lia";
 import EPButton from "../../../components/EP-UI/Button";
 import { MdDeleteOutline } from "react-icons/md";
 import { GrChapterAdd } from "react-icons/gr";
 import { useNavigate } from "react-router-dom";
 import {
   getEditStoryURL,
+  getReviewStoryURL,
   getWriteChapterURL,
 } from "../../../shared/generate-navigate-url";
 import { slugify } from "../../../shared/function";
 import PostedVolumesPage from "../PostedVolumes";
 import { toast } from "react-toastify";
+import { EStoryStatusKey, EStoryStatusLabel } from "../../../enums/story.enum";
 dayjs.extend(relativeTime);
 
 interface IProps {}
@@ -193,6 +195,15 @@ const PostedStoriesPage: FC<IProps> = (props: IProps) => {
                 }
               />
             </Tooltip>
+            {record.storyStatus > EStoryStatusKey.NOT_QUALIFY &&
+              !record.storyStatus && (
+                <Tooltip title="Xem kết quả review">
+                  <EPButton
+                    icon={<LiaCommentSolid className="fs-5" />}
+                    onClick={() => navigate(getReviewStoryURL(record.storyId))}
+                  />
+                </Tooltip>
+              )}
             <Popconfirm
               title="Xóa truyện"
               description="Bạn có muốn xóa truyện này không?"

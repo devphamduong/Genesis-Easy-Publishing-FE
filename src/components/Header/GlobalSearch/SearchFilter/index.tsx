@@ -11,6 +11,7 @@ const SearchFilter: FC<IProps> = (props: IProps) => {
   return (
     <div>
       <Select
+        onClick={(e) => e.stopPropagation()}
         defaultValue="lucy"
         className="custom-author-search-dropdown"
         onChange={handleChange}

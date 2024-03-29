@@ -47,7 +47,7 @@ export const accountSlice = createSlice({
       state.user = initialState.user;
     },
     updateUserAvatar: (state, action) => {
-      // state.user.tempAvatar = action.payload;
+      state.user.userImage = action.payload;
     },
     updateUserInfo: (state, action) => {
       const {

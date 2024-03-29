@@ -44,6 +44,7 @@ export interface IStory {
   userLike: boolean;
   storyCreateTime: string;
   status?: number;
+  storyStatus: number;
 }
 
 export interface IStoryInteraction {

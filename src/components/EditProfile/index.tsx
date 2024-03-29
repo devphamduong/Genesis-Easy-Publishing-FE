@@ -22,7 +22,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { IRootState } from "../../redux/store";
 import { updateAvatar, updateProfile } from "../../services/auth-api-service";
 import { toast } from "react-toastify";
-import { updateUserInfo } from "../../redux/account/accountSlice";
+import {
+  updateUserAvatar,
+  updateUserInfo,
+} from "../../redux/account/accountSlice";
 import ImgCrop from "antd-img-crop";
 import { PlusOutlined } from "@ant-design/icons";
 const mdParser = new MarkdownIt(/* Markdown-it options */);
@@ -110,16 +113,15 @@ const EditProfile: FC<IProps> = (props: IProps) => {
 
   const handleUploadAvatar = async (options) => {
     const { file, onSuccess, onError } = options;
-    console.log(file);
-    // const res = await updateAvatar(file);
-    // if (res && res.dt === 0) {
-    //     const newAvatar = res.data.fileUploaded;
-    //     dispatch(updateUserAvatar(newAvatar));
-    //     setUserAvatar(newAvatar);
-    //     onSuccess('ok');
-    // } else {
-    //     onError('An error occurred');
-    // }
+    const res = await updateAvatar(file);
+    console.log(res);
+    if (res && res.ec === 0) {
+      // const newAvatar = res.data.fileUploaded;
+      // dispatch(updateUserAvatar(newAvatar));
+      onSuccess("ok");
+    } else {
+      onError("An error occurred");
+    }
   };
 
   return (

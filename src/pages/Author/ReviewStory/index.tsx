@@ -1,11 +1,27 @@
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import "./ReviewStory.scss";
 import { Button, Checkbox } from "antd";
 import TextArea from "antd/es/input/TextArea";
+import { useSearchParams } from "react-router-dom";
+import { getReviewInfo } from "../../../services/author-api-service";
 
 interface IProps {}
 
 const ReviewStoryPage: FC<IProps> = (props: IProps) => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const storyId = searchParams.get("storyId");
+  const [dataResponse, setDataResponse] = useState();
+
+  useEffect(() => {
+    fetchReviewInfo();
+  }, [storyId]);
+
+  const fetchReviewInfo = async () => {
+    if (!storyId) return;
+    const res = await getReviewInfo(storyId);
+    setDataResponse(res);
+  };
+
   const onChange = (checkedValues) => {
     console.log("checked = ", checkedValues);
   };

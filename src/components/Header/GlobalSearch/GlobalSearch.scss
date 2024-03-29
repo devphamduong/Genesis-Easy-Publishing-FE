@@ -1,5 +1,6 @@
 .custom-global-search-dropdown {
-    width: 60vw !important;
+    width : 60vw !important;
+    height: 60vh;
 
     &>div>div {
         gap: 10px
@@ -7,6 +8,10 @@
 
     .rc-virtual-list {
         width: 70%;
+
+        .rc-virtual-list-holder {
+            max-height: 60vh !important;
+        }
     }
 
     .ant-divider {

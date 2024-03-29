@@ -122,3 +122,9 @@ export const updateVolume = (data: {
 }): Promise<IApiResponse<null>> => {
   return axios.put(`chapters/update_volume`, { ...data });
 };
+
+export const getReviewInfo = (
+  id: number | string
+): Promise<IApiResponse<null>> => {
+  return axios.get(`reviews/story_review?storyId=${id}`);
+};

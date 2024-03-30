@@ -84,6 +84,13 @@ export const getPaginationStoriesFollowing = (
   return axios.get(`shelves/my_follow?page=${page}&pageSize=${pageSize}`);
 };
 
+export const getPaginationStoriesReadHistory = (
+  page: number,
+  pageSize: number
+): Promise<IApiResponse<IPaginationStory>> => {
+  return axios.get(`shelves/my_read?page=${page}&pageSize=${pageSize}`);
+};
+
 export const getPaginationOwnedStories = (
   page: number,
   pageSize: number

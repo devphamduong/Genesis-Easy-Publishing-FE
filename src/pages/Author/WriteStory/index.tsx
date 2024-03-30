@@ -223,6 +223,8 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
                     <Select
                       mode="multiple"
                       size="large"
+                      maxTagCount="responsive"
+                      allowClear
                       placeholder="Thể loại"
                       options={
                         categories &&

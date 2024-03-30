@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from "react";
 import "./ReadHistory.scss";
 import { Table, TableProps } from "antd";
-import { getPaginationStoriesFollowing } from "../../../services/story-api-service";
+import { getPaginationStoriesReadHistory } from "../../../services/story-api-service";
 import { IStory } from "../../../interfaces/story.interface";
 import { dayjsFrom } from "../../../shared/function";
 import { Link } from "react-router-dom";
@@ -23,7 +23,7 @@ const ReadHistoryPage: FC<IProps> = (props: IProps) => {
   }, [currentPage, pageSize]);
 
   const fetchStoriesFollowing = async () => {
-    const res = await getPaginationStoriesFollowing(currentPage, pageSize);
+    const res = await getPaginationStoriesReadHistory(currentPage, pageSize);
     if (res && res.ec === 0) {
       setFollowingStories(res.dt.list);
       setTotalStories(res.dt.totalStories);

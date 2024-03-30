@@ -1,20 +1,59 @@
+// .custom-global-search-dropdown {
+//     width: 60vw !important;
+
+//     &>div>div {
+//         gap: 10px
+//     }
+
+//     .rc-virtual-list {
+//         width: 70%;
+
+//         .rc-virtual-list-holder {
+//             max-height: 60vh !important;
+//         }
+//     }
+
+//     .ant-divider {
+//         height: inherit;
+//     }
+// }
+
 .custom-global-search-dropdown {
-    width : 60vw !important;
-    height: 60vh;
+    width           : 60vw !important;
+    background-color: #fff;
+    box-shadow      : 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+    padding         : 0 5px;
+    border-radius   : 8px;
 
-    &>div>div {
-        gap: 10px
-    }
+    .ant-dropdown-menu {
+        width          : 70%;
+        box-shadow     : unset;
+        padding        : 5px;
+        height         : 70vh;
+        overflow       : hidden;
+        scrollbar-width: thin;
+        scrollbar-color: unset;
 
-    .rc-virtual-list {
-        width: 70%;
+        &:hover {
+            overflow-y: auto;
+        }
 
-        .rc-virtual-list-holder {
-            max-height: 60vh !important;
+        .ant-dropdown-menu-item {
+            .ant-dropdown-menu-title-content {
+                width: 100%;
+            }
         }
     }
 
     .ant-divider {
         height: inherit;
+    }
+
+    .search-filter-container {
+        width: 30%;
+
+        .search-filter-content {
+            padding: 5px;
+        }
     }
 }

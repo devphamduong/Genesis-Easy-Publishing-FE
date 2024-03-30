@@ -3,7 +3,7 @@ import "./EPFilter.scss";
 import { Button, Checkbox, Form, GetProp, Input, Select, Slider } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import { IFilterOptions } from "../../../interfaces/global.interface";
-import { getFilterOptions } from "../../../services/common-api-service";
+import { getFilterOptionsV1 } from "../../../services/common-api-service";
 import { useSearchParams } from "react-router-dom";
 
 interface IProps {
@@ -21,23 +21,11 @@ const EPFilter: FC<IProps> = (props: IProps) => {
   const [filterOptions, setFilterOptions] = useState<IFilterOptions>();
 
   useEffect(() => {
-    // if (searchParams) {
-    //   form.setFieldsValue({
-    //     title: searchParams.get("title"),
-    //     price: [searchParams.get("downLimit"), searchParams.get("upLimit")],
-    //     cates: [searchParams.get("cates")],
-    //   });
-    //   // setPriceRange([
-    //   //   searchParams.get("downLimit"),
-    //   //   +searchParams.get("upLimit"),
-    //   // ]);
-    // }
-    // console.log(searchParams.get("title"), searchParams.get("cates"));
     fetchFilterOptions();
   }, []);
 
   const fetchFilterOptions = async () => {
-    const res = await getFilterOptions();
+    const res = await getFilterOptionsV1();
     if (res && res.ec === 0) {
       setPriceRange([res.dt.from, res.dt.to]);
       MAX_PRICE = res.dt.to;
@@ -45,12 +33,6 @@ const EPFilter: FC<IProps> = (props: IProps) => {
       setFilterOptions(res.dt);
     }
   };
-
-  // const options = [
-  //   { label: "Apple", value: "Apple" },
-  //   { label: "Pear", value: "Pear" },
-  //   { label: "Orange", value: "Orange" },
-  // ];
 
   const onChange: GetProp<typeof Checkbox.Group, "onChange"> = (
     checkedValues
@@ -94,17 +76,7 @@ const EPFilter: FC<IProps> = (props: IProps) => {
 
   return (
     <>
-      <Form
-        form={form}
-        onFinish={onFinish}
-        initialValues={
-          {
-            // price: priceRange,
-            // cates: form.getFieldValue("cates"),
-            // options: ["Pear"],
-          }
-        }
-      >
+      <Form form={form} onFinish={onFinish}>
         <Form.Item name="title">
           <Input
             size="large"
@@ -112,9 +84,6 @@ const EPFilter: FC<IProps> = (props: IProps) => {
             prefix={<SearchOutlined />}
           />
         </Form.Item>
-        {/* <Form.Item name="options">
-          <Checkbox.Group options={options} onChange={onChange} />
-        </Form.Item> */}
         <Form.Item name="price">
           <div>
             From: {priceRange && priceRange[0]} To:{" "}
@@ -130,7 +99,9 @@ const EPFilter: FC<IProps> = (props: IProps) => {
         <Form.Item name="cates">
           <Select
             mode="multiple"
+            maxTagCount="responsive"
             placeholder="Thể loại"
+            allowClear
             options={
               filterOptions &&
               filterOptions?.cate?.map((item) => {

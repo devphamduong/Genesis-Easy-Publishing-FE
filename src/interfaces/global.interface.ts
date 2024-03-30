@@ -1,4 +1,6 @@
+import { EStoryStatusLabel } from "../enums/story.enum";
 import { ICategory } from "./category.interface";
+import { IAuthor } from "./story.interface";
 
 export interface IApiResponse<T> {
   ec: number;
@@ -13,18 +15,13 @@ export interface IReportOption {
 
 export interface IFilterOptions {
   cate: ICategory[];
+  author: IAuthor[];
   to: number;
   from: number;
-  status: [
-    done: {
-      name: string;
-      value: string | number;
-    },
-    writing: {
-      name: string;
-      value: string | number;
-    }
-  ];
+  status: {
+    name: EStoryStatusLabel;
+    value: string | number;
+  }[];
 }
 
 export interface IPropsEPModal {

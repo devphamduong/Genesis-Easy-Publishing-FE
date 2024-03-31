@@ -80,7 +80,7 @@ const HeaderAuthor = (props: IProps) => {
     }
 
     const items: MenuProps["items"] = [
-      getItem(<div>Home</div>, "home", null),
+      getItem(<div>Trang chủ</div>, "home", null),
       getItem(<div>{EMenuLabel.PROFILE}</div>, EMenuKey.PROFILE, null),
       getItem(<div>{EMenuLabel.DEPOSIT}</div>, EMenuKey.DEPOSIT, null),
       getItem(

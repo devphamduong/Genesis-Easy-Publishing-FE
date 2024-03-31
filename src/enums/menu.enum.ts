@@ -1,4 +1,5 @@
 export enum EMenuLabel {
+  DASHBOARD = "Thông tin cá nhân",
   PROFILE = "Trang cá nhân",
   DEPOSIT = "Ví",
   OWNED_STORIES = "Truyện đã sở hữu",

@@ -51,18 +51,21 @@ const EditProfile: FC<IProps> = (props: IProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [contentMarkdown, setContentMarkdown] = useState<string>("");
   const [contentHTML, setContentHTML] = useState<string>("");
-  const [fileList, setFileList] = useState<UploadFile[]>([
-    {
-      uid: "-1",
-      name: "image.png",
-      status: "done",
-      url: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-    },
-  ]);
+  const [fileList, setFileList] = useState<UploadFile[]>();
 
   useEffect(() => {
     setContentMarkdown(account.descriptionMarkdown ?? "");
     setContentHTML(account.descriptionHTML ?? "");
+    setFileList([
+      {
+        uid: "-1",
+        name: "image.png",
+        status: "done",
+        url: `${import.meta.env.VITE_BACKEND_URL}Assets/images/avatar/${
+          account.userImage
+        }`,
+      },
+    ]);
   }, []);
 
   const handleEditorChange = ({
@@ -114,10 +117,9 @@ const EditProfile: FC<IProps> = (props: IProps) => {
   const handleUploadAvatar = async (options) => {
     const { file, onSuccess, onError } = options;
     const res = await updateAvatar(file);
-    console.log(res);
     if (res && res.ec === 0) {
-      // const newAvatar = res.data.fileUploaded;
-      // dispatch(updateUserAvatar(newAvatar));
+      const newAvatar = res.dt.fileUploaded;
+      dispatch(updateUserAvatar(newAvatar));
       onSuccess("ok");
     } else {
       onError("An error occurred");
@@ -139,7 +141,7 @@ const EditProfile: FC<IProps> = (props: IProps) => {
               // onPreview={onPreview}
               maxCount={1}
             >
-              {fileList.length < 2 && (
+              {fileList && fileList.length < 2 && (
                 <>
                   <button
                     style={{ border: 0, background: "none" }}

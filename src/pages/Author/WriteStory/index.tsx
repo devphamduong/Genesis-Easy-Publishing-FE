@@ -38,6 +38,20 @@ import {
 } from "../../../services/author-api-service";
 import { ERouteEndPointForAuthor } from "../../../enums/route-end-point.enum";
 import { EStoryStatusKey, EStoryStatusLabel } from "../../../enums/story.enum";
+import AIGenerateImage from "./AIGenerateImage";
+import { uploadStoryCover } from "../../../services/story-api-service";
+
+const beforeUpload = (file) => {
+  const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
+  if (!isJpgOrPng) {
+    message.error("You can only upload JPG/PNG file!");
+  }
+  const isLt2M = file.size / 1024 / 1024 < 2;
+  if (!isLt2M) {
+    message.error("Image must smaller than 2MB!");
+  }
+  return isJpgOrPng && isLt2M;
+};
 
 interface IProps {}
 
@@ -59,6 +73,7 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
     (state: IRootState) => state.account.isAuthenticated
   );
   const account = useSelector((state: IRootState) => state.account.user);
+  const [previewImgName, setPreviewImgName] = useState("");
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -111,6 +126,7 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
     const payload: IWriteStoryForm = {
       ...values,
       storyId: storyId!,
+      storyImage: previewImgName,
       authorId: account.userId,
       storyDescription: getPlainTextFromHTML(descriptionHTML),
       storyDescriptionMarkdown: descriptionMarkdown,
@@ -136,10 +152,22 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
     setIsLoading(false);
   };
 
+  const handleUploadStoryCover = async (options) => {
+    const { file, onSuccess, onError } = options;
+    const res = await uploadStoryCover(file);
+    if (res && res.ec === 0) {
+      setPreviewImgName(res.dt.fileUploaded);
+      onSuccess("ok");
+    } else {
+      onError("An error occurred");
+    }
+  };
+
   const propsUpLoad: UploadProps = {
     name: "file",
-    multiple: true,
-    action: "https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188",
+    // multiple: true,
+    // action: "https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188",
+    beforeUpload: beforeUpload,
     onChange(info) {
       const { status } = info.file;
       if (status !== "uploading") {
@@ -154,6 +182,7 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
     onDrop(e) {
       console.log("Dropped files", e.dataTransfer.files);
     },
+    customRequest: handleUploadStoryCover,
   };
 
   return (
@@ -238,7 +267,7 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
                     />
                   </Form.Item>
                 </Col>
-                <Col span={8}>
+                <Col span={10}>
                   <Form.Item<IWriteStoryForm>
                     label={
                       <div className="d-flex align-items-center gap-1">
@@ -378,12 +407,19 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
             <div className="text-center">
               <Image
                 width={200}
-                src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+                src={
+                  previewImgName
+                    ? `${
+                        import.meta.env.VITE_BACKEND_URL
+                      }Assets/images/avatar/${previewImgName}`
+                    : "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+                }
               />
             </div>
           </Col>
         </Row>
       </div>
+      <AIGenerateImage />
     </div>
   );
 };

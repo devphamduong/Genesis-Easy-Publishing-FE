@@ -62,7 +62,13 @@ const Header: FC<IProps> = (props: IProps) => {
     return (
       <div className="d-flex align-items-center justify-content-between">
         <div className="d-flex align-items-center gap-2">
-          <Avatar size="large" icon={<UserOutlined />} />
+          <Avatar
+            size="large"
+            icon={<UserOutlined />}
+            src={`${import.meta.env.VITE_BACKEND_URL}Assets/images/avatar/${
+              account.userImage
+            }`}
+          />
           <div>{account.username ?? "vcl"}</div>
         </div>
         <EPButton

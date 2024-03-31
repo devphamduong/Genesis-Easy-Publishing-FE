@@ -25,11 +25,16 @@
     padding         : 0 5px;
     border-radius   : 8px;
 
+    .ant-dropdown-menu,
+    .loading-skeleton,
+    .no-matching {
+        width : 70%;
+        height: 80vh;
+    }
+
     .ant-dropdown-menu {
-        width          : 70%;
         box-shadow     : unset;
         padding        : 5px;
-        height         : 70vh;
         overflow       : hidden;
         scrollbar-width: thin;
         scrollbar-color: unset;
@@ -42,6 +47,17 @@
             .ant-dropdown-menu-title-content {
                 width: 100%;
             }
+        }
+    }
+
+    .loading-skeleton {
+        padding: 5px 0;
+    }
+
+    .no-matching {
+
+        .ant-result {
+            width: 100%;
         }
     }
 

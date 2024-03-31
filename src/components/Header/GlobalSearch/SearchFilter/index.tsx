@@ -49,7 +49,6 @@ const SearchFilter: FC<IProps> = (props: IProps) => {
       setFilters(res.dt);
       setPriceRange({ from: res.dt.from, to: res.dt.to });
       handleSetValue({
-        authorId: res.dt.author[0].authorId,
         from: res.dt.from,
         to: res.dt.to,
         status: EStoryStatusKey.NOT_COMPLETED,
@@ -71,13 +70,12 @@ const SearchFilter: FC<IProps> = (props: IProps) => {
     let query = "";
     Object.keys(filterValues).forEach((key, index) => {
       if (filterValues[key] || filterValues[key] === 0) {
-        if (
-          filterValues[key] instanceof Array &&
-          filterValues[key].length > 0
-        ) {
-          filterValues[key].forEach((element, index) => {
-            query += key + `=` + element + "&";
-          });
+        if (filterValues[key] instanceof Array) {
+          if (filterValues[key].length > 0) {
+            filterValues[key].forEach((element, index) => {
+              query += key + `=` + element + "&";
+            });
+          }
         } else {
           query += key + `=` + filterValues[key] + "&";
         }
@@ -102,13 +100,24 @@ const SearchFilter: FC<IProps> = (props: IProps) => {
             onChange={(e) => handleChangeFilter("authorId", e)}
             defaultValue={options[0]?.value}
             allowClear
+            virtual
+            placeholder="Truyện theo tác giả"
             className="custom-author-search-dropdown"
             options={options}
             labelRender={(props) => {
               const { label, value } = props;
+              const authorImage = filters.author.find(
+                (item) => item.authorId === value
+              )?.authorImage;
               return (
                 <div className="d-flex align-items-center gap-2">
-                  <Avatar size="large" icon={<UserOutlined />} />
+                  <Avatar
+                    size="large"
+                    icon={<UserOutlined />}
+                    src={`${
+                      import.meta.env.VITE_BACKEND_URL
+                    }Assets/images/avatar/${authorImage}`}
+                  />
                   <div className="d-flex flex-column">
                     <strong className="text-eclipse">{label}</strong>
                     <span className="text-eclipse">{label}</span>
@@ -117,11 +126,20 @@ const SearchFilter: FC<IProps> = (props: IProps) => {
               );
             }}
             optionRender={(props) => {
-              const { data } = props;
+              const { data, value } = props;
+              const authorImage = filters.author.find(
+                (item) => item.authorId === value
+              )?.authorImage;
               return (
                 <>
                   <div className="d-flex align-items-center gap-2">
-                    <Avatar size="large" icon={<UserOutlined />} />
+                    <Avatar
+                      size="large"
+                      icon={<UserOutlined />}
+                      src={`${
+                        import.meta.env.VITE_BACKEND_URL
+                      }Assets/images/avatar/${authorImage}`}
+                    />
                     <div className="d-flex flex-column">
                       <strong className="text-eclipse">{data.label}</strong>
                       <span className="text-eclipse">{data.label}</span>
@@ -173,7 +191,6 @@ const SearchFilter: FC<IProps> = (props: IProps) => {
           }
         />
       </div>
-      <button onClick={() => buildQuery()}>submit</button>
     </div>
   );
 };

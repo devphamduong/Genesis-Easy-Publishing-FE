@@ -32,17 +32,13 @@ export const updateProfile = (
 
 export const updateAvatar = (
   fileImg: string
-): Promise<IApiResponse<unknown>> => {
+): Promise<IApiResponse<{ fileUploaded: string }>> => {
   const bodyFormData = new FormData();
   bodyFormData.append("image", fileImg);
   return axios({
     method: "put",
     url: "auth/update_avatar",
     data: bodyFormData,
-    // headers: {
-    //     "Content-Type": "multipart/form-data",
-    //     "upload-type": "avatar"
-    // },
   });
 };
 

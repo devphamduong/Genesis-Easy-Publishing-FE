@@ -139,3 +139,15 @@ export const getGlobalSearchStories = (
 ): Promise<IApiResponse<IStory[]>> => {
   return axios.get(`story/search_global?${query}`);
 };
+
+export const uploadStoryCover = (
+  fileImg: string
+): Promise<IApiResponse<{ fileUploaded: string }>> => {
+  const bodyFormData = new FormData();
+  bodyFormData.append("image", fileImg);
+  return axios({
+    method: "put",
+    url: "story/update_storyimage",
+    data: bodyFormData,
+  });
+};

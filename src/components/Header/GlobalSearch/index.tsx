@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from "react";
 import "./GlobalSearch.scss";
 import SearchFilter from "./SearchFilter";
-import { Col, Divider, Dropdown, Input, Row, Select } from "antd";
+import { Col, Divider, Dropdown, Flex, Input, Result, Row, Select } from "antd";
 import { IStory } from "../../../interfaces/story.interface";
 import dayjs from "dayjs";
 import EPTag from "../../EP-UI/Tag";
@@ -13,6 +13,7 @@ import {
   getAuthorDetailURL,
   getStoryDetailURL,
 } from "../../../shared/generate-navigate-url";
+import ResultSkeleton from "./ResultSkeleton";
 
 interface IProps {}
 
@@ -21,18 +22,20 @@ const GlobalSearch: FC<IProps> = (props: IProps) => {
   const [searchText, setSearchText] = useState<string>("");
   const [searchFilter, setSearchFilter] = useState<string>("");
   const [isFocused, setIsFocused] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isExpand, setIsExpand] = useState<boolean>(false);
   const [isTriggerSearch, setIsTriggerSearch] = useState<boolean>(false);
   const ref = useOutsideClick(isExpand, () => isExpand && setIsExpand(false));
 
   useEffect(() => {
-    isTriggerSearch && fetchGlobalSearchStories();
+    fetchGlobalSearchStories();
   }, [isTriggerSearch, searchFilter]);
 
   const fetchGlobalSearchStories = async () => {
+    setIsLoading(true);
     let query = "";
     if (searchText) {
-      query += "search=" + searchText;
+      query += "search=" + searchText + "&";
     }
     if (searchFilter) {
       query += searchFilter;
@@ -42,6 +45,7 @@ const GlobalSearch: FC<IProps> = (props: IProps) => {
       setResult(res.dt);
       setIsTriggerSearch(false);
     }
+    setIsLoading(false);
   };
 
   let timeout: any = null;
@@ -53,10 +57,6 @@ const GlobalSearch: FC<IProps> = (props: IProps) => {
     timeout = setTimeout(() => {
       setIsTriggerSearch(true);
     }, 1500);
-  };
-
-  const handleBlur = () => {
-    !isExpand && setIsFocused(false);
   };
 
   const handleFocus = () => {
@@ -125,7 +125,21 @@ const GlobalSearch: FC<IProps> = (props: IProps) => {
         menu={{ items }}
         dropdownRender={(menu) => (
           <div className="d-flex gap-2" onClick={(e) => e.stopPropagation()}>
-            {menu}
+            {isLoading ? (
+              <Flex vertical gap={8} className="loading-skeleton">
+                <ResultSkeleton />
+              </Flex>
+            ) : !isLoading && result.length > 0 ? (
+              menu
+            ) : (
+              <Flex align="center" justify="center" className="no-matching">
+                <Result
+                  status="404"
+                  title="Không có kết quả nào được tìm thấy"
+                  subTitle="Hãy thử điều chỉnh cụm từ tìm kiếm hoặc bộ lọc của bạn để xem thêm kết quả."
+                />
+              </Flex>
+            )}
             <Divider type="vertical" />
             <SearchFilter
               searchFilter={searchFilter}
@@ -142,7 +156,6 @@ const GlobalSearch: FC<IProps> = (props: IProps) => {
           placeholder="Tìm tên truyện"
           value={searchText}
           onFocus={() => handleFocus()}
-          // onBlur={() => handleBlur()}
           onChange={(e) => {
             setIsFocused(true);
             setIsExpand(true);
@@ -151,65 +164,6 @@ const GlobalSearch: FC<IProps> = (props: IProps) => {
           }}
         />
       </Dropdown>
-      {/* <Select
-        className="w-100"
-        popupClassName="custom-global-search-dropdown"
-        size="large"
-        mode="multiple"
-        showSearch
-        searchValue={searchText}
-        allowClear
-        virtual={true}
-        placeholder={"Tìm tên truyện"}
-        defaultActiveFirstOption={false}
-        suffixIcon={null}
-        filterOption={false}
-        onSearch={handleSearch}
-        notFoundContent={null}
-        options={result}
-        open={isExpand}
-        onFocus={() => handleFocus()}
-        onBlur={() => handleBlur()}
-        onClear={() => setResult([])}
-        autoClearSearchValue={false}
-        optionRender={(props) => {
-          const { data } = props;
-          return (
-            <>
-              <div className="d-flex justify-content-between">
-                <span>Tác giả: {data.storyAuthor.userFullname}</span>
-                <i className="time">
-                  {dayjs("03-27-2024").format("DD/MM/YYYY")}
-                </i>
-              </div>
-              <div>
-                <strong>{data.storyTitle}</strong>
-              </div>
-              <div className="text-eclipse">
-                Marriage can be a real killer. On a warm summer morning in North
-                Carthage, Missouri, it is Nick and Amy Dunne’s fifth wedding
-                anniversary. Presents are being wrapped and reservations are
-                being made when Nick’s
-              </div>
-              <div>
-                <EPTag color="magenta" shape="round" content="cate 1" />
-                <EPTag color="magenta" shape="round" content="cate 2" />
-                <EPTag color="magenta" shape="round" content="cate 3" />
-              </div>
-            </>
-          );
-        }}
-        dropdownRender={(menu) => {
-          return (
-            <div className="d-flex" ref={ref}>
-              {menu}
-              <Divider type="vertical" />
-              <SearchFilter />
-            </div>
-          );
-        }}
-      /> */}
-      {/* <SearchFilter /> */}
     </div>
   );
 };

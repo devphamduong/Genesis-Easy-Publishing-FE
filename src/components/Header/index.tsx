@@ -26,7 +26,6 @@ import {
 } from "../../enums/route-end-point.enum";
 import EPButton from "../EP-UI/Button";
 import { PiBookmarks } from "react-icons/pi";
-import { kFormatter } from "../../shared/function";
 import { getPaginationStoriesFollowing } from "../../services/story-api-service";
 import { IStory } from "../../interfaces/story.interface";
 import RowStory from "../RowStory";
@@ -200,8 +199,7 @@ const Header: FC<IProps> = (props: IProps) => {
                         </strong>
                       </div>
                       <span>
-                        Bạn đang có: <strong>{kFormatter(account.tlt)}</strong>{" "}
-                        TLT
+                        Bạn đang có: <strong>{account.tlt}</strong> TLT
                       </span>
                     </Col>
                   )}

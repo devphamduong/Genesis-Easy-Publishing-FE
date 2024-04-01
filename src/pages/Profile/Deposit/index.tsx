@@ -4,17 +4,19 @@ import TransactionHistoryPage from "./TransactionHistory";
 import EPModalTopUp from "../../../components/EP-Common/Modal/TopUp";
 import { IWalletInfor } from "../../../interfaces/transaction.interface";
 import { getWallet } from "../../../services/transaction-api-service";
-import { kFormatter } from "../../../shared/function";
 import { TLT_CURRENCY } from "../../../enums/transaction.enum";
 import EPButton from "../../../components/EP-UI/Button";
 import { RiMoneyDollarCircleFill } from "react-icons/ri";
 import { GiTakeMyMoney } from "react-icons/gi";
 import { Flex } from "antd";
+import EPModalWithdraw from "../../../components/EP-Common/Modal/Withdraw";
 
 interface IProps {}
 
 const DepositPage: FC<IProps> = (props: IProps) => {
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [isModalTopUpOpen, setIsModalTopUpOpen] = useState<boolean>(false);
+  const [isModalWithdrawOpen, setIsModalWithdrawOpen] =
+    useState<boolean>(false);
   const [wallet, setWallet] = useState<IWalletInfor>();
 
   useEffect(() => {
@@ -33,7 +35,7 @@ const DepositPage: FC<IProps> = (props: IProps) => {
       <div className="deposit-container">
         <div className="deposit-content">
           <div>
-            Số dư: <strong>{wallet && kFormatter(wallet?.fund)}</strong> TLT
+            Số dư: <strong>{wallet?.fund}</strong> TLT
           </div>
           <div>
             TLT thu được từ bán truyện, chương:{" "}
@@ -91,7 +93,7 @@ const DepositPage: FC<IProps> = (props: IProps) => {
               className="d-flex align-items-center justify-content-center"
               type="primary"
               icon={<RiMoneyDollarCircleFill className="fs-5" />}
-              onClick={() => setIsModalOpen(true)}
+              onClick={() => setIsModalTopUpOpen(true)}
             >
               Nạp TLT
             </EPButton>
@@ -100,15 +102,22 @@ const DepositPage: FC<IProps> = (props: IProps) => {
               className="d-flex align-items-center justify-content-center"
               type="primary"
               icon={<GiTakeMyMoney className="fs-5" />}
-              onClick={() => setIsModalOpen(true)}
+              onClick={() => setIsModalWithdrawOpen(true)}
             >
               Rút tiền
             </EPButton>
           </Flex>
-          <TransactionHistoryPage />
+          <TransactionHistoryPage wallet={wallet} />
         </div>
       </div>
-      <EPModalTopUp isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+      <EPModalTopUp
+        isModalOpen={isModalTopUpOpen}
+        setIsModalOpen={setIsModalTopUpOpen}
+      />
+      <EPModalWithdraw
+        isModalOpen={isModalWithdrawOpen}
+        setIsModalOpen={setIsModalWithdrawOpen}
+      />
     </>
   );
 };

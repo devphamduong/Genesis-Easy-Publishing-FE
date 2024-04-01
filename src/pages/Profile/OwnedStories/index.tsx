@@ -44,7 +44,11 @@ const OwnedStoriesPage: FC<IProps> = (props: IProps) => {
           stories.length > 0 &&
           stories.map((item, index) => {
             return (
-              <Badge.Ribbon text={item.storyPrice + " TLT"} color="red">
+              <Badge.Ribbon
+                key={`owned-story-${item.storyId}`}
+                text={item.storyPrice + " TLT"}
+                color="red"
+              >
                 <Card
                   key={`owned-story-${item.storyId}`}
                   hoverable

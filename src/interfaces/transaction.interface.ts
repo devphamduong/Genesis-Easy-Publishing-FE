@@ -32,3 +32,23 @@ export interface IWalletInfor {
   amount_top_up: number;
   amount_withdrawn: number;
 }
+
+export interface ITransactionHistory {
+  amount: number;
+  chapterTitle: string;
+  description: string;
+  fundAfter: number;
+  fundBefore: number;
+  refundAfter: number;
+  refundBefore: number;
+  status: boolean;
+  storyTitle: number;
+  transactionId: number;
+  transactionTime: string;
+}
+
+export interface IWithdrawForm {
+  bankId: string;
+  bankAccount: string;
+  amount: string;
+}

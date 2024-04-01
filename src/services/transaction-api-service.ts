@@ -1,10 +1,15 @@
 import axios from "../utils/axios-customize";
-import { IApiResponse } from "../interfaces/global.interface";
+import {
+  IApiResponse,
+  IApiResponsePagination,
+} from "../interfaces/global.interface";
 import {
   IDataTransactionBuyChapters,
   IInformationBuyChapters,
   IResponseTransactionBuyChapters,
+  ITransactionHistory,
   IWalletInfor,
+  IWithdrawForm,
 } from "../interfaces/transaction.interface";
 
 export const VNPayTopUp = (data: {
@@ -32,10 +37,8 @@ export const addTransactionTopUp = (
 export const getTransactionHistory = (
   page: number,
   pageSize: number
-): Promise<IApiResponse<{ paymentUrl: string }>> => {
-  return axios.get(
-    `transaction/transaction_history?page=${page}&pageSize=${pageSize}`
-  );
+): Promise<IApiResponsePagination<ITransactionHistory>> => {
+  return axios.get(`transaction/history?page=${page}&pageSize=${pageSize}`);
 };
 
 export const buySingleChapter = (
@@ -75,5 +78,11 @@ export const getInformationBuyMultipleChapters = (
 };
 
 export const getWallet = (): Promise<IApiResponse<IWalletInfor>> => {
-  return axios.get(`transaction/get_user_wallet`);
+  return axios.get(`transaction/wallet`);
+};
+
+export const sendWithdrawRequest = (
+  data: IWithdrawForm
+): Promise<IApiResponse<IWalletInfor>> => {
+  return axios.post(`tickets/refund_send`, { ...data });
 };

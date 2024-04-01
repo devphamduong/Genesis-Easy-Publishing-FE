@@ -8,6 +8,18 @@ export interface IApiResponse<T> {
   dt: T;
 }
 
+export interface IApiResponsePagination<T> {
+  ec: number;
+  em: string;
+  dt: {
+    total: number;
+    totalPage: number;
+    current: number;
+    pageSize: number;
+    list: T[];
+  };
+}
+
 export interface IReportOption {
   reportTypeId: number | string;
   reportTypeContent: string;

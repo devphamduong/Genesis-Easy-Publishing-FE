@@ -181,7 +181,7 @@ const EPModalTopUp: FC<IProps> = (props: IProps) => {
             <Row gutter={[10, 10]} className="w-100">
               {momoPrices.map((item) => {
                 return (
-                  <Col span={12}>
+                  <Col key={item.amount} span={12}>
                     <EPButton
                       color="#29b6f6"
                       block
@@ -203,7 +203,7 @@ const EPModalTopUp: FC<IProps> = (props: IProps) => {
       </div>
       <div className="fs-6 my-3">
         Giao dịch sẽ được xử lý trong 1-2 phút. Nếu sau 10 phút bạn vẫn chưa
-        nhận được TLT vui lòng chụp ảnh GD có{" "}
+        nhận được TLT, vui lòng chụp ảnh GD có{" "}
         <strong>kèm thời gian cụ thể và nội dung chuyển khoản</strong> vào page
         của The Genesis. Chúng tôi sẽ hỗ trợ bạn trong khung giờ từ 9:00-18:00.
         Trân trọng cảm ơn!

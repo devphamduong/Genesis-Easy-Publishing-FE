@@ -289,20 +289,20 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
                   >
                     <Radio.Group buttonStyle="solid">
                       <Radio.Button
-                        value={EStoryStatusKey.NOT_QUALIFY}
+                        value={EStoryStatusKey.NOT_PUBLIC}
                         disabled={
                           form.getFieldValue("status") >
-                          EStoryStatusKey.NOT_QUALIFY
+                          EStoryStatusKey.NOT_PUBLIC
                         }
                       >
-                        {EStoryStatusLabel.NOT_QUALIFY}
+                        {EStoryStatusLabel.NOT_PUBLIC}
                       </Radio.Button>
                       <Radio.Button
                         value={EStoryStatusKey.NOT_COMPLETED}
                         disabled={
                           !form.getFieldValue("status") ||
                           form.getFieldValue("status") ===
-                            EStoryStatusKey.NOT_QUALIFY
+                            EStoryStatusKey.NOT_PUBLIC
                         }
                       >
                         {EStoryStatusLabel.NOT_COMPLETED}
@@ -312,7 +312,7 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
                         disabled={
                           !form.getFieldValue("status") ||
                           form.getFieldValue("status") ===
-                            EStoryStatusKey.NOT_QUALIFY
+                            EStoryStatusKey.NOT_PUBLIC
                         }
                       >
                         {EStoryStatusLabel.COMPLETED}

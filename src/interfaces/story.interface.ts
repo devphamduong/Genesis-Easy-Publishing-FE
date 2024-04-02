@@ -97,6 +97,7 @@ export interface IChapter {
   userPurchaseChapter: number;
   chapterContentMarkdown: string;
   chapterContentHtml: string;
+  status: number;
 }
 
 export interface IChapterInteraction {

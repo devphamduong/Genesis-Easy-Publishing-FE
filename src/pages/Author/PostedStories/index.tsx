@@ -34,6 +34,7 @@ import { slugify } from "../../../shared/function";
 import PostedVolumesPage from "../PostedVolumes";
 import { toast } from "react-toastify";
 import { EStoryStatusKey, EStoryStatusLabel } from "../../../enums/story.enum";
+import { ERouteEndPointForAuthor } from "../../../enums/route-end-point.enum";
 dayjs.extend(relativeTime);
 
 interface IProps {}
@@ -70,7 +71,7 @@ const PostedStoriesPage: FC<IProps> = (props: IProps) => {
 
   const fetchPostedStories = async () => {
     setIsLoading(true);
-    let query = `current=${currentPage}&pageSize=${pageSize}`;
+    let query = `page=${currentPage}&pageSize=${pageSize}`;
     if (searchText) {
       query += "&title=" + searchText;
     }
@@ -195,12 +196,12 @@ const PostedStoriesPage: FC<IProps> = (props: IProps) => {
                 }
               />
             </Tooltip>
-            {record.storyStatus > EStoryStatusKey.NOT_QUALIFY &&
+            {record.storyStatus > EStoryStatusKey.NOT_PUBLIC &&
               !record.storyStatus && (
                 <Tooltip title="Xem kết quả review">
                   <EPButton
                     icon={<LiaCommentSolid className="fs-5" />}
-                    onClick={() => navigate(getReviewStoryURL(record.storyId))}
+                    onClick={() => navigate(ERouteEndPointForAuthor.REVIEW)}
                   />
                 </Tooltip>
               )}

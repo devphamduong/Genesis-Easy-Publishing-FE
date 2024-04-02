@@ -33,10 +33,11 @@ import PaymentConfirmPage from "../pages/PaymentConfirm";
 import FollowingPage from "../pages/Profile/Following";
 import ReadHistoryPage from "../pages/Profile/ReadHistory";
 import OwnedStoriesPage from "../pages/Profile/OwnedStories";
-import ReviewStoryPage from "../pages/Author/ReviewStory";
+import ReviewPage from "../pages/Author/Review";
 import ProtectedRoute from "../components/ProtectedRoute";
 import { IRootState } from "../redux/store";
 import { useSelector } from "react-redux";
+import ReviewAChapterPage from "../pages/Author/Review/ReviewAChapter";
 
 interface IProps {}
 
@@ -142,7 +143,11 @@ const AppRoutes: FC<IProps> = (props: IProps) => {
             <Route path="posted-stories" element={<PostedStoriesPage />} />
             <Route path="write-story" element={<WriteStoryPage />}></Route>
             <Route path="write-chapter" element={<WriteChapterPage />}></Route>
-            <Route path="review-story" element={<ReviewStoryPage />}></Route>
+            <Route path="review" element={<ReviewPage />}></Route>
+            <Route
+              path="review-a-chapter"
+              element={<ReviewAChapterPage />}
+            ></Route>
           </Route>
         </Route>
         <Route path="*" element={<NotFoundPage />}></Route>

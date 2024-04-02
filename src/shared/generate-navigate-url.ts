@@ -46,6 +46,9 @@ export const getEditChapterURL = (
   return `${ERouteEndPointForAuthor.WRITE_CHAPTER}?mode=edit&storyId=${storyId}&chapterId=${chapterId}&storyTitle=${slug}`;
 };
 
-export const getReviewStoryURL = (id: number | string): string => {
-  return `${ERouteEndPointForAuthor.REVIEW_STORY}?storyId=${id}`;
+export const getReviewAChapterURL = (
+  storyId: number | string,
+  chapterId: number | string
+): string => {
+  return `${ERouteEndPointForAuthor.REVIEW_CHAPTER}?storyId=${storyId}&chapterId=${chapterId}`;
 };

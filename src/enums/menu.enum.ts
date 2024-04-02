@@ -11,7 +11,7 @@ export enum EMenuLabel {
   AUTHOR_WRITE_STORY = "Viết truyện",
   AUTHOR_WRITE_CHAPTER = "Viết chương truyện",
   AUTHOR_POSTED_STORY = "Truyện đã đăng",
-  AUTHOR_REVIEW_STORY = "Review truyện",
+  AUTHOR_REVIEW_STORY = "Review",
 }
 
 export enum EMenuKey {

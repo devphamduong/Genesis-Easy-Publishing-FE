@@ -128,10 +128,10 @@ export const reportStory = (data: IReportForm): Promise<IApiResponse<null>> => {
 };
 
 export const getChapterContent = (
-  storyid: string | number,
+  storyId: string | number,
   chapterNumber: number
 ): Promise<IApiResponse<IChapterContent>> => {
-  return axios.get(`chapters/chapter_content/${storyid}/${chapterNumber}`);
+  return axios.get(`chapters/chapter_content/${storyId}/${chapterNumber}`);
 };
 
 export const getGlobalSearchStories = (

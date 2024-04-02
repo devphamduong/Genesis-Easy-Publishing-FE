@@ -18,14 +18,12 @@ import {
   getStoryVolume,
   updateVolume,
 } from "../../../services/author-api-service";
-import relativeTime from "dayjs/plugin/relativeTime";
 import dayjs from "dayjs";
 import EPButton from "../../../components/EP-UI/Button";
 import { MdDeleteOutline, MdPublic } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { getEditChapterURL } from "../../../shared/generate-navigate-url";
-import { slugify } from "../../../shared/function";
-dayjs.extend(relativeTime);
+import { dayjsFrom, slugify } from "../../../shared/function";
 import { v4 as uuidv4 } from "uuid";
 import { LuFileEdit } from "react-icons/lu";
 import { toast } from "react-toastify";
@@ -129,7 +127,7 @@ const PostedVolumesPage: FC<IProps> = (props: IProps) => {
         return (
           <span>
             {dayjs(record.createTime).format("DD/MM/YYYY")}{" "}
-            <span className="time">({dayjs(record.createTime).fromNow()})</span>
+            <span className="time">({dayjsFrom(record.createTime)})</span>
           </span>
         );
       },

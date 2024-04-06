@@ -27,7 +27,6 @@ import { GrChapterAdd } from "react-icons/gr";
 import { useNavigate } from "react-router-dom";
 import {
   getEditStoryURL,
-  getReviewStoryURL,
   getWriteChapterURL,
 } from "../../../shared/generate-navigate-url";
 import { slugify } from "../../../shared/function";

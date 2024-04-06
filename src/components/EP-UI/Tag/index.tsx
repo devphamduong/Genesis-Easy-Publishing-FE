@@ -5,7 +5,7 @@ import { Tag } from "antd";
 interface IProps {
   shape: "round" | "rectangle";
   color: string;
-  size: "small" | "large";
+  size?: "small" | "large";
   content: string;
 }
 

@@ -17,5 +17,6 @@ export enum ERouteEndPointForAuthor {
   POSTED_STORIES = "/author/posted-stories",
   WRITE_STORY = "/author/write-story",
   WRITE_CHAPTER = "/author/write-chapter",
-  REVIEW_STORY = "/author/review-story",
+  REVIEW = "/author/review",
+  REVIEW_CHAPTER = "/author/review-a-chapter",
 }

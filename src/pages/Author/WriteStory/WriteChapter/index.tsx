@@ -3,17 +3,7 @@ import MdEditor from "react-markdown-editor-lite";
 import MarkdownIt from "markdown-it";
 import "react-markdown-editor-lite/lib/index.css";
 import "./WriteChapter.scss";
-import {
-  Button,
-  Col,
-  Form,
-  Input,
-  InputNumber,
-  Radio,
-  Row,
-  Select,
-  Tooltip,
-} from "antd";
+import { Button, Col, Form, Input, InputNumber, Row, Select } from "antd";
 import {
   IVolume,
   IWriteChapterForm,
@@ -27,7 +17,7 @@ import {
   updateChapter,
 } from "../../../../services/author-api-service";
 import { toast } from "react-toastify";
-import generatePDF, { Margin, Options, Resolution } from "react-to-pdf";
+import EPExport from "../../../../components/EP-Common/Export";
 
 interface IProps {}
 
@@ -52,28 +42,6 @@ const WriteChapterPage: FC<IProps> = (props: IProps) => {
   const [contentMarkdown, setContentMarkdown] = useState<string>("");
   const [contentHTML, setContentHTML] = useState<string>("");
   const targetRef = useRef<HTMLInputElement>(null);
-
-  const options: Options = {
-    filename: "advanced-example.pdf",
-    method: "save",
-    resolution: Resolution.HIGH,
-    page: {
-      margin: Margin.SMALL,
-      orientation: "landscape",
-    },
-    canvas: {
-      mimeType: "image/jpeg",
-      qualityRatio: 1,
-    },
-    overrides: {
-      pdf: {
-        compress: true,
-      },
-      canvas: {
-        useCORS: true,
-      },
-    },
-  };
 
   useEffect(() => {
     storyId && fetchVolumes();
@@ -143,24 +111,12 @@ const WriteChapterPage: FC<IProps> = (props: IProps) => {
     setIsLoading(false);
   };
 
-  const downloadPdf = () => generatePDF(targetRef, options);
-
   return (
     <div className="write-chapter-container my-3">
       <div className="write-chapter-content container">
         <Row gutter={[16, 16]}>
           <Col span={18}>
-            <Form
-              form={form}
-              layout="vertical"
-              onFinish={onFinish}
-              initialValues={{
-                chapterTitle: form.getFieldValue("chapterTitle"),
-                volumeId: form.getFieldValue("volumeId"),
-                chapterPrice: form.getFieldValue("chapterPrice"),
-                storyTitle,
-              }}
-            >
+            <Form form={form} layout="vertical" onFinish={onFinish}>
               <Row>
                 <Col span={7}>
                   <Form.Item<IWriteChapterForm>
@@ -221,12 +177,12 @@ const WriteChapterPage: FC<IProps> = (props: IProps) => {
                   <Form.Item<IWriteChapterForm>
                     label="Giá"
                     name="chapterPrice"
-                    // rules={[
-                    //   {
-                    //     required: true,
-                    //     message: "Tựa đề không được để trống!",
-                    //   },
-                    // ]}
+                    rules={[
+                      {
+                        required: true,
+                        message: "Giá không được để trống",
+                      },
+                    ]}
                   >
                     <InputNumber
                       addonBefore={"TLT"}
@@ -272,13 +228,11 @@ const WriteChapterPage: FC<IProps> = (props: IProps) => {
         </Row>
       </div>
 
-      <Button onClick={downloadPdf}>Download PDF</Button>
-      <div
-        ref={targetRef}
-        className="content no-select"
-        dangerouslySetInnerHTML={{
-          __html: contentHTML ?? "",
-        }}
+      <EPExport
+        customText="Xuất doc"
+        contentToExport={contentHTML}
+        storyTitle={form.getFieldValue("storyTitle")}
+        chapterTitle={form.getFieldValue("chapterTitle")}
       />
     </div>
   );

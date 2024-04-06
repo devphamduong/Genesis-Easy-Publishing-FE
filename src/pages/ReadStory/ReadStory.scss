@@ -1,5 +1,60 @@
 .read-story-container {
+
+    &.dark-theme {
+        background-color: #333;
+        color           : #fff;
+
+        button:not(.ant-btn-dangerous) {
+            color: #fff;
+        }
+
+        .ant-descriptions {
+            .ant-descriptions-view {
+                border-color: #fff;
+
+                .ant-descriptions-row {
+                    border-bottom-color: #fff;
+
+                    .ant-descriptions-item-label {
+                        color: #fff;
+                    }
+
+                    .ant-descriptions-item-content {
+                        color: #fff;
+                    }
+                }
+            }
+        }
+    }
+
     .read-story-content {
+        .content {
+            position: relative;
+
+            .configs-read-story {
+                position: absolute;
+                top     : 50%;
+                right   : -25%;
+
+                .custom-font-size {
+
+                    .ant-input-number-group-addon {
+                        padding: 0;
+                    }
+
+                    .ant-input-number {
+                        width: 40px;
+
+                        .ant-input-number-input-wrap {
+                            input {
+                                text-align: center;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         .buttons {
             margin: 0 230px;
         }

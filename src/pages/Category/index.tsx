@@ -139,7 +139,7 @@ const CategoryPage: FC<IProps> = (props: IProps) => {
       <EPCover
         imgUrl={categoryDetail?.categoryBanner ?? ""}
         title={
-          <span className="capitalize">
+          <span className="text-capitalize">
             Truyện {categoryDetail ? categoryDetail?.categoryName : null}
           </span>
         }

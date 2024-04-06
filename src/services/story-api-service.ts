@@ -84,6 +84,13 @@ export const getPaginationStoriesFollowing = (
   return axios.get(`shelves/my_follow?page=${page}&pageSize=${pageSize}`);
 };
 
+export const getPaginationStoriesReadHistory = (
+  page: number,
+  pageSize: number
+): Promise<IApiResponse<IPaginationStory>> => {
+  return axios.get(`shelves/my_read?page=${page}&pageSize=${pageSize}`);
+};
+
 export const getPaginationOwnedStories = (
   page: number,
   pageSize: number
@@ -121,8 +128,26 @@ export const reportStory = (data: IReportForm): Promise<IApiResponse<null>> => {
 };
 
 export const getChapterContent = (
-  storyid: string | number,
+  storyId: string | number,
   chapterNumber: number
 ): Promise<IApiResponse<IChapterContent>> => {
-  return axios.get(`chapters/chapter_content/${storyid}/${chapterNumber}`);
+  return axios.get(`chapters/chapter_content/${storyId}/${chapterNumber}`);
+};
+
+export const getGlobalSearchStories = (
+  query?: string
+): Promise<IApiResponse<IStory[]>> => {
+  return axios.get(`story/search_global?${query}`);
+};
+
+export const uploadStoryCover = (
+  fileImg: string
+): Promise<IApiResponse<{ fileUploaded: string }>> => {
+  const bodyFormData = new FormData();
+  bodyFormData.append("image", fileImg);
+  return axios({
+    method: "put",
+    url: "story/update_storyimage",
+    data: bodyFormData,
+  });
 };

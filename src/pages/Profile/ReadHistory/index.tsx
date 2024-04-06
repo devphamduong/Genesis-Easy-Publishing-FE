@@ -1,9 +1,11 @@
 import { FC, useEffect, useState } from "react";
 import "./ReadHistory.scss";
 import { Table, TableProps } from "antd";
-import { getPaginationStoriesFollowing } from "../../../services/story-api-service";
+import { getPaginationStoriesReadHistory } from "../../../services/story-api-service";
 import { IStory } from "../../../interfaces/story.interface";
 import { dayjsFrom } from "../../../shared/function";
+import { Link } from "react-router-dom";
+import { getStoryReadURL } from "../../../shared/generate-navigate-url";
 
 interface IProps {}
 
@@ -21,7 +23,7 @@ const ReadHistoryPage: FC<IProps> = (props: IProps) => {
   }, [currentPage, pageSize]);
 
   const fetchStoriesFollowing = async () => {
-    const res = await getPaginationStoriesFollowing(currentPage, pageSize);
+    const res = await getPaginationStoriesReadHistory(currentPage, pageSize);
     if (res && res.ec === 0) {
       setFollowingStories(res.dt.list);
       setTotalStories(res.dt.totalStories);
@@ -46,7 +48,16 @@ const ReadHistoryPage: FC<IProps> = (props: IProps) => {
       render(value, record: IStory, index) {
         return (
           <>
-            <div>Chương {record.storyReadChapter?.chapterNumber}</div>
+            <Link
+              className="link-hover"
+              to={getStoryReadURL(
+                record.storyId,
+                record.storyTitle,
+                record.storyReadChapter?.chapterNumber
+              )}
+            >
+              Chương {record.storyReadChapter?.chapterNumber}
+            </Link>
             <div className="time">
               {record.storyReadChapter &&
                 dayjsFrom(record.storyReadChapter?.createTime)}
@@ -62,7 +73,16 @@ const ReadHistoryPage: FC<IProps> = (props: IProps) => {
       render(value, record: IStory, index) {
         return (
           <>
-            <div>Chương {record.storyLatestChapter?.chapterNumber}</div>
+            <Link
+              className="link-hover"
+              to={getStoryReadURL(
+                record.storyId,
+                record.storyTitle,
+                record.storyLatestChapter?.chapterNumber
+              )}
+            >
+              Chương {record.storyLatestChapter?.chapterNumber}
+            </Link>
             <div className="time">
               {record.storyLatestChapter &&
                 dayjsFrom(record.storyLatestChapter?.createTime)}

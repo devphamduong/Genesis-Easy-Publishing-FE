@@ -14,13 +14,13 @@ export interface IStory {
   };
   storyChapterNumber: number;
   storyChapters?: IChapter[];
-  storyLatestChapter?: {
+  storyLatestChapter: {
     chapterId: number | string;
     chapterTitle: string;
     chapterNumber: number;
     createTime: string;
   };
-  storyReadChapter?: {
+  storyReadChapter: {
     chapterId: number | string;
     chapterTitle: string;
     chapterNumber: number;
@@ -44,6 +44,7 @@ export interface IStory {
   userLike: boolean;
   storyCreateTime: string;
   status?: number;
+  storyStatus: number;
 }
 
 export interface IStoryInteraction {
@@ -96,6 +97,7 @@ export interface IChapter {
   userPurchaseChapter: number;
   chapterContentMarkdown: string;
   chapterContentHtml: string;
+  status: number;
 }
 
 export interface IChapterInteraction {
@@ -149,8 +151,8 @@ export interface IWriteStoryForm {
   type?: string;
   storyId: number | string;
   authorId?: string | number;
-  storyPrice?: number;
-  storySale?: number;
+  storyPrice: number;
+  storySale: number;
   storyImage?: string;
   status?: number;
   categoryIds?: string[];

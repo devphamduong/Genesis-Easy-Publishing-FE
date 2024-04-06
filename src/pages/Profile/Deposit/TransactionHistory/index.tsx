@@ -3,17 +3,28 @@ import "./TransactionHistory.scss";
 import { GoArrowDown, GoArrowUp } from "react-icons/go";
 import { Table, TableProps, Tag } from "antd";
 import { getTransactionHistory } from "../../../../services/transaction-api-service";
+import {
+  ITransactionHistory,
+  IWalletInfor,
+} from "../../../../interfaces/transaction.interface";
+import { dayjsFrom } from "../../../../shared/function";
+import dayjs from "dayjs";
 
-interface IProps {}
+interface IProps {
+  wallet?: IWalletInfor;
+}
 
 const PAGE_SIZE = 10;
 
 const TransactionHistoryPage: FC<IProps> = (props: IProps) => {
+  const { wallet } = props;
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(PAGE_SIZE);
-  const [totalStories, setTotalStories] = useState<number>(0);
+  const [totalTransactions, setTotalTransactions] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [transactionHistory, setTransactionHistory] = useState();
+  const [transactionHistory, setTransactionHistory] = useState<
+    ITransactionHistory[]
+  >([]);
 
   useEffect(() => {
     fetchTransactionHistory();
@@ -22,70 +33,74 @@ const TransactionHistoryPage: FC<IProps> = (props: IProps) => {
   const fetchTransactionHistory = async () => {
     const res = await getTransactionHistory(currentPage, pageSize);
     if (res && res.ec === 0) {
-      console.log(res);
-      // transactionHistory(res.dt.)
+      setTransactionHistory(res.dt.list);
+      setTotalTransactions(res.dt.total);
     }
   };
 
   const columns: TableProps["columns"] = [
     {
+      title: "",
+      dataIndex: "key",
+      key: "key",
+      render(value, record, index) {
+        return <span>{(currentPage - 1) * pageSize + index + 1}</span>;
+      },
+    },
+    {
       title: "Hoạt động",
-      dataIndex: "name",
-      key: "name",
+      dataIndex: "description",
+      key: "description",
       render: (text) => <a>{text}</a>,
     },
     {
       title: "Thời gian",
-      dataIndex: "age",
-      key: "age",
+      dataIndex: "transactionTime",
+      key: "transactionTime",
+      render(value, record: ITransactionHistory, index) {
+        return (
+          <span>
+            {dayjs(record.transactionTime).format("DD/MM/YYYY")}{" "}
+            <i className="time">({dayjsFrom(record.transactionTime)})</i>
+          </span>
+        );
+      },
     },
     {
-      title: "Số lượng",
-      dataIndex: "address",
-      key: "address",
-    },
-  ];
-  const data = [
-    {
-      key: "1",
-      name: "John Brown",
-      age: 32,
-      address: "New York No. 1 Lake Park",
-      tags: ["nice", "developer"],
-    },
-    {
-      key: "2",
-      name: "Jim Green",
-      age: 42,
-      address: "London No. 1 Lake Park",
-      tags: ["loser"],
-    },
-    {
-      key: "3",
-      name: "Joe Black",
-      age: 32,
-      address: "Sydney No. 1 Lake Park",
-      tags: ["cool", "teacher"],
+      title: "Số lượng (TLT)",
+      dataIndex: "amount",
+      key: "amount",
     },
   ];
 
   const renderHeader = () => {
     return (
-      <div className="sum-transaction mt-2 d-flex align-items-center justify-content-between">
-        <Tag
-          icon={<GoArrowDown className="fs-4" />}
-          color="success"
-          className="fs-5 d-flex align-items-center"
-        >
-          <p>Tiền vào: $9,758.23</p>
-        </Tag>
-        <Tag
-          icon={<GoArrowUp className="fs-4" />}
-          color="success"
-          className="fs-5 d-flex align-items-center"
-        >
-          <p>Tiền ra: $961.23</p>
-        </Tag>
+      <div className="sum-transaction mt-2">
+        <div>
+          <strong className="fs-4">Lịch sử giao dịch</strong>
+        </div>
+        {wallet && (
+          <div className="d-flex align-items-center justify-content-between">
+            <Tag
+              icon={<GoArrowDown className="fs-4" />}
+              color="success"
+              className="fs-5 d-flex align-items-center"
+            >
+              <p>
+                Tiền vào: {wallet?.amount_top_up + wallet?.amount_received} TLT
+              </p>
+            </Tag>
+            <Tag
+              icon={<GoArrowUp className="fs-4" />}
+              color="success"
+              className="fs-5 d-flex align-items-center"
+            >
+              <p>
+                Tiền ra: {wallet?.amount_withdrawn + wallet?.amount_spent} TLT
+              </p>
+            </Tag>
+          </div>
+        )}
       </div>
     );
   };
@@ -103,17 +118,16 @@ const TransactionHistoryPage: FC<IProps> = (props: IProps) => {
   return (
     <div className="transaction-history-container">
       <div className="transaction-history-content">
-        <strong className="fs-4">Lịch sử giao dịch</strong>
         <Table
           title={renderHeader}
-          rowKey={"storyId"}
+          rowKey={"transactionId"}
           onChange={onChangePagination}
           loading={isLoading}
           columns={columns}
-          dataSource={data}
+          dataSource={transactionHistory}
           pagination={{
             current: currentPage,
-            total: totalStories,
+            total: totalTransactions,
             pageSize: pageSize,
             showSizeChanger: true,
             showTotal: (total, range) =>

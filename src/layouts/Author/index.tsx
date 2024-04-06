@@ -80,7 +80,7 @@ const HeaderAuthor = (props: IProps) => {
     }
 
     const items: MenuProps["items"] = [
-      getItem(<div>Home</div>, "home", null),
+      getItem(<div>Trang chủ</div>, "home", null),
       getItem(<div>{EMenuLabel.PROFILE}</div>, EMenuKey.PROFILE, null),
       getItem(<div>{EMenuLabel.DEPOSIT}</div>, EMenuKey.DEPOSIT, null),
       getItem(
@@ -197,13 +197,13 @@ const AuthorLayout: FC<IProps> = (props: IProps) => {
       true
     ),
     getItem(
-      <div onClick={() => navigate(ERouteEndPointForAuthor.REVIEW_STORY)}>
+      <div onClick={() => navigate(ERouteEndPointForAuthor.REVIEW)}>
         {EMenuLabel.AUTHOR_REVIEW_STORY}
       </div>,
-      ERouteEndPointForAuthor.REVIEW_STORY,
+      ERouteEndPointForAuthor.REVIEW,
       <VscOpenPreview
         className="fs-5"
-        onClick={() => navigate(ERouteEndPointForAuthor.REVIEW_STORY)}
+        onClick={() => navigate(ERouteEndPointForAuthor.REVIEW)}
       />
     ),
   ];

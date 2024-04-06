@@ -1,6 +1,17 @@
 import { FC, useEffect, useState } from "react";
 import "./ReadStory.scss";
-import { App, Button, Col, Descriptions, FloatButton, Modal, Row } from "antd";
+import {
+  App,
+  Button,
+  Col,
+  Descriptions,
+  Flex,
+  FloatButton,
+  InputNumber,
+  Modal,
+  Row,
+  Switch,
+} from "antd";
 import {
   ExclamationCircleFilled,
   HeartOutlined,
@@ -50,6 +61,8 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
   const [isSubmittedLike, setIsSubmittedLike] = useState<boolean>(false);
   const [chapterContent, setChapterContent] = useState<IChapterContent>();
   const [isModalTopUpOpen, setIsModalTopUpOpen] = useState<boolean>(false);
+  const [isLightTheme, setIsLightTheme] = useState(true);
+  const [fontSize, setFontSize] = useState(14);
 
   useEffect(() => {
     fetchChapterContent();
@@ -121,7 +134,9 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
 
   return (
     <>
-      <div className="read-story-container">
+      <div
+        className={`read-story-container ${!isLightTheme ? "dark-theme" : ""}`}
+      >
         <div className="read-story-content container py-3 d-flex flex-column gap-3">
           <div className="buttons">
             <Row gutter={[10, 10]}>
@@ -152,12 +167,61 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
             </Row>
           </div>
           {chapterContent && chapterContent?.owned ? (
-            <div
-              className="content no-select"
-              dangerouslySetInnerHTML={{
-                __html: chapterContent?.content ?? "",
-              }}
-            />
+            <div className="content w-75 mx-auto">
+              <div
+                className="no-select"
+                style={{ fontSize: `${fontSize}px` }}
+                dangerouslySetInnerHTML={{
+                  __html: chapterContent?.content ?? "",
+                }}
+              />
+              <Flex
+                align="center"
+                justify="center"
+                vertical
+                gap={10}
+                className="configs-read-story"
+              >
+                <InputNumber
+                  controls={false}
+                  className="custom-font-size"
+                  value={fontSize}
+                  onChange={(e) => setFontSize(+e!)}
+                  addonBefore={
+                    <Button
+                      // block
+                      disabled={fontSize - 1 < 1}
+                      type="text"
+                      onClick={() =>
+                        fontSize - 1 >= 1 && setFontSize(fontSize - 1)
+                      }
+                    >
+                      -
+                    </Button>
+                  }
+                  addonAfter={
+                    <Button
+                      // block
+                      disabled={fontSize + 1 >= 72}
+                      type="text"
+                      onClick={() =>
+                        fontSize + 1 < 72 && setFontSize(fontSize + 1)
+                      }
+                    >
+                      +
+                    </Button>
+                  }
+                  min={1}
+                  max={72}
+                />
+                <Switch
+                  checkedChildren="Sáng"
+                  unCheckedChildren="Tối"
+                  defaultChecked={isLightTheme}
+                  onChange={() => setIsLightTheme(!isLightTheme)}
+                />
+              </Flex>
+            </div>
           ) : (
             chapterContent && (
               <div className="d-flex flex-column gap-2 align-items-center justify-content-center">
@@ -172,7 +236,7 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
                     color="#09bb07"
                     className="d-flex align-items-center justify-content-center"
                     type="primary"
-                    icon={<IoCheckmark />}
+                    icon={<IoCheckmark className="fs-5" />}
                     size={"large"}
                     onClick={() =>
                       showConfirmBuyChapter(
@@ -187,7 +251,7 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
                     color="#09bb07"
                     className="d-flex align-items-center justify-content-center"
                     type="primary"
-                    icon={<IoMdDoneAll />}
+                    icon={<IoMdDoneAll className="fs-5" />}
                     size={"large"}
                     onClick={() => setIsModalBuyChaptersOpen(true)}
                   >
@@ -197,7 +261,7 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
                     color="#09bb07"
                     className="d-flex align-items-center justify-content-center"
                     type="primary"
-                    icon={<RiMoneyDollarCircleFill />}
+                    icon={<RiMoneyDollarCircleFill className="fs-5" />}
                     size={"large"}
                     onClick={() => setIsModalTopUpOpen(true)}
                   >

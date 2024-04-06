@@ -3,12 +3,17 @@ import "./PaymentConfirm.scss";
 import { CloseCircleOutlined } from "@ant-design/icons";
 import { Button, Result, Typography } from "antd";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { TLT_CURRENCY } from "../../enums/transaction.enum";
+import {
+  EUpdateBalanceAction,
+  TLT_CURRENCY,
+} from "../../enums/transaction.enum";
 import { addTransactionTopUp } from "../../services/transaction-api-service";
 import { IRootState } from "../../redux/store";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { PacmanLoader } from "react-spinners";
+import { updateAccountBalance } from "../../redux/account/accountSlice";
+import { IUpdateBalanceAction } from "../../interfaces/transaction.interface";
 
 const { Paragraph, Text } = Typography;
 
@@ -16,6 +21,7 @@ interface IProps {}
 
 const PaymentConfirmPage: FC<IProps> = (props: IProps) => {
   const account = useSelector((state: IRootState) => state.account.user);
+  const dispatch = useDispatch();
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const result = searchParams.get("resultCode");
@@ -32,12 +38,15 @@ const PaymentConfirmPage: FC<IProps> = (props: IProps) => {
   const addTransaction = () => {
     setIsLoading(true);
     setTimeout(async () => {
-      const res = await addTransactionTopUp({
-        userId: account.userId,
-        amount: +amount! / TLT_CURRENCY,
-      });
+      const res = await addTransactionTopUp(+amount! / TLT_CURRENCY);
       if (res && res.ec === 0) {
         toast.success(res.em);
+        dispatch(
+          updateAccountBalance({
+            updateAction: EUpdateBalanceAction.TOPUP,
+            amount: res.dt.amount,
+          } as IUpdateBalanceAction)
+        );
       } else {
         toast.error(res.em);
       }
@@ -59,7 +68,7 @@ const PaymentConfirmPage: FC<IProps> = (props: IProps) => {
             title={message}
             subTitle={
               <span className="fs-5">
-                Bạn vùa nạp{" "}
+                Bạn vừa nạp{" "}
                 {new Intl.NumberFormat("vi-VN", {
                   style: "currency",
                   currency: "VND",

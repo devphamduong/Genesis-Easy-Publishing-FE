@@ -40,7 +40,9 @@ const ProfileLayout: FC<IProps> = (props: IProps) => {
 
   const items: MenuItem[] = [
     getItem(
-      <NavLink to={ERouteEndPointForUser.DASHBOARD}>Dashboard</NavLink>,
+      <NavLink to={ERouteEndPointForUser.DASHBOARD}>
+        {EMenuLabel.DASHBOARD}
+      </NavLink>,
       ERouteEndPointForUser.DASHBOARD,
       null
     ),

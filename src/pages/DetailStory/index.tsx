@@ -495,7 +495,7 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
                                 shape="round"
                                 size="large"
                                 content={item.categoryName}
-                              ></EPTag>
+                              />
                             );
                           })}
                       </Space>
@@ -584,7 +584,7 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
               <table>
                 <tbody>
                   <tr>
-                    <td></td>
+                    <td>Giá gốc</td>
                     <td>
                       <Text strong delete={story && story?.storySale < 0}>
                         {story?.storyPrice ?? 0}
@@ -595,7 +595,7 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
                     <>
                       <tr>
                         <td>
-                          <Text type="danger">Special!:</Text>
+                          <Text type="danger">Giá ưu đãi:</Text>
                         </td>
                         <td>
                           <Text type="danger">
@@ -605,13 +605,13 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
                       </tr>
                       <tr>
                         <td>
-                          <Text>Bạn tiết kiệm được:</Text>
+                          <Text>
+                            Bạn tiết kiệm được (
+                            <strong>{story?.storySale}%</strong>):
+                          </Text>
                         </td>
                         <td>
-                          <p>
-                            {(PRICE - (NEW_PRICE as number)).toFixed(2)} (
-                            <strong>{story?.storySale}%</strong>)
-                          </p>
+                          <p>{(PRICE - (NEW_PRICE as number)).toFixed(2)}</p>
                         </td>
                       </tr>
                     </>

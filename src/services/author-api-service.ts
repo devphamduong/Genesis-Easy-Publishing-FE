@@ -25,9 +25,10 @@ export const getAuthorDetailById = (
 };
 
 export const getAuthorStoriesById = (
-  id: number | string
+  id: number | string,
+  status: string = "written"
 ): Promise<IApiResponse<IStory[]>> => {
-  return axios.get(`shelves/author_detail?authorId=${id}`);
+  return axios.get(`shelves/author_detail/${status}?authorId=${id}`);
 };
 
 export const getAuthorPostedStories = (

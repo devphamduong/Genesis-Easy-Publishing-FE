@@ -154,9 +154,13 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
 
   const handleUploadStoryCover = async (options) => {
     const { file, onSuccess, onError } = options;
-    const res = await uploadStoryCover(file);
+    const res = await uploadStoryCover(file, storyId!);
     if (res && res.ec === 0) {
-      setPreviewImgName(res.dt.fileUploaded);
+      setPreviewImgName(
+        `${import.meta.env.VITE_BACKEND_URL}Assets/images/avatar/${
+          res.dt.fileUploaded
+        }`
+      );
       onSuccess("ok");
     } else {
       onError("An error occurred");
@@ -165,8 +169,7 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
 
   const propsUpLoad: UploadProps = {
     name: "file",
-    // multiple: true,
-    // action: "https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188",
+    maxCount: 1,
     beforeUpload: beforeUpload,
     onChange(info) {
       const { status } = info.file;

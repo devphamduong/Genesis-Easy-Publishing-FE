@@ -50,5 +50,12 @@ export const getReviewAChapterURL = (
   storyId: number | string,
   chapterId: number | string
 ): string => {
-  return `${ERouteEndPointForAuthor.REVIEW_CHAPTER}?storyId=${storyId}&chapterId=${chapterId}`;
+  return `${ERouteEndPointForAuthor.REVIEW_CHAPTER}?mode=reviewing&storyId=${storyId}&chapterId=${chapterId}`;
+};
+
+export const getReviewDetailAChapterURL = (
+  storyId: number | string,
+  chapterId: number | string
+): string => {
+  return `${ERouteEndPointForAuthor.REVIEW_CHAPTER}?mode=readOnly&storyId=${storyId}&chapterId=${chapterId}`;
 };

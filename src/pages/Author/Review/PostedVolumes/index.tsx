@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from "react";
 import "./PostedVolumes.scss";
-import { Table, TableColumnsType } from "antd";
+import { Table, TableColumnsType, Tooltip } from "antd";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
@@ -10,7 +10,12 @@ import {
   EChapterStatusKey,
   EChapterStatusLabel,
 } from "../../../../enums/story.enum";
-import { getReviewAChapterURL } from "../../../../shared/generate-navigate-url";
+import {
+  getReviewAChapterURL,
+  getReviewDetailAChapterURL,
+} from "../../../../shared/generate-navigate-url";
+import EPButton from "../../../../components/EP-UI/Button";
+import { PiQuestion } from "react-icons/pi";
 
 interface IProps {}
 
@@ -24,7 +29,7 @@ interface DataType {
   createTime: string;
   total: number;
   type: "volume" | "chapter";
-  status: number;
+  status: number | null;
   children?: DataType[];
 }
 
@@ -43,7 +48,7 @@ const PostedVolumes: FC<IProps> = (props: IProps) => {
   const fetchStoryVolume = async () => {
     setIsLoading(true);
     const res = await getVolumeList(
-      17
+      6
       // `authorid=${account.userId}&` + query
     );
     if (res && res.ec === 0) {
@@ -86,10 +91,14 @@ const PostedVolumes: FC<IProps> = (props: IProps) => {
           <span
             onClick={() =>
               record.type === "chapter" &&
+              record.status === EChapterStatusKey.NOT_QUALIFY &&
               navigate(getReviewAChapterURL(17, record.id))
             }
             className={
-              record.type === "chapter" ? `pointer custom-title-hover` : ""
+              record.type === "chapter" &&
+              record.status === EChapterStatusKey.NOT_QUALIFY
+                ? `pointer custom-title-hover`
+                : ""
             }
           >
             {record.number} {record.name}
@@ -110,7 +119,9 @@ const PostedVolumes: FC<IProps> = (props: IProps) => {
       render(value: string, record) {
         if (record.type === "chapter")
           return (
-            <span>{EChapterStatusLabel[EChapterStatusKey[record.status]]}</span>
+            <span>
+              {EChapterStatusLabel[EChapterStatusKey[record.status as number]]}
+            </span>
           );
       },
     },
@@ -126,72 +137,28 @@ const PostedVolumes: FC<IProps> = (props: IProps) => {
         );
       },
     },
-    // {
-    //   title: "",
-    //   dataIndex: "actions",
-    //   render(value, record) {
-    //     return (
-    //       <div className="d-flex gap-2">
-    //         {record.type === "chapter" ? (
-    //           <>
-    //             <Tooltip title="Sửa chương">
-    //               <EPButton
-    //                 icon={<LuFileEdit className="fs-5" />}
-    //                 onClick={() =>
-    //                   navigate(
-    //                     getEditChapterURL(17, record.id, slugify(record.name))
-    //                   )
-    //                 }
-    //               />
-    //             </Tooltip>
-    //             <Tooltip title="Công bố">
-    //               <EPButton
-    //                 icon={<MdPublic className="fs-5" />}
-    //                 // onClick={() =>
-    //                 //   navigate(
-    //                 //     getWriteChapterURL(
-    //                 //       record.storyId,
-    //                 //       slugify(record.storyTitle)
-    //                 //     ),
-    //                 //     {
-    //                 //       state: {
-    //                 //         storyId: record.storyId,
-    //                 //         storyTitle: record.storyTitle,
-    //                 //       },
-    //                 //     }
-    //                 //   )
-    //                 // }
-    //               />
-    //             </Tooltip>
-    //           </>
-    //         ) : (
-    //           <Tooltip title="Sửa tiêu đề">
-    //             <EPButton
-    //               icon={<LuFileEdit className="fs-5" />}
-    //               onClick={() => {
-    //                 setVolumeTitle(record.name);
-    //                 setVolumeId(record.id);
-    //                 setIsEditMode(true);
-    //                 setIsModalOpen(true);
-    //               }}
-    //             />
-    //           </Tooltip>
-    //         )}
-    //         {record.type === "chapter" && (
-    //           <Popconfirm
-    //             title="Xóa chương"
-    //             description="Bạn có muốn xóa chương này không?"
-    //             okText="Xóa"
-    //             cancelText="Hủy"
-    //             onConfirm={() => handleDeleteChapter(record.id)}
-    //           >
-    //             <EPButton danger icon={<MdDeleteOutline className="fs-5" />} />
-    //           </Popconfirm>
-    //         )}
-    //       </div>
-    //     );
-    //   },
-    // },
+    {
+      title: "",
+      dataIndex: "actions",
+      render(value, record) {
+        return (
+          <div className="d-flex gap-2">
+            {record.type === "chapter" && record.status === null && (
+              <>
+                <Tooltip title="Xem lý do">
+                  <EPButton
+                    icon={<PiQuestion className="fs-5" />}
+                    onClick={() =>
+                      navigate(getReviewDetailAChapterURL(6, record.id))
+                    }
+                  />
+                </Tooltip>
+              </>
+            )}
+          </div>
+        );
+      },
+    },
   ];
 
   const onChangePagination = (pagination, filters, sorter, extra) => {

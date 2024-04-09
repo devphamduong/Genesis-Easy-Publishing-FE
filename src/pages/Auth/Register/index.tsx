@@ -36,10 +36,8 @@ const RegisterPage: FC<IProps> = (props: IProps) => {
       <div className="register-content">
         <div className="d-flex flex-column gap-5">
           <div className="top">
-            <h1>Register</h1>
-            <p className="fs-4">
-              Please enter your information to create an account.
-            </p>
+            <h1>Đăng ký</h1>
+            <p className="fs-4">Vui lòng nhập thông tin để tạo tài khoản.</p>
           </div>
           <div className="bottom">
             <Form
@@ -54,21 +52,19 @@ const RegisterPage: FC<IProps> = (props: IProps) => {
                 rules={[
                   {
                     type: "email",
-                    message: "The input is not valid Email!",
+                    message: "Email không hợp lệ!",
                   },
-                  { required: true, message: "Please input your Email!" },
+                  { required: true, message: "Hãy nhập Email!" },
                 ]}
               >
-                <Input size="large" placeholder="Enter your email" />
+                <Input size="large" placeholder="Email" />
               </Form.Item>
               <Form.Item<IRegisterForm>
                 label="Username"
                 name="username"
-                rules={[
-                  { required: true, message: "Please input your Username!" },
-                ]}
+                rules={[{ required: true, message: "Hãy nhập Username!" }]}
               >
-                <Input size="large" placeholder="Enter your username" />
+                <Input size="large" placeholder="Username" />
               </Form.Item>
               <Form.Item<IRegisterForm>
                 label="Mật khẩu"
@@ -76,25 +72,25 @@ const RegisterPage: FC<IProps> = (props: IProps) => {
                 rules={[
                   {
                     required: true,
-                    message: "Please input your Password!",
+                    message: "Hãy nhập mật khẩu!",
                   },
                 ]}
               >
                 <Input.Password
                   size="large"
                   type="password"
-                  placeholder="Enter your password"
+                  placeholder="Mật khẩu"
                 />
               </Form.Item>
               <Form.Item<IRegisterForm>
                 name="confirmPassword"
-                label="Confirm Password"
+                label="Nhập lại mật khẩu"
                 dependencies={["password"]}
                 hasFeedback
                 rules={[
                   {
                     required: true,
-                    message: "Please confirm your password!",
+                    message: "Hãy nhập lại mật khẩu lần 2!",
                   },
                   ({ getFieldValue }) => ({
                     validator(_, value) {
@@ -102,18 +98,13 @@ const RegisterPage: FC<IProps> = (props: IProps) => {
                         return Promise.resolve();
                       }
                       return Promise.reject(
-                        new Error(
-                          "The new password that you entered do not match!"
-                        )
+                        new Error("Mật khẩu bạn vừa nhập không trùng khớp!")
                       );
                     },
                   }),
                 ]}
               >
-                <Input.Password
-                  size="large"
-                  placeholder="Enter your confirm password"
-                />
+                <Input.Password size="large" placeholder="Nhập lại mật khẩu" />
               </Form.Item>
               <Form.Item>
                 <div className="d-flex justify-content-between">
@@ -123,7 +114,7 @@ const RegisterPage: FC<IProps> = (props: IProps) => {
                     noStyle
                   >
                     <Checkbox>
-                      I have read the <Link to={""}>agreement</Link>
+                      Tôi đã đọc tất cả các<Link to={""}> điều khoản</Link>
                     </Checkbox>
                   </Form.Item>
                 </div>
@@ -138,10 +129,10 @@ const RegisterPage: FC<IProps> = (props: IProps) => {
                   loading={isLoading}
                   disabled={isLoading}
                 >
-                  Register
+                  Đăng ký
                 </Button>
-                Already have an account?
-                <Link to={"/auth/login"}> Back to login</Link>
+                Bạn đã có tài khoản rồi?
+                <Link to={"/auth/login"}> Quay lại đăng nhập</Link>
               </Form.Item>
             </Form>
           </div>

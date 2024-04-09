@@ -1,26 +1,31 @@
 import { FC, useEffect, useState } from "react";
 import "./ReviewAChapter.scss";
-import { Button, Checkbox, Form } from "antd";
+import { Button, Checkbox, Collapse, Form } from "antd";
 import TextArea from "antd/es/input/TextArea";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import {
   getReviewChapterInfo,
+  getReviewDetailChapterInfo,
   sendReviewResult,
 } from "../../../../services/review-api-service";
 import {
   IReviewChapterForm,
   IReviewChapterInfo,
+  IReviewDetailChapterInfo,
 } from "../../../../interfaces/review.interface";
 import { toast } from "react-toastify";
+import { getAuthorDetailURL } from "../../../../shared/generate-navigate-url";
 
 interface IProps {}
 
 const ReviewAChapterPage: FC<IProps> = (props: IProps) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const chapterId = searchParams.get("chapterId");
+  const mode = searchParams.get("mode");
   const [form] = Form.useForm<IReviewChapterForm>();
-  const [reviewChapterInfo, setReviewChapterInfo] =
-    useState<IReviewChapterInfo>();
+  const [reviewChapterInfo, setReviewChapterInfo] = useState<
+    IReviewChapterInfo | IReviewDetailChapterInfo
+  >();
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -28,9 +33,28 @@ const ReviewAChapterPage: FC<IProps> = (props: IProps) => {
   }, [chapterId]);
 
   const fetchReviewChapterInfo = async () => {
-    const res = await getReviewChapterInfo(chapterId!);
+    let res;
+    if (mode === "reviewing") {
+      res = await getReviewChapterInfo(chapterId!);
+    } else if (mode === "readOnly") {
+      res = await getReviewDetailChapterInfo(chapterId!);
+    }
     if (res && res.ec === 0) {
-      setReviewChapterInfo(res.dt);
+      if (mode === "reviewing") {
+        setReviewChapterInfo(res.dt);
+      } else if (mode === "readOnly") {
+        setReviewChapterInfo(res.dt);
+        form.setFieldsValue({
+          spellingError: res.dt.review.spellingError,
+          lengthError: res.dt.review.lengthError,
+          politicalContentError: res.dt.review.politicalContentError,
+          distortHistoryError: res.dt.review.distortHistoryError,
+          secretContentError: res.dt.review.secretContentError,
+          offensiveContentError: res.dt.review.offensiveContentError,
+          unhealthyContentError: res.dt.review.unhealthyContentError,
+          reviewContent: res.dt.review.reviewContent,
+        });
+      }
     }
   };
 
@@ -64,40 +88,59 @@ const ReviewAChapterPage: FC<IProps> = (props: IProps) => {
     <div className="review-chapter-container">
       <div className="review-chapter-content">
         <div className="fs-4">
-          Chương {reviewChapterInfo?.chapterNumber}:{" "}
-          <strong>{reviewChapterInfo?.chapterTitle}</strong> của truyện{" "}
-          <strong>{reviewChapterInfo?.storyTitle}</strong>
+          Chương{" "}
+          {mode === "reviewing"
+            ? (reviewChapterInfo as IReviewChapterInfo)?.chapterNumber
+            : (reviewChapterInfo as IReviewDetailChapterInfo).review.chapters
+                .chapterNumber}
+          :{" "}
+          <strong>
+            {mode === "reviewing"
+              ? (reviewChapterInfo as IReviewChapterInfo)?.chapterTitle
+              : (reviewChapterInfo as IReviewDetailChapterInfo).review.chapters
+                  .chapterTitle}
+          </strong>{" "}
+          của truyện{" "}
+          <strong>
+            {mode === "reviewing"
+              ? (reviewChapterInfo as IReviewChapterInfo)?.storyTitle
+              : (reviewChapterInfo as IReviewDetailChapterInfo).review.chapters
+                  .storyTitle}
+          </strong>
         </div>
         <div
           className="my-3 w-75 mx-auto"
           dangerouslySetInnerHTML={{
-            __html: reviewChapterInfo?.chapterContentHtml ?? "",
+            __html:
+              mode === "reviewing"
+                ? (reviewChapterInfo as IReviewChapterInfo)?.chapterContentHtml
+                : (reviewChapterInfo as IReviewDetailChapterInfo).review
+                    .chapters.chapterContentHtml,
           }}
         />
         <div className="rate-area">
-          <Form
-            form={form}
-            layout="vertical"
-            onFinish={onFinish}
-            initialValues={{ spellingError: true }}
-          >
+          <Form form={form} layout="vertical" onFinish={onFinish}>
             <Form.Item<IReviewChapterForm>
               name="spellingError"
               valuePropName="checked"
             >
-              <Checkbox>Không chứa lỗi chính tả.</Checkbox>
+              <Checkbox disabled={mode === "readOnly"}>
+                Không chứa lỗi chính tả.
+              </Checkbox>
             </Form.Item>
             <Form.Item<IReviewChapterForm>
               valuePropName="checked"
               name="lengthError"
             >
-              <Checkbox>Độ dài chương không quá dài hoặc quá ngắn.</Checkbox>
+              <Checkbox disabled={mode === "readOnly"}>
+                Độ dài chương không quá dài hoặc quá ngắn.
+              </Checkbox>
             </Form.Item>
             <Form.Item<IReviewChapterForm>
               valuePropName="checked"
               name="politicalContentError"
             >
-              <Checkbox>
+              <Checkbox disabled={mode === "readOnly"}>
                 Không chứa nội dung tuyên truyền chống Nhà nước Cộng hòa xã hội
                 chủ nghĩa Việt Nam; phá hoại khối đại đoàn kết toàn dân tộc;
                 truyền bá tư tưởng phản động; kích động chiến tranh xâm lược,
@@ -108,7 +151,7 @@ const ReviewAChapterPage: FC<IProps> = (props: IProps) => {
               valuePropName="checked"
               name="distortHistoryError"
             >
-              <Checkbox>
+              <Checkbox disabled={mode === "readOnly"}>
                 Không chứa nội dung xuyên tạc sự thật lịch sử, phủ nhận thành
                 tựu cách mạng; xúc phạm dân tộc, danh nhân, anh hùng dân tộc;
                 không thể hiện hoặc thể hiện không đúng chủ quyền quốc gia.
@@ -118,7 +161,7 @@ const ReviewAChapterPage: FC<IProps> = (props: IProps) => {
               valuePropName="checked"
               name="secretContentError"
             >
-              <Checkbox>
+              <Checkbox disabled={mode === "readOnly"}>
                 Không chứa nội dung tiết lộ bí mật nhà nước, bí mật đời tư của
                 cá nhân và bí mật khác do pháp luật quy định.
               </Checkbox>
@@ -127,7 +170,7 @@ const ReviewAChapterPage: FC<IProps> = (props: IProps) => {
               valuePropName="checked"
               name="offensiveContentError"
             >
-              <Checkbox>
+              <Checkbox disabled={mode === "readOnly"}>
                 Không chứa nội dung vu khống, xúc phạm uy tín của cơ quan, tổ
                 chức và danh dự, nhân phẩm của cá nhân.
               </Checkbox>
@@ -136,7 +179,7 @@ const ReviewAChapterPage: FC<IProps> = (props: IProps) => {
               valuePropName="checked"
               name="unhealthyContentError"
             >
-              <Checkbox>
+              <Checkbox disabled={mode === "readOnly"}>
                 Không chứa nội dung nội dung kích động bạo lực, tuyên truyền lối
                 sống dâm ô, đồi trụy, hành vi tội ác, tệ nạn xã hội, mê tín dị
                 đoan, phá hoại thuần phong mỹ tục.
@@ -145,25 +188,79 @@ const ReviewAChapterPage: FC<IProps> = (props: IProps) => {
             <Form.Item<IReviewChapterForm> name="reviewContent">
               <div className="my-3 w-50 mx-auto">
                 <TextArea
+                  value={form.getFieldValue("reviewContent")}
+                  disabled={mode === "readOnly"}
                   placeholder="Nhận xét của bạn"
                   autoSize={{ minRows: 3 }}
                 />
               </div>
             </Form.Item>
-            <Form.Item>
-              <div className="text-center">
-                <Button
-                  type="primary"
-                  htmlType="submit"
-                  loading={isLoading}
-                  disabled={isLoading}
-                >
-                  Gửi nhận xét
-                </Button>
-              </div>
-            </Form.Item>
+            {mode === "reviewing" && (
+              <Form.Item>
+                <div className="text-center">
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    loading={isLoading}
+                    disabled={isLoading}
+                  >
+                    Gửi nhận xét
+                  </Button>
+                </div>
+              </Form.Item>
+            )}
           </Form>
         </div>
+        {mode === "readOnly" && (
+          <Collapse
+            items={[
+              {
+                key: "reviewer",
+                label: "Thông tin của reviewer",
+                children: (
+                  <>
+                    <p>
+                      Tên đầy đủ:{" "}
+                      <Link
+                        to={getAuthorDetailURL(
+                          (reviewChapterInfo as IReviewDetailChapterInfo)
+                            ?.review?.reviewer?.userId
+                        )}
+                        className="link-hover"
+                      >
+                        {
+                          (reviewChapterInfo as IReviewDetailChapterInfo)
+                            ?.review?.reviewer?.userFullname
+                        }
+                      </Link>
+                    </p>
+                    <p>
+                      Username:{" "}
+                      {
+                        (reviewChapterInfo as IReviewDetailChapterInfo)?.review
+                          ?.reviewer?.username
+                      }
+                    </p>
+                    <p>
+                      Email:{" "}
+                      {
+                        (reviewChapterInfo as IReviewDetailChapterInfo)?.review
+                          ?.reviewer?.email
+                      }
+                    </p>
+                    <p>
+                      Số điện thoại:{" "}
+                      {
+                        (reviewChapterInfo as IReviewDetailChapterInfo)?.review
+                          ?.reviewer?.phone
+                      }
+                    </p>
+                  </>
+                ),
+              },
+            ]}
+          />
+        )}
       </div>
     </div>
   );

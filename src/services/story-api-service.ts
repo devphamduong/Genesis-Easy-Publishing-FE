@@ -141,13 +141,15 @@ export const getGlobalSearchStories = (
 };
 
 export const uploadStoryCover = (
-  fileImg: string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  fileImg: any,
+  storyId: number | string
 ): Promise<IApiResponse<{ fileUploaded: string }>> => {
   const bodyFormData = new FormData();
   bodyFormData.append("image", fileImg);
   return axios({
     method: "put",
-    url: "story/update_storyimage",
-    data: bodyFormData,
+    url: "story/update_storyImage",
+    data: { bodyFormData, storyId },
   });
 };

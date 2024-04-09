@@ -65,10 +65,8 @@ const LoginPage: FC<IProps> = (props: IProps) => {
       <div className="login-content">
         <div className="d-flex flex-column gap-5">
           <div className="top">
-            <h1>Log In</h1>
-            <p className="fs-4">
-              Please enter your email or username and password.
-            </p>
+            <h1>Đăng nhập</h1>
+            <p className="fs-4">Hãy nhập địa chỉ email và mật khẩu của bạn.</p>
           </div>
           <div className="bottom">
             <Form
@@ -82,19 +80,16 @@ const LoginPage: FC<IProps> = (props: IProps) => {
               onFinish={onFinish}
             >
               <Form.Item<ILoginForm>
-                label="Email or Username"
+                label="Email hoặc Username"
                 name="emailOrUsername"
                 rules={[
                   {
                     required: true,
-                    message: "Please input your Email or Username!",
+                    message: "Hãy nhập Email hoặc Username!",
                   },
                 ]}
               >
-                <Input
-                  size="large"
-                  placeholder="Enter your email or username"
-                />
+                <Input size="large" placeholder="Email hoặc Username" />
               </Form.Item>
               <Form.Item<ILoginForm>
                 label="Mật khẩu"
@@ -102,14 +97,14 @@ const LoginPage: FC<IProps> = (props: IProps) => {
                 rules={[
                   {
                     required: true,
-                    message: "Please input your Password!",
+                    message: "Hãy nhập mật khẩu!",
                   },
                 ]}
               >
                 <Input.Password
                   size="large"
                   type="password"
-                  placeholder="Enter your password"
+                  placeholder="Mật khẩu của bạn"
                 />
               </Form.Item>
               <Form.Item>
@@ -119,10 +114,10 @@ const LoginPage: FC<IProps> = (props: IProps) => {
                     valuePropName="checked"
                     noStyle
                   >
-                    <Checkbox>Remember me</Checkbox>
+                    <Checkbox>Lưu đăng nhập</Checkbox>
                   </Form.Item>
 
-                  <Link to={"/auth/forgot-password"}>Forgot password</Link>
+                  <Link to={"/auth/forgot-password"}>Quên mật khẩu</Link>
                 </div>
               </Form.Item>
               <Form.Item>
@@ -134,10 +129,10 @@ const LoginPage: FC<IProps> = (props: IProps) => {
                   loading={isLoading}
                   disabled={!submittable || isLoading}
                 >
-                  Log in
+                  Đăng nhập
                 </Button>
-                Don't have an account?
-                <Link to={"/auth/register"}> Register now!</Link>
+                Bạn chưa có tài khoản?
+                <Link to={"/auth/register"}> Đăng ký ngay!</Link>
               </Form.Item>
             </Form>
           </div>

@@ -79,7 +79,7 @@ const ChangePasswordPage: FC<IProps> = (props: IProps) => {
                 rules={[
                   {
                     required: true,
-                    message: "Please input your current password!",
+                    message: "Hãy nhập mật khẩu hiện tại của bạn!",
                   },
                 ]}
               >
@@ -87,11 +87,11 @@ const ChangePasswordPage: FC<IProps> = (props: IProps) => {
               </Form.Item>
               <Form.Item<FieldType>
                 name="password"
-                label="Mật khẩu"
+                label="Mật khẩu mới"
                 rules={[
                   {
                     required: true,
-                    message: "Please input your password!",
+                    message: "Hãy nhập mật khẩu mới!",
                   },
                 ]}
                 hasFeedback
@@ -106,7 +106,7 @@ const ChangePasswordPage: FC<IProps> = (props: IProps) => {
                 rules={[
                   {
                     required: true,
-                    message: "Please confirm your password!",
+                    message: "Hãy nhập lại mật khẩu mới!",
                   },
                   ({ getFieldValue }) => ({
                     validator(_, value) {
@@ -114,9 +114,7 @@ const ChangePasswordPage: FC<IProps> = (props: IProps) => {
                         return Promise.resolve();
                       }
                       return Promise.reject(
-                        new Error(
-                          "The new password that you entered do not match!"
-                        )
+                        new Error("Mật khẩu mới bạn vừa nhập không trùng khớp!")
                       );
                     },
                   }),

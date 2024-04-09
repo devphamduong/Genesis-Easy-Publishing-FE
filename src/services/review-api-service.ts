@@ -5,6 +5,7 @@ import {
 import {
   IReviewChapterForm,
   IReviewChapterInfo,
+  IReviewDetailChapterInfo,
 } from "../interfaces/review.interface";
 import { IStory, IVolume } from "../interfaces/story.interface";
 import axios from "../utils/axios-customize";
@@ -26,6 +27,12 @@ export const getReviewChapterInfo = (
   id: number | string
 ): Promise<IApiResponse<IReviewChapterInfo>> => {
   return axios.get(`reviews/chapter_information?chapterId=${id}`);
+};
+
+export const getReviewDetailChapterInfo = (
+  id: number | string
+): Promise<IApiResponse<IReviewDetailChapterInfo>> => {
+  return axios.get(`reviews/review_detail?chapterId=${id}`);
 };
 
 export const sendReviewResult = (

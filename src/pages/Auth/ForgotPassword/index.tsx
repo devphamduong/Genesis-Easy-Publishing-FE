@@ -45,10 +45,10 @@ const ForgotPasswordPage: FC<IProps> = (props: IProps) => {
       <div className="forgot-password-content">
         <div className="d-flex flex-column gap-5">
           <div className="top">
-            <h1>Forgot password</h1>
+            <h1>Quên mật khẩu</h1>
             <p className="fs-5">
-              Please enter your email address and we’ll send you a link to reset
-              your password.
+              Vui lòng nhập địa chỉ email, chúng tôi sẽ gửi yêu cầu để bạn có
+              thể tạo mật khẩu mới
             </p>
           </div>
           <div className="bottom">
@@ -58,16 +58,16 @@ const ForgotPasswordPage: FC<IProps> = (props: IProps) => {
                 rules={[
                   {
                     type: "email",
-                    message: "The input is not valid Email!",
+                    message: "Email không hợp lệ!",
                   },
-                  { required: true, message: "Please input your Email!" },
+                  { required: true, message: "Hãy nhập Email!" },
                 ]}
               >
-                <Input size="large" placeholder="Enter your email" />
+                <Input size="large" placeholder="Email" />
               </Form.Item>
               <Form.Item>
                 <Link to={"/auth/login"} className="login-form-forgot">
-                  Back to login
+                  Quay về đăng nhập
                 </Link>
               </Form.Item>
 
@@ -80,7 +80,7 @@ const ForgotPasswordPage: FC<IProps> = (props: IProps) => {
                   htmlType="submit"
                   block
                 >
-                  Send reset email
+                  Gửi yêu cầu
                 </Button>
               </Form.Item>
             </Form>

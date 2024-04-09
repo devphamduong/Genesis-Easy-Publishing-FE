@@ -31,7 +31,8 @@ export const updateProfile = (
 };
 
 export const updateAvatar = (
-  fileImg: string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  fileImg: any
 ): Promise<IApiResponse<{ fileUploaded: string }>> => {
   const bodyFormData = new FormData();
   bodyFormData.append("image", fileImg);

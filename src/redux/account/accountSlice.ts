@@ -1,7 +1,8 @@
 import { EUpdateBalanceAction } from "../../enums/transaction.enum";
-import { IUser } from "../../interfaces/auth.interface";
 import { createSlice } from "@reduxjs/toolkit";
 import { IUpdateBalanceAction } from "../../interfaces/transaction.interface";
+import { EUserRole } from "../../enums/user.enum";
+import { IUser } from "../../interfaces/auth.interface";
 
 const initialState: {
   isAuthenticated: boolean;
@@ -24,6 +25,7 @@ const initialState: {
     descriptionMarkdown: "",
     descriptionHTML: "",
     tlt: 0,
+    role: EUserRole.NORMAL_USER,
   },
 };
 

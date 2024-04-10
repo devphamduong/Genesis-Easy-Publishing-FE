@@ -38,6 +38,7 @@ import ProtectedRoute from "../components/ProtectedRoute";
 import { IRootState } from "../redux/store";
 import { useSelector } from "react-redux";
 import ReviewAChapterPage from "../pages/Author/Review/ReviewAChapter";
+import ReviewerProtectedRoute from "../components/ProtectedRoute/Reviewer";
 
 interface IProps {}
 
@@ -46,6 +47,7 @@ const AppRoutes: FC<IProps> = (props: IProps) => {
   const isAuthenticated = useSelector(
     (state: IRootState) => state.account.isAuthenticated
   );
+  const role = useSelector((state: IRootState) => state.account.user.role);
 
   useEffect(() => {
     fetchAllCategories();
@@ -143,10 +145,27 @@ const AppRoutes: FC<IProps> = (props: IProps) => {
             <Route path="posted-stories" element={<PostedStoriesPage />} />
             <Route path="write-story" element={<WriteStoryPage />}></Route>
             <Route path="write-chapter" element={<WriteChapterPage />}></Route>
-            <Route path="review" element={<ReviewPage />}></Route>
+            <Route
+              path="review"
+              element={
+                <ReviewerProtectedRoute
+                  isAuthenticated={isAuthenticated}
+                  role={role}
+                >
+                  <ReviewPage />
+                </ReviewerProtectedRoute>
+              }
+            ></Route>
             <Route
               path="review-a-chapter"
-              element={<ReviewAChapterPage />}
+              element={
+                <ReviewerProtectedRoute
+                  isAuthenticated={isAuthenticated}
+                  role={role}
+                >
+                  <ReviewAChapterPage />
+                </ReviewerProtectedRoute>
+              }
             ></Route>
           </Route>
         </Route>

@@ -77,63 +77,6 @@ const ReviewPage: FC<IProps> = (props: IProps) => {
         );
       },
     },
-    // {
-    //   title: "",
-    //   dataIndex: "actions",
-    //   render(value, record: IStory) {
-    //     return (
-    //       <div className="d-flex gap-2">
-    //         <Tooltip title="Sửa truyện">
-    //           <EPButton
-    //             icon={<LiaUserEditSolid className="fs-5" />}
-    //             onClick={() =>
-    //               navigate(
-    //                 getEditStoryURL(record.storyId, slugify(record.storyTitle))
-    //               )
-    //             }
-    //           />
-    //         </Tooltip>
-    //         <Tooltip title="Thêm chương mới">
-    //           <EPButton
-    //             icon={<GrChapterAdd className="fs-5" />}
-    //             onClick={() =>
-    //               navigate(
-    //                 getWriteChapterURL(
-    //                   record.storyId,
-    //                   slugify(record.storyTitle)
-    //                 ),
-    //                 {
-    //                   state: {
-    //                     storyId: record.storyId,
-    //                     storyTitle: record.storyTitle,
-    //                   },
-    //                 }
-    //               )
-    //             }
-    //           />
-    //         </Tooltip>
-    //         {record.storyStatus > EStoryStatusKey.NOT_PUBLIC &&
-    //           !record.storyStatus && (
-    //             <Tooltip title="Xem kết quả review">
-    //               <EPButton
-    //                 icon={<LiaCommentSolid className="fs-5" />}
-    //                 onClick={() => navigate(getReviewStoryURL(record.storyId))}
-    //               />
-    //             </Tooltip>
-    //           )}
-    //         <Popconfirm
-    //           title="Xóa truyện"
-    //           description="Bạn có muốn xóa truyện này không?"
-    //           okText="Xóa"
-    //           cancelText="Hủy"
-    //           onConfirm={() => handleDeleteStory(record.storyId)}
-    //         >
-    //           <EPButton danger icon={<MdDeleteOutline className="fs-5" />} />
-    //         </Popconfirm>
-    //       </div>
-    //     );
-    //   },
-    // },
   ];
 
   const onChangePagination = (pagination, filters, sorter, extra) => {

@@ -6,11 +6,12 @@ import { BaseButtonProps } from "antd/es/button/button";
 interface IProps extends BaseButtonProps {
   color?: string;
   warning?: boolean;
+  extraClassName?: string;
   onClick?: () => void;
 }
 
 const EPButton: FC<IProps> = (props: IProps) => {
-  const { onClick, warning, color, children } = props;
+  const { onClick, warning, color, children, extraClassName } = props;
 
   return (
     <ConfigProvider
@@ -35,7 +36,7 @@ const EPButton: FC<IProps> = (props: IProps) => {
         onClick={onClick}
         type={props.type ?? "primary"}
         style={warning ? { color: "#000" } : undefined}
-        className="d-flex align-items-center justify-content-center"
+        className={`d-flex align-items-center justify-content-center ${extraClassName}`}
       >
         {children}
       </Button>

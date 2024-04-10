@@ -20,6 +20,7 @@ import { GiBookshelf } from "react-icons/gi";
 import { TbBookUpload } from "react-icons/tb";
 import { GrChapterAdd } from "react-icons/gr";
 import { VscOpenPreview } from "react-icons/vsc";
+import { EUserRole } from "../../enums/user.enum";
 
 const { Content, Footer, Sider } = Layout;
 
@@ -154,6 +155,7 @@ const HeaderAuthor = (props: IProps) => {
 
 const AuthorLayout: FC<IProps> = (props: IProps) => {
   const { categories } = props;
+  const role = useSelector((state: IRootState) => state.account?.user.role);
   const location = useLocation();
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState<boolean>(false);
@@ -229,13 +231,17 @@ const AuthorLayout: FC<IProps> = (props: IProps) => {
           <HeaderAuthor />
           <Content style={{ margin: "0 16px" }}>
             <div
-              style={{
-                marginTop: 16,
-                padding: 24,
-                minHeight: 360,
-                background: colorBgContainer,
-                borderRadius: borderRadiusLG,
-              }}
+              style={
+                role === EUserRole.REVIEWER
+                  ? {
+                      marginTop: 16,
+                      padding: 24,
+                      minHeight: 360,
+                      background: colorBgContainer,
+                      borderRadius: borderRadiusLG,
+                    }
+                  : {}
+              }
             >
               <Outlet context={categories} />
             </div>

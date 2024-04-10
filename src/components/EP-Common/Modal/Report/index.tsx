@@ -42,6 +42,10 @@ const EPModalReport: FC<IProps> = (props: IProps) => {
     fetchReportOptions();
   }, []);
 
+  useEffect(() => {
+    form.setFieldValue("chapterId", inChapter);
+  }, [inChapter]);
+
   const fetchReportOptions = async () => {
     const res = await getReportOptions();
     if (res && res.ec === 0) {
@@ -75,14 +79,7 @@ const EPModalReport: FC<IProps> = (props: IProps) => {
       }}
       onCancel={handleCancel}
     >
-      <Form
-        {...formItemLayout}
-        form={form}
-        onFinish={onFinish}
-        initialValues={{
-          chapterId: inChapter,
-        }}
-      >
+      <Form {...formItemLayout} form={form} onFinish={onFinish}>
         <Form.Item<IReportForm>
           name="reportTypeId"
           label="Vấn đề"
@@ -111,7 +108,7 @@ const EPModalReport: FC<IProps> = (props: IProps) => {
             label="Trong chương"
             rules={[{ required: true, message: "Không được để trống! " }]}
           >
-            <InputNumber min={1} max={10} />
+            <InputNumber disabled min={1} />
           </Form.Item>
         )}
         {/* {inChapter && (

@@ -1,18 +1,19 @@
 import { FC, useEffect, useState } from "react";
-import "./RankStories.scss";
-import { Spin } from "antd";
+import "./StoriesLatestByChapter.scss";
 import { useOutletContext } from "react-router-dom";
+import { IStory } from "../../../interfaces/story.interface";
+import RowStory from "../../../components/RowStory";
+import { Spin } from "antd";
+import EPNoResultFound from "../../../components/EP-UI/NoResultFound";
 import {
   getFilteredStories,
   getTopFamous,
-} from "../../services/story-api-service";
-import { IStory } from "../../interfaces/story.interface";
-import RowStory from "../../components/RowStory";
-import EPNoResultFound from "../../components/EP-UI/NoResultFound";
+  getTopLatestByChapter,
+} from "../../../services/story-api-service";
 
 interface IProps {}
 
-const RankStories: FC<IProps> = (props: IProps) => {
+const StoriesLatestByChapter: FC<IProps> = (props: IProps) => {
   const [searchTerm, setSearchTerm] = useOutletContext() as [
     string,
     (value: string) => void
@@ -43,7 +44,7 @@ const RankStories: FC<IProps> = (props: IProps) => {
 
   const fetchTopFamous = async () => {
     setIsLoading(true);
-    const res = await getTopFamous();
+    const res = await getTopLatestByChapter();
     if (res && res.ec === 0) {
       setStories(res.dt.list);
     }
@@ -51,8 +52,8 @@ const RankStories: FC<IProps> = (props: IProps) => {
   };
 
   return (
-    <div className="rank-stories-container">
-      <div className="rank-stories-content">
+    <div className="latest-by-chapter-container">
+      <div className="latest-by-chapter-content">
         <div className="bottom">
           <Spin spinning={isLoading}>
             {stories &&
@@ -72,4 +73,4 @@ const RankStories: FC<IProps> = (props: IProps) => {
   );
 };
 
-export default RankStories;
+export default StoriesLatestByChapter;

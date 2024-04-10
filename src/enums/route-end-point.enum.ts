@@ -10,6 +10,7 @@ export enum ERouteEndPointForUser {
   MOST_VIP_STORIES_READ = "/rank-stories/most-vip-read-in-week",
   TOP_FULL_STORIES = "/rank-stories/top-full-stories",
   STORIES_WITH_MOST_FAN = "/rank-stories/stories-with-most-fan",
+  STORIES_LATEST_BY_CHAPTER = "/rank-stories/stories-latest-by-chapter",
 }
 
 export enum ERouteEndPointForAuthor {

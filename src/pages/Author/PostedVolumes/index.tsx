@@ -244,6 +244,10 @@ const PostedVolumesPage: FC<IProps> = (props: IProps) => {
   };
 
   const handleVolumeActions = async () => {
+    if (!volumeTitle) {
+      toast.error("Tên không được để trống");
+      return;
+    }
     let res;
     if (isEditMode) {
       res = await updateVolume({

@@ -15,7 +15,9 @@ export const getTop6Purchase = (): Promise<IApiResponse<IStory[]>> => {
   return axios.get("shelves/top6_purchase");
 };
 
-export const getTopLatestByChapter = (): Promise<IApiResponse<IStory[]>> => {
+export const getTopLatestByChapter = (): Promise<
+  IApiResponse<IPaginationStory>
+> => {
   return axios.get("shelves/top_latest_by_chapter");
 };
 
@@ -152,4 +154,13 @@ export const uploadStoryCover = (
     url: "story/update_storyImage",
     data: { bodyFormData, storyId },
   });
+};
+
+export const likeChapter = (
+  storyId: number | string,
+  chapterNumber: number | string
+): Promise<IApiResponse<null>> => {
+  return axios.put(
+    `interaction/chapter_like?storyId=${storyId}&chapterNum=${chapterNumber}`
+  );
 };

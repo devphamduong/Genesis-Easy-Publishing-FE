@@ -39,6 +39,7 @@ import { IRootState } from "../redux/store";
 import { useSelector } from "react-redux";
 import ReviewAChapterPage from "../pages/Author/Review/ReviewAChapter";
 import ReviewerProtectedRoute from "../components/ProtectedRoute/Reviewer";
+import StoriesLatestByChapter from "../pages/RankStories/StoriesLatestByChapter";
 
 interface IProps {}
 
@@ -79,7 +80,7 @@ const AppRoutes: FC<IProps> = (props: IProps) => {
               path={ERouteEndPointForUser.MOST_READ_IN_WEEK}
               element={<MostReadInWeek />}
             />
-            <Route
+            {/* <Route
               path={ERouteEndPointForUser.MOST_VIP_STORIES_READ}
               element={<MostVIPStoriesRead />}
             />
@@ -90,6 +91,10 @@ const AppRoutes: FC<IProps> = (props: IProps) => {
             <Route
               path={ERouteEndPointForUser.STORIES_WITH_MOST_FAN}
               element={<StoriesWithMostFan />}
+            /> */}
+            <Route
+              path={ERouteEndPointForUser.STORIES_LATEST_BY_CHAPTER}
+              element={<StoriesLatestByChapter />}
             />
           </Route>
           <Route

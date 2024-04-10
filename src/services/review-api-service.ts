@@ -17,6 +17,12 @@ export const getStoriesReview = (
   return axios.get(`reviews/story_list?page=${page}&pageSize=${pageSize}`);
 };
 
+export const sendRequestToBecomeReviewer = (): Promise<
+  IApiResponse<unknown>
+> => {
+  return axios.post(`tickets/send`);
+};
+
 export const getVolumeList = (
   storyId: string | number
 ): Promise<IApiResponse<IVolume[]>> => {

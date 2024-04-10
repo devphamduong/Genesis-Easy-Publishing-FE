@@ -5,6 +5,7 @@ import { getAccount } from "./services/auth-api-service";
 import { getAccountAction } from "./redux/account/accountSlice";
 import { IRootState } from "./redux/store";
 import { Button, ConfigProvider, theme } from "antd";
+import NetworkDetection from "./components/NetworkDetection";
 
 interface IProps {}
 
@@ -43,7 +44,9 @@ const AppMain: FC<IProps> = (props: IProps) => {
     //     Change Theme to {isDarkMode ? "Light" : "Dark"}
     //   </Button>
     // {/* </ConfigProvider> */}
-    <AppRoutes />
+    <NetworkDetection>
+      <AppRoutes />
+    </NetworkDetection>
   );
 };
 

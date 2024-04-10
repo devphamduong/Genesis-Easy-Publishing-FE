@@ -1,3 +1,5 @@
+import { EUserRole } from "../enums/user.enum";
+
 export interface IUser {
   userId: string | number;
   email: string;
@@ -12,6 +14,7 @@ export interface IUser {
   descriptionMarkdown?: string;
   descriptionHTML?: string;
   tlt: number;
+  role: EUserRole;
 }
 
 export interface ILoginResponse {

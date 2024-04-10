@@ -14,14 +14,14 @@ function NotPermitted() {
       }}
       status="403"
       title="403"
-      subTitle="Sorry, you are not authorized to access this page."
+      subTitle="Oops, bạn không có quyên truy cập vào trang này."
       extra={
         <>
           <Button type="primary" onClick={() => navigate("")}>
-            Back Home
+            Trang chủ
           </Button>
           <Button type="primary" onClick={() => navigate("/auth/login")}>
-            Login
+            Đăng nhập
           </Button>
         </>
       }

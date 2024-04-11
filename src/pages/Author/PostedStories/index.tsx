@@ -30,10 +30,11 @@ import {
   getWriteChapterURL,
 } from "../../../shared/generate-navigate-url";
 import { slugify } from "../../../shared/function";
-import PostedVolumesPage from "../PostedVolumes";
+import PostedVolumes from "./PostedVolumes";
 import { toast } from "react-toastify";
-import { EStoryStatusKey, EStoryStatusLabel } from "../../../enums/story.enum";
+import { EStoryStatusKey } from "../../../enums/story.enum";
 import { ERouteEndPointForAuthor } from "../../../enums/route-end-point.enum";
+import AuthorDrawer from "./AuthorDrawer";
 dayjs.extend(relativeTime);
 
 interface IProps {}
@@ -324,8 +325,8 @@ const PostedStoriesPage: FC<IProps> = (props: IProps) => {
           <div className="fs-6 d-flex align-items-center gap-1">
             <BsInfoCircleFill />
             <span>
-              Click vào từng tên truyện để có thể xem chi tiết số liệu thống kê
-              của truyện đó.
+              Click vào từng tên truyện để có thể tất cả tập và chương của
+              truyện đó.
             </span>
           </div>
           <Table
@@ -346,10 +347,9 @@ const PostedStoriesPage: FC<IProps> = (props: IProps) => {
           />
         </div>
       </div>
-      <PostedVolumesPage />
-      <Drawer
+      <AuthorDrawer
         className="drawer-posted-stories"
-        title={`Số liệu thống kê của truyện "${currentStory?.storyTitle}"`}
+        title={`Tất cả tập và chương của truyện "${currentStory?.storyTitle}"`}
         placement="right"
         onClose={() => {
           setOpenDrawer(false);
@@ -358,14 +358,15 @@ const PostedStoriesPage: FC<IProps> = (props: IProps) => {
         }}
         open={openDrawer}
       >
-        <EPStoryStatistics
+        {currentStory && <PostedVolumes storyId={currentStory.storyId} />}
+        {/* <EPStoryStatistics
           width={"100%"}
           height={"65%"}
           storyId={currentStory?.storyId}
           storyInteraction={dataStoryInteraction}
           chaptersInteraction={dataChaptersInteraction}
-        />
-      </Drawer>
+        /> */}
+      </AuthorDrawer>
     </>
   );
 };

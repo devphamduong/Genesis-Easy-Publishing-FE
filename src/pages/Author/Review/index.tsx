@@ -1,7 +1,6 @@
 import { FC, useEffect, useState } from "react";
 import "./Review.scss";
 import { Table } from "antd";
-import { useNavigate, useSearchParams } from "react-router-dom";
 import { getStoriesReview } from "../../../services/review-api-service";
 import { IStory } from "../../../interfaces/story.interface";
 import dayjs from "dayjs";
@@ -9,20 +8,20 @@ import { dayjsFrom } from "../../../shared/function";
 import { BsInfoCircleFill } from "react-icons/bs";
 import { EStoryStatusKey, EStoryStatusLabel } from "../../../enums/story.enum";
 import PostedVolumes from "./PostedVolumes";
+import AuthorDrawer from "../PostedStories/AuthorDrawer";
 
 interface IProps {}
 
 const PAGE_SIZE = 10;
 
 const ReviewPage: FC<IProps> = (props: IProps) => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const storyId = searchParams.get("storyId");
-  const navigate = useNavigate();
+  const [openDrawer, setOpenDrawer] = useState(false);
   const [stories, setStories] = useState<IStory[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(PAGE_SIZE);
   const [totalStories, setTotalStories] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [currentStory, setCurrentStory] = useState<IStory>();
 
   useEffect(() => {
     fetchStoriesForReview();
@@ -50,6 +49,10 @@ const ReviewPage: FC<IProps> = (props: IProps) => {
             //   setOpenDrawer(true);
             // }}
             className="pointer custom-title-hover"
+            onClick={() => {
+              setCurrentStory(record);
+              setOpenDrawer(true);
+            }}
           >
             {value}
           </span>
@@ -91,8 +94,8 @@ const ReviewPage: FC<IProps> = (props: IProps) => {
 
   return (
     <>
-      <div className="posted-stories-container">
-        <div className="posted-stories-content">
+      <div className="stories-review-container">
+        <div className="stories-review-content">
           <div className="fs-6 d-flex align-items-center gap-1">
             <BsInfoCircleFill />
             <span>Click vào từng tên truyện để có thể tiến hành review.</span>
@@ -112,7 +115,17 @@ const ReviewPage: FC<IProps> = (props: IProps) => {
                 `${range[0]}-${range[1]} of ${total} items`,
             }}
           />
-          <PostedVolumes />
+          <AuthorDrawer
+            className="drawer-review-stories"
+            title={`Tất cả tập và chương của truyện "${currentStory?.storyTitle}" có thể review`}
+            placement="right"
+            onClose={() => {
+              setOpenDrawer(false);
+            }}
+            open={openDrawer}
+          >
+            {currentStory && <PostedVolumes storyId={currentStory.storyId} />}
+          </AuthorDrawer>
         </div>
       </div>
     </>

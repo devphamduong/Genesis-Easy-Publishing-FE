@@ -172,6 +172,17 @@ const AuthorLayout: FC<IProps> = (props: IProps) => {
 
   const items: MenuItem[] = [
     getItem(
+      <div
+        onClick={() => navigate("/")}
+        className="text-center"
+        style={{ fontSize: "1.25rem" }}
+      >
+        The Genesis
+      </div>,
+      "home",
+      null
+    ),
+    getItem(
       <div onClick={() => navigate(ERouteEndPointForAuthor.POSTED_STORIES)}>
         {EMenuLabel.AUTHOR_POSTED_STORY}
       </div>,

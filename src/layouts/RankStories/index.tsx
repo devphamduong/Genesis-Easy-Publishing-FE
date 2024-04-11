@@ -39,27 +39,29 @@ const items: MenuProps["items"] = [
     ERouteEndPointForUser.MOST_READ_IN_WEEK,
     null
   ),
+  // getItem(
+  //   <Link to={ERouteEndPointForUser.MOST_VIP_STORIES_READ}>
+  //     Truyện VIP nhiều người đọc
+  //   </Link>,
+  //   ERouteEndPointForUser.MOST_VIP_STORIES_READ,
+  //   null
+  // ),
   getItem(
-    <Link to={ERouteEndPointForUser.MOST_VIP_STORIES_READ}>
-      Truyện VIP nhiều người đọc
+    <Link to={ERouteEndPointForUser.STORIES_LATEST_BY_CHAPTER}>
+      Truyện theo chương mới nhất
     </Link>,
-    ERouteEndPointForUser.MOST_VIP_STORIES_READ,
+    ERouteEndPointForUser.STORIES_LATEST_BY_CHAPTER,
     null
   ),
-  getItem(
-    <Link to={ERouteEndPointForUser.TOP_FULL_STORIES}>Top truyện full</Link>,
-    ERouteEndPointForUser.TOP_FULL_STORIES,
-    null
-  ),
-  { type: "divider" },
+  // { type: "divider" },
 
-  getItem(
-    <Link to={ERouteEndPointForUser.STORIES_WITH_MOST_FAN}>
-      Truyện nhiều fan
-    </Link>,
-    ERouteEndPointForUser.STORIES_WITH_MOST_FAN,
-    null
-  ),
+  // getItem(
+  //   <Link to={ERouteEndPointForUser.STORIES_WITH_MOST_FAN}>
+  //     Truyện nhiều fan
+  //   </Link>,
+  //   ERouteEndPointForUser.STORIES_WITH_MOST_FAN,
+  //   null
+  // ),
 ];
 
 interface IProps {

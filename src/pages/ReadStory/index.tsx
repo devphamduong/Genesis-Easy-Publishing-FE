@@ -21,12 +21,14 @@ import {
 } from "@ant-design/icons";
 import { Link, useParams } from "react-router-dom";
 import { getChapterNumber } from "./shared/function";
-import { dayjsFrom, kFormatter } from "../../shared/function";
+import { dayjsFrom } from "../../shared/function";
 import EPButton from "../../components/EP-UI/Button";
 import { IChapterContent } from "../../interfaces/story.interface";
-import { getChapterContent } from "../../services/story-api-service";
-import { useDispatch, useSelector } from "react-redux";
-import { IRootState } from "../../redux/store";
+import {
+  getChapterContent,
+  likeChapter,
+} from "../../services/story-api-service";
+import { useDispatch } from "react-redux";
 import {
   getAuthorDetailURL,
   getStoryDetailURL,
@@ -43,6 +45,7 @@ import { toast } from "react-toastify";
 import { updateAccountBalance } from "../../redux/account/accountSlice";
 import { EUpdateBalanceAction } from "../../enums/transaction.enum";
 import { IUpdateBalanceAction } from "../../interfaces/transaction.interface";
+import dayjs from "dayjs";
 const { confirm } = Modal;
 
 interface IProps {}
@@ -51,7 +54,6 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
   const { modal } = App.useApp();
   const { id, chapter } = useParams();
   const dispatch = useDispatch();
-  const account = useSelector((state: IRootState) => state.account.user);
   const [currentChapter, setCurrentChapter] = useState<number>(
     getChapterNumber(chapter!)
   );
@@ -75,7 +77,17 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
     }
   };
 
-  const handleLikeStory = () => {
+  const handleLikeStory = async () => {
+    const res = await likeChapter(
+      chapterContent!.story.storyId!,
+      chapterContent!.chapterNumber!
+    );
+    if (res && res.ec === 0) {
+      setChapterContent((prevState) => ({
+        ...prevState!,
+        userLike: !prevState?.userLike,
+      }));
+    }
     setIsSubmittedLike(true);
   };
 
@@ -110,10 +122,11 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
   const handlePrevChapter = () => {
     const newEndPoint = window.location.pathname.replace(
       `chapter-${chapterContent?.chapterNumber}`,
-      `chapter-${currentChapter - 1}`
+      `chapter-${chapterContent?.previousChapterNumber}`
     );
     history.replaceState(null, "", newEndPoint);
-    currentChapter - 1 > 0 && setCurrentChapter(currentChapter - 1);
+    chapterContent!.previousChapterNumber > 0 &&
+      setCurrentChapter(chapterContent!.previousChapterNumber);
   };
 
   const handleBuySingleChapter = async (id: number | string, price: number) => {
@@ -138,6 +151,66 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
         className={`read-story-container ${!isLightTheme ? "dark-theme" : ""}`}
       >
         <div className="read-story-content container py-3 d-flex flex-column gap-3">
+          <Descriptions
+            layout="vertical"
+            bordered
+            items={[
+              {
+                key: "1",
+                label: <strong>Thông Tin Chương Truyện</strong>,
+                children: (
+                  <Row>
+                    <Col span={2} className="text-lighter">
+                      Đăng bởi
+                    </Col>{" "}
+                    <Col span={22}>
+                      <Link
+                        to={getAuthorDetailURL(chapterContent?.author.userId)}
+                        className="author link-hover"
+                      >
+                        {" "}
+                        {chapterContent?.author.userFullname}
+                      </Link>
+                    </Col>
+                    <Col span={2} className="text-lighter">
+                      Tên truyện
+                    </Col>{" "}
+                    <Col span={22}>
+                      <Link
+                        to={getStoryDetailURL(id!, chapter!.split(".")[0])}
+                        className="name link-hover"
+                      >
+                        {" "}
+                        {chapterContent?.story.storyTitle}{" "}
+                      </Link>
+                    </Col>
+                    <Col span={2} className="text-lighter">
+                      Tên chương
+                    </Col>{" "}
+                    <Col span={22}>{chapterContent?.chapterTitle}</Col>
+                    <Col span={2} className="text-lighter">
+                      Chương
+                    </Col>{" "}
+                    <Col span={22}>{chapterContent?.chapterNumber}</Col>
+                    <Col span={2} className="text-lighter">
+                      Thời gian
+                    </Col>{" "}
+                    <Col span={22}>
+                      {dayjs(chapterContent?.createTime).format("DD/MM/YYYY")}{" "}
+                      <i className="time">
+                        ({dayjsFrom(chapterContent?.createTime ?? "")})
+                      </i>
+                    </Col>
+                    <Col span={2} className="text-lighter">
+                      Lượt mua
+                    </Col>{" "}
+                    <Col span={22}>{chapterContent?.userPurchaseChapter}</Col>
+                  </Row>
+                ),
+              },
+            ]}
+            size="small"
+          />
           <div className="buttons">
             <Row gutter={[10, 10]}>
               <Col span={12}>
@@ -255,7 +328,7 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
                     size={"large"}
                     onClick={() => setIsModalBuyChaptersOpen(true)}
                   >
-                    Mua Full
+                    Mua Theo Khoảng
                   </EPButton>
                   <EPButton
                     color="#09bb07"
@@ -274,13 +347,13 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
           <div className="d-flex justify-content-center gap-3">
             {chapterContent?.owned && (
               <Button
-                type={isSubmittedLike ? "primary" : undefined}
+                type={chapterContent.userLike ? "primary" : undefined}
                 danger
                 size="large"
                 icon={<HeartOutlined />}
                 onClick={() => handleLikeStory()}
               >
-                <span>{isSubmittedLike ? "Đã thích" : "Ta thích"}</span>
+                <span>{chapterContent.userLike ? "Đã thích" : "Ta thích"}</span>
               </Button>
             )}
             <EPButton
@@ -291,24 +364,6 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
             >
               Report
             </EPButton>
-          </div>
-          <div className="sort-description">
-            Bạn đang đọc
-            <Link
-              to={getStoryDetailURL(id!, chapter!.split(".")[0])}
-              className="name link-hover"
-            >
-              {" "}
-              {chapterContent?.story.storyTitle}{" "}
-            </Link>
-            của
-            <Link
-              to={getAuthorDetailURL(chapterContent?.author.userId)}
-              className="author link-hover"
-            >
-              {" "}
-              {chapterContent?.author.userFullname}
-            </Link>
           </div>
           <div className="buttons">
             <Row gutter={[10, 10]}>
@@ -338,44 +393,6 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
               </Col>
             </Row>
           </div>
-          <Descriptions
-            layout="vertical"
-            bordered
-            items={[
-              {
-                key: "1",
-                label: <strong>Thông Tin Chương Truyện</strong>,
-                children: (
-                  <Row>
-                    <Col span={2} className="text-lighter">
-                      Đăng bởi
-                    </Col>{" "}
-                    <Col span={22}>MongoDB</Col>
-                    <Col span={2} className="text-lighter">
-                      Thời gian
-                    </Col>{" "}
-                    <Col span={22}>dds.mongo.mid</Col>
-                    <Col span={2} className="text-lighter">
-                      Cập nhật
-                    </Col>{" "}
-                    <Col span={22}>
-                      {chapterContent?.updateTime &&
-                        dayjsFrom(chapterContent?.updateTime)}
-                    </Col>
-                    <Col span={2} className="text-lighter">
-                      Lượt mua
-                    </Col>{" "}
-                    <Col span={22}>{chapterContent?.userPurchaseChapter}</Col>
-                    <Col span={2} className="text-lighter">
-                      Lượt đọc
-                    </Col>{" "}
-                    <Col span={22}>{kFormatter(19999)}</Col>
-                  </Row>
-                ),
-              },
-            ]}
-            size="small"
-          />
         </div>
       </div>
       <FloatButton.BackTop />
@@ -385,12 +402,15 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
         inChapter={currentChapter}
         storyId={id}
       />
-      <EPModalBuyChapters
-        isModalOpen={isModalBuyChaptersOpen}
-        setIsModalOpen={setIsModalBuyChaptersOpen}
-        fetchChapterContent={fetchChapterContent}
-        storyId={id}
-      />
+      {chapterContent && (
+        <EPModalBuyChapters
+          isModalOpen={isModalBuyChaptersOpen}
+          setIsModalOpen={setIsModalBuyChaptersOpen}
+          fetchChapterContent={fetchChapterContent}
+          storyId={id}
+          storyTitle={chapterContent.story.storyTitle}
+        />
+      )}
       <EPModalTopUp
         isModalOpen={isModalTopUpOpen}
         setIsModalOpen={setIsModalTopUpOpen}

@@ -18,6 +18,7 @@ import {
   getStoriesByCategory,
   getTop6Purchase,
   getTopFamous,
+  getTopLatestByChapter,
   getTopNewestStories,
   getTopReadStories,
 } from "../../services/story-api-service";
@@ -35,7 +36,10 @@ import Loading from "../../components/Loading";
 import { PiDotsThreeCircleLight } from "react-icons/pi";
 import { useSelector } from "react-redux";
 import { IRootState } from "../../redux/store";
-import { ERouteEndPointForAuthor } from "../../enums/route-end-point.enum";
+import {
+  ERouteEndPointForAuthor,
+  ERouteEndPointForUser,
+} from "../../enums/route-end-point.enum";
 const { Paragraph } = Typography;
 
 const HomePage: FC = (props) => {
@@ -49,6 +53,7 @@ const HomePage: FC = (props) => {
   const [famousStories, setFamousStories] = useState<IPaginationStory>();
   const [newestStories, setNewestStories] = useState<IPaginationStory>();
   const [topReadStories, setTopReadStories] = useState<IPaginationStory>();
+  const [latestByChapter, setLatestByChapter] = useState<IPaginationStory>();
   const [storiesByCategory, setStoriesByCategory] = useState<ICategory[]>([]);
 
   useEffect(() => {
@@ -57,6 +62,7 @@ const HomePage: FC = (props) => {
     fetchStoriesByCategory();
     fetchTopNewestStories();
     fetchTopReadStories();
+    fetchStoriesLatestByChapter();
   }, []);
 
   const fetchTop6PurchaseStories = async () => {
@@ -70,6 +76,13 @@ const HomePage: FC = (props) => {
     const res = await getTopFamous();
     if (res && res.ec === 0) {
       setFamousStories(res.dt);
+    }
+  };
+
+  const fetchStoriesLatestByChapter = async () => {
+    const res = await getTopLatestByChapter();
+    if (res && res.ec === 0) {
+      setLatestByChapter(res.dt);
     }
   };
 
@@ -326,7 +339,7 @@ const HomePage: FC = (props) => {
                 <Col span={8}>
                   {famousStories?.list && famousStories?.list?.length > 0 ? (
                     <ListStories
-                      urlToNavigate="rank-stories"
+                      urlToNavigate={ERouteEndPointForUser.RANK_STORIES}
                       showDetailFirstStory
                       displayRank
                       displayChapter
@@ -340,12 +353,12 @@ const HomePage: FC = (props) => {
                 <Col span={8}>
                   {famousStories?.list && famousStories?.list?.length > 0 ? (
                     <ListStories
-                      urlToNavigate="rank-stories"
+                      urlToNavigate={ERouteEndPointForUser.MOST_READ_IN_WEEK}
                       showDetailFirstStory
                       displayRank
                       displayChapter
-                      title="Kim Thánh Bảng"
-                      stories={[...(famousStories?.list ?? [])]}
+                      title="Đọc nhiều trong tuần"
+                      stories={[...(topReadStories?.list ?? [])]}
                     />
                   ) : (
                     <ListStoriesSkeleton />
@@ -354,12 +367,14 @@ const HomePage: FC = (props) => {
                 <Col span={8}>
                   {famousStories?.list && famousStories?.list?.length > 0 ? (
                     <ListStories
-                      urlToNavigate="rank-stories"
+                      urlToNavigate={
+                        ERouteEndPointForUser.STORIES_LATEST_BY_CHAPTER
+                      }
                       showDetailFirstStory
                       displayRank
                       displayChapter
-                      title="Kim Thánh Bảng"
-                      stories={[...(famousStories?.list ?? [])]}
+                      title="Truyện theo chương mới nhất"
+                      stories={[...(latestByChapter?.list ?? [])]}
                     />
                   ) : (
                     <ListStoriesSkeleton />

@@ -672,23 +672,23 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
                   <VerticalImageHover
                     height={120}
                     width={80}
-                    imageUrl={author?.authorNewestStory.storyImage ?? ""}
+                    imageUrl={author?.authorNewestStory?.storyImage ?? ""}
                   ></VerticalImageHover>
                   <Link
                     className="link-hover"
                     to={
                       author
                         ? getStoryDetailURL(
-                            author?.authorNewestStory.storyId,
-                            author?.authorNewestStory.storyTitle
+                            author?.authorNewestStory?.storyId,
+                            author?.authorNewestStory?.storyTitle
                           )
                         : ""
                     }
                   >
-                    <h6>{author?.authorNewestStory.storyTitle}</h6>
+                    <h6>{author?.authorNewestStory?.storyTitle}</h6>
                   </Link>
                   <Paragraph ellipsis={{ rows: 3 }}>
-                    {author?.authorNewestStory.storyDescription}
+                    {author?.authorNewestStory?.storyDescription}
                   </Paragraph>
                   <Button type="primary">Xem ngay</Button>
                 </div>

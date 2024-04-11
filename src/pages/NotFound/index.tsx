@@ -16,10 +16,10 @@ const NotFoundPage: FC<IProps> = (props: IProps) => {
       }}
       status="404"
       title="404"
-      subTitle="Sorry, the page you visited does not exist."
+      subTitle="Oops, có vẻ như trang bạn tìm không tồn tại"
       extra={
         <Button type="primary" onClick={() => navigate("/")}>
-          Back Home
+          Trang chủ
         </Button>
       }
     />

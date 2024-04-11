@@ -1,23 +1,19 @@
 import { FC, useEffect, useState } from "react";
 import "./EPFilter.scss";
-import { Button, Checkbox, Form, GetProp, Input, Select, Slider } from "antd";
+import { Button, Form, Input, InputNumber, Select } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import { IFilterOptions } from "../../../interfaces/global.interface";
 import { getFilterOptionsV1 } from "../../../services/common-api-service";
-import { useSearchParams } from "react-router-dom";
 
 interface IProps {
   searchTerm: string;
   setSearchTerm: (value: string) => void;
 }
 
-let MAX_PRICE = 100;
-
 const EPFilter: FC<IProps> = (props: IProps) => {
   const { searchTerm, setSearchTerm } = props;
   const [form] = Form.useForm();
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [priceRange, setPriceRange] = useState<number[]>();
+  const [maxPrice, setMaxPrice] = useState(0);
   const [filterOptions, setFilterOptions] = useState<IFilterOptions>();
 
   useEffect(() => {
@@ -27,22 +23,9 @@ const EPFilter: FC<IProps> = (props: IProps) => {
   const fetchFilterOptions = async () => {
     const res = await getFilterOptionsV1();
     if (res && res.ec === 0) {
-      setPriceRange([res.dt.from, res.dt.to]);
-      MAX_PRICE = res.dt.to;
-      form.setFieldValue("price", [res.dt.from, res.dt.to]);
+      setMaxPrice(res.dt.to);
       setFilterOptions(res.dt);
     }
-  };
-
-  const onChange: GetProp<typeof Checkbox.Group, "onChange"> = (
-    checkedValues
-  ) => {
-    console.log("checked = ", checkedValues);
-  };
-
-  const onChangePriceRange = (value: number[]) => {
-    setPriceRange(value);
-    form.setFieldValue("price", value);
   };
 
   const onFinish = (values) => {
@@ -84,17 +67,11 @@ const EPFilter: FC<IProps> = (props: IProps) => {
             prefix={<SearchOutlined />}
           />
         </Form.Item>
-        <Form.Item name="price">
-          <div>
-            From: {priceRange && priceRange[0]} To:{" "}
-            {priceRange && priceRange[1]}
-          </div>
-          <Slider
-            range
-            defaultValue={priceRange}
-            max={priceRange && priceRange[1]}
-            onChangeComplete={onChangePriceRange}
-          />
+        <Form.Item name="from">
+          <InputNumber addonBefore="Từ" addonAfter="TLT" min={0} />
+        </Form.Item>
+        <Form.Item name="to">
+          <InputNumber addonBefore="Đến" addonAfter="TLT" max={maxPrice} />
         </Form.Item>
         <Form.Item name="cates">
           <Select
@@ -122,7 +99,7 @@ const EPFilter: FC<IProps> = (props: IProps) => {
           />
         </Form.Item>
         <Button block icon={<SearchOutlined />} onClick={() => form.submit()}>
-          Seach
+          Tìm kiếm
         </Button>
       </Form>
     </>

@@ -199,8 +199,10 @@ export interface IChapterContent {
   updateTime: string;
   comment: number;
   userPurchaseChapter: number;
+  previousChapterNumber: number;
   nextChapterNumber: number;
   message: string;
+  userLike: boolean;
   owned: boolean;
 }
 

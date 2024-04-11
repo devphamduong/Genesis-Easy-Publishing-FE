@@ -10,14 +10,13 @@ import {
   EChapterStatusKey,
   EChapterStatusLabel,
 } from "../../../../enums/story.enum";
-import {
-  getReviewAChapterURL,
-  getReviewDetailAChapterURL,
-} from "../../../../shared/generate-navigate-url";
+import { getReviewAChapterURL } from "../../../../shared/generate-navigate-url";
 import EPButton from "../../../../components/EP-UI/Button";
-import { PiQuestion } from "react-icons/pi";
+import { MdOutlineRateReview } from "react-icons/md";
 
-interface IProps {}
+interface IProps {
+  storyId: number | string;
+}
 
 const PAGE_SIZE = 10;
 
@@ -35,6 +34,7 @@ interface DataType {
 
 const PostedVolumes: FC<IProps> = (props: IProps) => {
   const navigate = useNavigate();
+  const { storyId } = props;
   const [volumes, setVolumes] = useState<DataType[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(PAGE_SIZE);
@@ -43,12 +43,12 @@ const PostedVolumes: FC<IProps> = (props: IProps) => {
 
   useEffect(() => {
     fetchStoryVolume();
-  }, [currentPage, pageSize]);
+  }, [storyId, currentPage, pageSize]);
 
   const fetchStoryVolume = async () => {
     setIsLoading(true);
     const res = await getVolumeList(
-      6
+      storyId
       // `authorid=${account.userId}&` + query
     );
     if (res && res.ec === 0) {
@@ -92,7 +92,7 @@ const PostedVolumes: FC<IProps> = (props: IProps) => {
             onClick={() =>
               record.type === "chapter" &&
               record.status === EChapterStatusKey.NOT_QUALIFY &&
-              navigate(getReviewAChapterURL(17, record.id))
+              navigate(getReviewAChapterURL(storyId, record.id))
             }
             className={
               record.type === "chapter" &&
@@ -143,18 +143,17 @@ const PostedVolumes: FC<IProps> = (props: IProps) => {
       render(value, record) {
         return (
           <div className="d-flex gap-2">
-            {record.type === "chapter" && record.status === null && (
-              <>
-                <Tooltip title="Xem lý do">
+            {record.type === "chapter" &&
+              record.status === EChapterStatusKey.NOT_QUALIFY && (
+                <Tooltip title="Review">
                   <EPButton
-                    icon={<PiQuestion className="fs-5" />}
+                    icon={<MdOutlineRateReview className="fs-5" />}
                     onClick={() =>
-                      navigate(getReviewDetailAChapterURL(6, record.id))
+                      navigate(getReviewAChapterURL(storyId, record.id))
                     }
                   />
                 </Tooltip>
-              </>
-            )}
+              )}
           </div>
         );
       },
@@ -169,10 +168,6 @@ const PostedVolumes: FC<IProps> = (props: IProps) => {
       setPageSize(pagination.pageSize);
       setCurrentPage(1);
     }
-  };
-
-  const onChangeSelect = (value: string) => {
-    console.log(`selected ${value}`);
   };
 
   return (

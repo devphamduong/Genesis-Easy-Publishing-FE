@@ -5,30 +5,39 @@ import {
   Input,
   Modal,
   Popconfirm,
-  Select,
   Table,
   TableColumnsType,
   Tooltip,
 } from "antd";
 import { useSelector } from "react-redux";
-import { IRootState } from "../../../redux/store";
+import { IRootState } from "../../../../redux/store";
 import {
   addVolume,
   deleteChapter,
   getStoryVolume,
   updateVolume,
-} from "../../../services/author-api-service";
+} from "../../../../services/author-api-service";
 import dayjs from "dayjs";
-import EPButton from "../../../components/EP-UI/Button";
+import EPButton from "../../../../components/EP-UI/Button";
 import { MdDeleteOutline, MdPublic } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
-import { getEditChapterURL } from "../../../shared/generate-navigate-url";
-import { dayjsFrom, slugify } from "../../../shared/function";
+import {
+  getEditChapterURL,
+  getReviewDetailAChapterURL,
+} from "../../../../shared/generate-navigate-url";
+import { dayjsFrom, slugify } from "../../../../shared/function";
 import { v4 as uuidv4 } from "uuid";
 import { LuFileEdit } from "react-icons/lu";
 import { toast } from "react-toastify";
+import { PiQuestion } from "react-icons/pi";
+import {
+  EChapterStatusKey,
+  EChapterStatusLabel,
+} from "../../../../enums/story.enum";
 
-interface IProps {}
+interface IProps {
+  storyId: number | string;
+}
 
 const PAGE_SIZE = 10;
 
@@ -40,10 +49,12 @@ interface DataType {
   createTime: string;
   total: number;
   type: "volume" | "chapter";
+  status: number | null;
   children?: DataType[];
 }
 
-const PostedVolumesPage: FC<IProps> = (props: IProps) => {
+const PostedVolumes: FC<IProps> = (props: IProps) => {
+  const { storyId } = props;
   const navigate = useNavigate();
   const [volumes, setVolumes] = useState<DataType[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -59,7 +70,7 @@ const PostedVolumesPage: FC<IProps> = (props: IProps) => {
 
   useEffect(() => {
     fetchStoryVolume();
-  }, [currentPage, pageSize, sortQuery]);
+  }, [storyId, currentPage, pageSize, sortQuery]);
 
   const fetchStoryVolume = async () => {
     setIsLoading(true);
@@ -68,7 +79,7 @@ const PostedVolumesPage: FC<IProps> = (props: IProps) => {
       query += sortQuery;
     }
     const res = await getStoryVolume(
-      17
+      storyId
       // `authorid=${account.userId}&` + query
     );
     if (res && res.ec === 0) {
@@ -92,6 +103,7 @@ const PostedVolumesPage: FC<IProps> = (props: IProps) => {
               createTime: itemC.createTime,
               total: 0,
               type: "chapter",
+              status: itemC.status,
             } as DataType;
           }),
         } as DataType;
@@ -118,6 +130,18 @@ const PostedVolumesPage: FC<IProps> = (props: IProps) => {
       dataIndex: "total",
       render(value: string, record) {
         if (record.total) return <span>{record.total}</span>;
+      },
+    },
+    {
+      title: "TRẠNG THÁI",
+      dataIndex: "status",
+      render(value: string, record) {
+        if (record.type === "chapter")
+          return (
+            <span>
+              {EChapterStatusLabel[EChapterStatusKey[record.status as number]]}
+            </span>
+          );
       },
     },
     {
@@ -150,25 +174,16 @@ const PostedVolumesPage: FC<IProps> = (props: IProps) => {
                     }
                   />
                 </Tooltip>
-                <Tooltip title="Công bố">
-                  <EPButton
-                    icon={<MdPublic className="fs-5" />}
-                    // onClick={() =>
-                    //   navigate(
-                    //     getWriteChapterURL(
-                    //       record.storyId,
-                    //       slugify(record.storyTitle)
-                    //     ),
-                    //     {
-                    //       state: {
-                    //         storyId: record.storyId,
-                    //         storyTitle: record.storyTitle,
-                    //       },
-                    //     }
-                    //   )
-                    // }
-                  />
-                </Tooltip>
+                {record.status === null && (
+                  <Tooltip title="Xem lý do">
+                    <EPButton
+                      icon={<PiQuestion className="fs-5" />}
+                      onClick={() =>
+                        navigate(getReviewDetailAChapterURL(6, record.id))
+                      }
+                    />
+                  </Tooltip>
+                )}
               </>
             ) : (
               <Tooltip title="Sửa tiêu đề">
@@ -217,10 +232,6 @@ const PostedVolumesPage: FC<IProps> = (props: IProps) => {
         setSortQuery(sort);
       }
     }
-  };
-
-  const onChangeSelect = (value: string) => {
-    console.log(`selected ${value}`);
   };
 
   const renderHeader = () => {
@@ -311,4 +322,4 @@ const PostedVolumesPage: FC<IProps> = (props: IProps) => {
   );
 };
 
-export default PostedVolumesPage;
+export default PostedVolumes;

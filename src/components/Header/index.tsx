@@ -40,7 +40,6 @@ const Header: FC<IProps> = (props: IProps) => {
     (state: IRootState) => state.account.isAuthenticated
   );
   const account = useSelector((state: IRootState) => state.account?.user);
-  const [current, setCurrent] = useState<string>("mail");
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const [followingStories, setFollowingStories] = useState<IStory[]>([]);
 
@@ -146,7 +145,7 @@ const Header: FC<IProps> = (props: IProps) => {
     const res = await logout();
     if (res && res.ec === 0) {
       dispatch(logoutAction());
-      toast.success("Logout successfully");
+      toast.success(res.em);
       navigate("/");
     }
     setIsPopoverOpen(false);

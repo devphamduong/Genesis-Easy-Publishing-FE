@@ -122,10 +122,11 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
   const handlePrevChapter = () => {
     const newEndPoint = window.location.pathname.replace(
       `chapter-${chapterContent?.chapterNumber}`,
-      `chapter-${currentChapter - 1}`
+      `chapter-${chapterContent?.previousChapterNumber}`
     );
     history.replaceState(null, "", newEndPoint);
-    currentChapter - 1 > 0 && setCurrentChapter(currentChapter - 1);
+    chapterContent!.previousChapterNumber > 0 &&
+      setCurrentChapter(chapterContent!.previousChapterNumber);
   };
 
   const handleBuySingleChapter = async (id: number | string, price: number) => {
@@ -327,7 +328,7 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
                     size={"large"}
                     onClick={() => setIsModalBuyChaptersOpen(true)}
                   >
-                    Mua Full
+                    Mua Theo Khoảng
                   </EPButton>
                   <EPButton
                     color="#09bb07"
@@ -401,12 +402,15 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
         inChapter={currentChapter}
         storyId={id}
       />
-      <EPModalBuyChapters
-        isModalOpen={isModalBuyChaptersOpen}
-        setIsModalOpen={setIsModalBuyChaptersOpen}
-        fetchChapterContent={fetchChapterContent}
-        storyId={id}
-      />
+      {chapterContent && (
+        <EPModalBuyChapters
+          isModalOpen={isModalBuyChaptersOpen}
+          setIsModalOpen={setIsModalBuyChaptersOpen}
+          fetchChapterContent={fetchChapterContent}
+          storyId={id}
+          storyTitle={chapterContent.story.storyTitle}
+        />
+      )}
       <EPModalTopUp
         isModalOpen={isModalTopUpOpen}
         setIsModalOpen={setIsModalTopUpOpen}

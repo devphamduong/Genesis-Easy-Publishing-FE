@@ -34,6 +34,7 @@ import { EUpdateBalanceAction } from "../../../../enums/transaction.enum";
 
 interface IProps extends IPropsEPModal {
   storyId?: number | string;
+  storyTitle: string;
   fetchChapterContent: () => void;
 }
 
@@ -60,7 +61,13 @@ const steps = [
 const items = steps.map((item) => ({ key: item.title, title: item.title }));
 
 const EPModalBuyChapters: FC<IProps> = (props: IProps) => {
-  const { isModalOpen, setIsModalOpen, storyId, fetchChapterContent } = props;
+  const {
+    isModalOpen,
+    setIsModalOpen,
+    storyId,
+    storyTitle,
+    fetchChapterContent,
+  } = props;
   const [dataTransactionChapters, setDataTransactionChapters] =
     useState<IDataTransactionBuyChapters>();
   const [informationBuyChapters, setInformationBuyChapters] =
@@ -72,6 +79,7 @@ const EPModalBuyChapters: FC<IProps> = (props: IProps) => {
   const [form] = Form.useForm<IFormBuyChapters>();
   const [numberOfChaptersSucceed, setNumberOfChaptersSucceed] =
     useState<number>(0);
+  const [isBuyFull, setIsBuyFull] = useState(false);
 
   useEffect(() => {
     isModalOpen === true && fetchInformationBuyMultipleChapters();
@@ -102,7 +110,9 @@ const EPModalBuyChapters: FC<IProps> = (props: IProps) => {
   const fetchTransactionBuyMultipleChapters = async () => {
     const res = await getTransactionBuyMultipleChapters(
       form.getFieldValue("from"),
-      form.getFieldValue("to"),
+      isBuyFull
+        ? informationBuyChapters?.chapter_story_max
+        : form.getFieldValue("to"),
       storyId!
     );
     if (res && res.ec === 0) {
@@ -149,9 +159,8 @@ const EPModalBuyChapters: FC<IProps> = (props: IProps) => {
   return (
     <Modal
       className="w-75 ep-modal-buy-chapters"
-      title="Mua Chương VIP Truyện Chẳng Lẽ Thật Sự Có Người Cảm Thấy Sư Tôn Là Phàm Nhân Sao (Dịch)"
+      title={`Mua Chương VIP Truyện ${storyTitle}`}
       open={isModalOpen}
-      okText="Report"
       maskClosable={false}
       footer={null}
       onCancel={() => {
@@ -162,17 +171,17 @@ const EPModalBuyChapters: FC<IProps> = (props: IProps) => {
       <div>
         <Steps labelPlacement={"vertical"} current={current}>
           <Steps.Step
-            title="Step 1"
+            title="Bước 1"
             description=""
             // status={current === 1 ? "finish" : "process"}
           />
           <Steps.Step
-            title="Step 2"
+            title="Bước 2"
             description=""
             // status={current === 2 ? "finish" : "process"}
           />
           <Steps.Step
-            title="Step 3"
+            title="Bước 3"
             description=""
             // status={current === 2 ? "finish" : "process"}
           />
@@ -207,7 +216,7 @@ const EPModalBuyChapters: FC<IProps> = (props: IProps) => {
                 <Form.Item<IFormBuyChapters>
                   name="from"
                   label="Từ chương"
-                  rules={[{ required: true }]}
+                  rules={[{ required: true, message: "Không được để trống" }]}
                 >
                   <InputNumber
                     size="large"
@@ -240,7 +249,13 @@ const EPModalBuyChapters: FC<IProps> = (props: IProps) => {
               </Col>
               <Col span={12}>
                 <Form.Item>
-                  <Button block size="large" type="primary" htmlType="submit">
+                  <Button
+                    block
+                    size="large"
+                    type="primary"
+                    htmlType="submit"
+                    onClick={() => setIsBuyFull(true)}
+                  >
                     MUA FULL CHƯƠNG VIP
                   </Button>
                 </Form.Item>
@@ -315,7 +330,13 @@ const EPModalBuyChapters: FC<IProps> = (props: IProps) => {
       )}
       <div className="text-end" style={{ marginTop: 24 }}>
         {current > 0 && current <= 1 && (
-          <Button style={{ margin: "0 8px" }} onClick={() => prev()}>
+          <Button
+            style={{ margin: "0 8px" }}
+            onClick={() => {
+              prev();
+              current === 1 && setIsBuyFull(false);
+            }}
+          >
             Quay lại
           </Button>
         )}

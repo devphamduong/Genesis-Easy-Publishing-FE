@@ -2,7 +2,7 @@ import { FC, useEffect, useState } from "react";
 import "./ReviewAChapter.scss";
 import { Button, Checkbox, Collapse, Form } from "antd";
 import TextArea from "antd/es/input/TextArea";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import {
   getReviewChapterInfo,
   getReviewDetailChapterInfo,
@@ -15,11 +15,13 @@ import {
 } from "../../../../interfaces/review.interface";
 import { toast } from "react-toastify";
 import { getAuthorDetailURL } from "../../../../shared/generate-navigate-url";
+import { ERouteEndPointForAuthor } from "../../../../enums/route-end-point.enum";
 
 interface IProps {}
 
 const ReviewAChapterPage: FC<IProps> = (props: IProps) => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const chapterId = searchParams.get("chapterId");
   const mode = searchParams.get("mode");
   const [form] = Form.useForm<IReviewChapterForm>();
@@ -67,6 +69,7 @@ const ReviewAChapterPage: FC<IProps> = (props: IProps) => {
     const res = await sendReviewResult(payload);
     if (res && res.ec === 0) {
       toast.success(res.em);
+      navigate(ERouteEndPointForAuthor.REVIEW);
       form.setFieldsValue({
         chapterId: undefined,
         spellingError: undefined,

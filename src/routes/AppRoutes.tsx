@@ -40,6 +40,7 @@ import { useSelector } from "react-redux";
 import ReviewAChapterPage from "../pages/Author/Review/ReviewAChapter";
 import ReviewerProtectedRoute from "../components/ProtectedRoute/Reviewer";
 import StoriesLatestByChapter from "../pages/RankStories/StoriesLatestByChapter";
+import PreviewExportPage from "../pages/Author/PreviewExport";
 
 interface IProps {}
 
@@ -150,6 +151,10 @@ const AppRoutes: FC<IProps> = (props: IProps) => {
             <Route path="posted-stories" element={<PostedStoriesPage />} />
             <Route path="write-story" element={<WriteStoryPage />}></Route>
             <Route path="write-chapter" element={<WriteChapterPage />}></Route>
+            <Route
+              path="export-preview"
+              element={<PreviewExportPage />}
+            ></Route>
             <Route
               path="review"
               element={

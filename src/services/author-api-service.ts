@@ -3,6 +3,7 @@ import {
   IAuthor,
   IChapter,
   IChapterInteraction,
+  IExportPreview,
   IPaginationStory,
   IStory,
   IStoryInteraction,
@@ -121,4 +122,10 @@ export const updateVolume = (data: {
   volumeTitle: string;
 }): Promise<IApiResponse<null>> => {
   return axios.put(`chapters/update_volume`, { ...data });
+};
+
+export const storyExportPreview = (
+  storyId: number | string
+): Promise<IApiResponse<IExportPreview>> => {
+  return axios.get(`story/prints?storyId=${storyId}`);
 };

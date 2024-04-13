@@ -66,10 +66,8 @@ const ResetPasswordPage: FC<IProps> = (props: IProps) => {
       <div className="forgot-password-content">
         <div className="d-flex flex-column gap-5">
           <div className="top">
-            <h1>Reset password</h1>
-            <p className="fs-5">
-              Please enter your password and confirm password.
-            </p>
+            <h1>Làm mới mật khẩu</h1>
+            <p className="fs-5">Vui lòng nhập mật khẩu.</p>
           </div>
           <div className="bottom">
             <Form form={form} layout="vertical" onFinish={onFinish}>
@@ -79,7 +77,7 @@ const ResetPasswordPage: FC<IProps> = (props: IProps) => {
                 rules={[
                   {
                     required: true,
-                    message: "Please input your password!",
+                    message: "Hãy nhập mật khẩu!",
                   },
                 ]}
                 hasFeedback
@@ -94,7 +92,7 @@ const ResetPasswordPage: FC<IProps> = (props: IProps) => {
                 rules={[
                   {
                     required: true,
-                    message: "Please confirm your password!",
+                    message: "Hãy nhập lại mật khẩu lần 2!",
                   },
                   ({ getFieldValue }) => ({
                     validator(_, value) {
@@ -102,9 +100,7 @@ const ResetPasswordPage: FC<IProps> = (props: IProps) => {
                         return Promise.resolve();
                       }
                       return Promise.reject(
-                        new Error(
-                          "The new password that you entered do not match!"
-                        )
+                        new Error("Mật khẩu bạn vừa nhập không trùng khớp!")
                       );
                     },
                   }),
@@ -122,7 +118,7 @@ const ResetPasswordPage: FC<IProps> = (props: IProps) => {
                   htmlType="submit"
                   block
                 >
-                  Reset password
+                  Làm mới
                 </Button>
               </Form.Item>
             </Form>

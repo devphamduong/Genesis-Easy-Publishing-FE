@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import MdEditor from "react-markdown-editor-lite";
 import MarkdownIt from "markdown-it";
 import "react-markdown-editor-lite/lib/index.css";
@@ -17,15 +17,8 @@ import {
   updateChapter,
 } from "../../../../services/author-api-service";
 import { toast } from "react-toastify";
-import EPExport from "../../../../components/EP-Common/Export";
 
 interface IProps {}
-
-enum EChapterStatus {
-  DELETED = "deleted",
-  PENDING = "pending",
-  PUBLIC = "public",
-}
 
 const mdParser = new MarkdownIt(/* Markdown-it options */);
 
@@ -41,7 +34,6 @@ const WriteChapterPage: FC<IProps> = (props: IProps) => {
   const [volumes, setVolumes] = useState<IVolume[]>([]);
   const [contentMarkdown, setContentMarkdown] = useState<string>("");
   const [contentHTML, setContentHTML] = useState<string>("");
-  const targetRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     storyId && fetchVolumes();
@@ -227,13 +219,6 @@ const WriteChapterPage: FC<IProps> = (props: IProps) => {
           </Col>
         </Row>
       </div>
-
-      <EPExport
-        customText="Xuất doc"
-        contentToExport={contentHTML}
-        storyTitle={form.getFieldValue("storyTitle")}
-        chapterTitle={form.getFieldValue("chapterTitle")}
-      />
     </div>
   );
 };

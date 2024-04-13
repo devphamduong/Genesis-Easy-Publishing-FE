@@ -8,12 +8,8 @@ import {
   Button,
   Col,
   Divider,
-  Flex,
-  Input,
   List,
   Pagination,
-  Popconfirm,
-  Popover,
   Row,
   Space,
   Table,
@@ -33,11 +29,6 @@ import {
 } from "@ant-design/icons";
 import RowStory from "../../components/RowStory";
 import { PiBook } from "react-icons/pi";
-import {
-  BsReverseLayoutTextWindowReverse,
-  BsThreeDotsVertical,
-} from "react-icons/bs";
-import { GiSelfLove } from "react-icons/gi";
 import {
   IAuthor,
   IChapter,
@@ -72,14 +63,8 @@ import { buyStory } from "../../services/transaction-api-service";
 import { updateAccountBalance } from "../../redux/account/accountSlice";
 import { EUpdateBalanceAction } from "../../enums/transaction.enum";
 import { IUpdateBalanceAction } from "../../interfaces/transaction.interface";
-import {
-  MdDeleteOutline,
-  MdOutlineModeEdit,
-  MdOutlinedFlag,
-} from "react-icons/md";
-import EPButton from "../../components/EP-UI/Button";
 import CommentItem from "./CommentItem";
-const { TextArea } = Input;
+import { LiaBookReaderSolid } from "react-icons/lia";
 
 const { Paragraph, Text } = Typography;
 
@@ -649,20 +634,31 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
                     icon={<UserOutlined />}
                   />
                 </div>
-                <strong>{author?.authorName}</strong>
+                <strong>
+                  <Link
+                    to={getAuthorDetailURL(author?.authorId)}
+                    className="link-hover"
+                  >
+                    {author?.authorName}
+                  </Link>
+                </strong>
                 <div>
                   <Space split={<Divider type="vertical" />}>
                     <div className="d-flex flex-column align-items-center gap-1">
                       <PiBook className="icon-info" />
-                      <span className="text-small">3 Truyện</span>
+                      <span className="text-small">
+                        {author?.authorStories} Truyện
+                      </span>
                     </div>
                     <div className="d-flex flex-column align-items-center gap-1">
-                      <BsReverseLayoutTextWindowReverse className="icon-info" />
-                      <span className="text-small">{kFormatter(1999)} Chữ</span>
+                      <AiOutlineLike className="icon-info" />
+                      <span className="text-small">{author?.like} Like</span>
                     </div>
                     <div className="d-flex flex-column align-items-center gap-1">
-                      <GiSelfLove className="icon-info" />
-                      <span className="text-small">24 Yêu Thích</span>
+                      <LiaBookReaderSolid className="icon-info" />
+                      <span className="text-small">
+                        {author?.read} Lượt đọc
+                      </span>
                     </div>
                   </Space>
                 </div>

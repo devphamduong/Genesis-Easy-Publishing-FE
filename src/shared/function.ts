@@ -1,5 +1,7 @@
 import relativeTime from "dayjs/plugin/relativeTime";
 import dayjs from "dayjs";
+import { saveAs } from "file-saver";
+import { Document, Packer, Paragraph, TextRun } from "docx";
 dayjs.extend(relativeTime);
 
 export const kFormatter = (num: number): number | string => {
@@ -59,4 +61,24 @@ export const exportHTMLToDoc = (
   }
   if (chapter) fileDownload.click();
   document.body.removeChild(fileDownload);
+};
+
+export const exportToWord = () => {
+  const doc = new Document({
+    sections: [
+      {
+        properties: {},
+        children: [
+          new Paragraph({
+            children: [new TextRun("Hello World")],
+          }),
+        ],
+      },
+    ],
+  });
+  Packer.toBlob(doc).then((blob) => {
+    console.log(blob);
+    saveAs(blob, "example.docx");
+    console.log("Document created successfully");
+  });
 };

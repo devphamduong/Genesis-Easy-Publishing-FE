@@ -1,35 +1,29 @@
-import { FC, useState } from "react";
+import { FC } from "react";
 import "./EPExport.scss";
 import EPButton from "../../EP-UI/Button";
-import { exportHTMLToDoc } from "../../../shared/function";
-import { GrDocumentDownload } from "react-icons/gr";
-
+import { exportPDF } from "../../../shared/function";
+import { BsFiletypePdf } from "react-icons/bs";
+import "../../../assets/css/preview-print.css";
 interface IProps {
   customText?: string;
-  contentToExport: string;
-  storyTitle?: string;
-  chapterTitle?: string;
+  storyTitle: string;
+  contentToExport?: string;
 }
 
 const EPExport: FC<IProps> = (props: IProps) => {
-  const { customText, contentToExport, storyTitle, chapterTitle } = props;
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { customText, storyTitle, contentToExport } = props;
 
   const handleExport = () => {
-    setIsLoading(true);
-    setTimeout(() => {
-      exportHTMLToDoc(contentToExport, storyTitle, chapterTitle);
-      setIsLoading(false);
-    }, 6000);
+    exportPDF(storyTitle, contentToExport);
   };
 
   return (
     <EPButton
-      icon={<GrDocumentDownload />}
+      icon={<BsFiletypePdf />}
       onClick={() => handleExport()}
-      loading={isLoading}
+      size="large"
     >
-      {customText ? customText : "Export doc"}
+      {customText ? customText : "Export PDF"}
     </EPButton>
   );
 };

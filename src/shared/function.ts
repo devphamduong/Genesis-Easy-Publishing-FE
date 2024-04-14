@@ -1,5 +1,6 @@
 import relativeTime from "dayjs/plugin/relativeTime";
 import dayjs from "dayjs";
+import { IExportPreview } from "../interfaces/story.interface";
 dayjs.extend(relativeTime);
 
 export const kFormatter = (num: number): number | string => {
@@ -59,4 +60,52 @@ export const exportHTMLToDoc = (
   }
   if (chapter) fileDownload.click();
   document.body.removeChild(fileDownload);
+};
+
+export const exportPDF = (title: string, content?: string) => {
+  const head = window.document.querySelector("head")!.innerHTML;
+
+  const windowWidth = window.screen.availWidth;
+  const windowHeight = window.screen.availHeight;
+
+  const windowPrint = window.open(
+    "",
+    "",
+    `left=0,top=24,width=${windowWidth},height=${windowHeight},toolbar=0,scrollbars=0,status=0`
+  );
+
+  const replaceChars = {
+    "/": "-",
+    " ": "_",
+  };
+
+  let fileName = `Truyện ${title}`;
+  fileName = fileName.replace(/[/\s/]/g, (m) => replaceChars[m]);
+
+  windowPrint!.document.write(
+    `<html>
+        <head>
+          <title>${fileName}</title>
+          ${head}
+          </head>
+          <body>
+            <div class="preview-print-wrapper">
+              ${content || ""}
+              </div>
+          </body>
+        </html>
+          `
+  );
+
+  windowPrint!.document.close();
+  windowPrint!.addEventListener("load", function load() {
+    windowPrint!.focus();
+    windowPrint!.print();
+  });
+
+  windowPrint!.addEventListener("afterprint", function afterPrint() {
+    windowPrint!.close();
+  });
+
+  return;
 };

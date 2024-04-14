@@ -151,66 +151,11 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
         className={`read-story-container ${!isLightTheme ? "dark-theme" : ""}`}
       >
         <div className="read-story-content container py-3 d-flex flex-column gap-3">
-          <Descriptions
-            layout="vertical"
-            bordered
-            items={[
-              {
-                key: "1",
-                label: <strong>Thông Tin Chương Truyện</strong>,
-                children: (
-                  <Row>
-                    <Col span={2} className="text-lighter">
-                      Đăng bởi
-                    </Col>{" "}
-                    <Col span={22}>
-                      <Link
-                        to={getAuthorDetailURL(chapterContent?.author.userId)}
-                        className="author link-hover"
-                      >
-                        {" "}
-                        {chapterContent?.author.userFullname}
-                      </Link>
-                    </Col>
-                    <Col span={2} className="text-lighter">
-                      Tên truyện
-                    </Col>{" "}
-                    <Col span={22}>
-                      <Link
-                        to={getStoryDetailURL(id!, chapter!.split(".")[0])}
-                        className="name link-hover"
-                      >
-                        {" "}
-                        {chapterContent?.story.storyTitle}{" "}
-                      </Link>
-                    </Col>
-                    <Col span={2} className="text-lighter">
-                      Tên chương
-                    </Col>{" "}
-                    <Col span={22}>{chapterContent?.chapterTitle}</Col>
-                    <Col span={2} className="text-lighter">
-                      Chương
-                    </Col>{" "}
-                    <Col span={22}>{chapterContent?.chapterNumber}</Col>
-                    <Col span={2} className="text-lighter">
-                      Thời gian
-                    </Col>{" "}
-                    <Col span={22}>
-                      {dayjs(chapterContent?.createTime).format("DD/MM/YYYY")}{" "}
-                      <i className="time">
-                        ({dayjsFrom(chapterContent?.createTime ?? "")})
-                      </i>
-                    </Col>
-                    <Col span={2} className="text-lighter">
-                      Lượt mua
-                    </Col>{" "}
-                    <Col span={22}>{chapterContent?.userPurchaseChapter}</Col>
-                  </Row>
-                ),
-              },
-            ]}
-            size="small"
-          />
+          <div className="fs-4 text-center">
+            Chương {chapterContent?.chapterNumber}:{" "}
+            <strong>{chapterContent?.chapterTitle}</strong> của truyện{" "}
+            <strong>{chapterContent?.story.storyTitle}</strong>
+          </div>
           <div className="buttons">
             <Row gutter={[10, 10]}>
               <Col span={12}>
@@ -393,6 +338,66 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
               </Col>
             </Row>
           </div>
+          <Descriptions
+            layout="vertical"
+            bordered
+            items={[
+              {
+                key: "1",
+                label: <strong>Thông Tin Chương Truyện</strong>,
+                children: (
+                  <Row>
+                    <Col span={2} className="text-lighter">
+                      Đăng bởi
+                    </Col>{" "}
+                    <Col span={22}>
+                      <Link
+                        to={getAuthorDetailURL(chapterContent?.author.userId)}
+                        className="author link-hover"
+                      >
+                        {" "}
+                        {chapterContent?.author.userFullname}
+                      </Link>
+                    </Col>
+                    <Col span={2} className="text-lighter">
+                      Tên truyện
+                    </Col>{" "}
+                    <Col span={22}>
+                      <Link
+                        to={getStoryDetailURL(id!, chapter!.split(".")[0])}
+                        className="name link-hover"
+                      >
+                        {" "}
+                        {chapterContent?.story.storyTitle}{" "}
+                      </Link>
+                    </Col>
+                    <Col span={2} className="text-lighter">
+                      Tên chương
+                    </Col>{" "}
+                    <Col span={22}>{chapterContent?.chapterTitle}</Col>
+                    <Col span={2} className="text-lighter">
+                      Chương
+                    </Col>{" "}
+                    <Col span={22}>{chapterContent?.chapterNumber}</Col>
+                    <Col span={2} className="text-lighter">
+                      Thời gian
+                    </Col>{" "}
+                    <Col span={22}>
+                      {dayjs(chapterContent?.createTime).format("DD/MM/YYYY")}{" "}
+                      <i className="time">
+                        ({dayjsFrom(chapterContent?.createTime ?? "")})
+                      </i>
+                    </Col>
+                    <Col span={2} className="text-lighter">
+                      Lượt mua
+                    </Col>{" "}
+                    <Col span={22}>{chapterContent?.userPurchaseChapter}</Col>
+                  </Row>
+                ),
+              },
+            ]}
+            size="small"
+          />
         </div>
       </div>
       <FloatButton.BackTop />

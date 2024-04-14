@@ -75,6 +75,8 @@ export interface IAuthor {
     storyDescriptionMarkdown?: string;
     storyDescriptionHtml?: string;
   };
+  like: number;
+  read: number;
 }
 
 export interface IPaginationStory {
@@ -212,4 +214,12 @@ export interface IVolume {
   volumeTitle: string;
   createTime: string;
   chapters: IChapter[];
+}
+
+export interface IExportPreview extends IStory {
+  storyVolumes: {
+    volumeNumber: number;
+    volumeTitle: string;
+    volumeChapters: IChapter[];
+  }[];
 }

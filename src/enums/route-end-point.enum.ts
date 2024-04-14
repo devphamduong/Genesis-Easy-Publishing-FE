@@ -20,4 +20,5 @@ export enum ERouteEndPointForAuthor {
   WRITE_CHAPTER = "/author/write-chapter",
   REVIEW = "/author/review",
   REVIEW_CHAPTER = "/author/review-a-chapter",
+  EXPORT_PREVIEW = "/author/export-preview",
 }

@@ -3,6 +3,7 @@ import {
   IAuthor,
   IChapter,
   IChapterInteraction,
+  IExportPreview,
   IPaginationStory,
   IStory,
   IStoryInteraction,
@@ -110,7 +111,7 @@ export const deleteChapter = (
 };
 
 export const addVolume = (data: {
-  storyId: number;
+  storyId: number | string;
   volumeTitle: string;
 }): Promise<IApiResponse<null>> => {
   return axios.post(`chapters/add_volume`, { ...data });
@@ -121,4 +122,10 @@ export const updateVolume = (data: {
   volumeTitle: string;
 }): Promise<IApiResponse<null>> => {
   return axios.put(`chapters/update_volume`, { ...data });
+};
+
+export const storyExportPreview = (
+  storyId: number | string
+): Promise<IApiResponse<IExportPreview>> => {
+  return axios.get(`story/prints?storyId=${storyId}`);
 };

@@ -1,10 +1,8 @@
 import { ChangeEvent, FC, useEffect, useState } from "react";
 import "./PostedStories.scss";
-import { Drawer, Input, Popconfirm, Select, Table, Tooltip } from "antd";
+import { Input, Popconfirm, Table, Tooltip } from "antd";
 import Highlighter from "react-highlight-words";
 import { SearchOutlined } from "@ant-design/icons";
-import EPStoryStatistics from "../../../components/EP-UI/StoryStatistics";
-import { BsInfoCircleFill } from "react-icons/bs";
 import { useSelector } from "react-redux";
 import { IRootState } from "../../../redux/store";
 import {
@@ -20,7 +18,7 @@ import {
 } from "../../../interfaces/story.interface";
 import relativeTime from "dayjs/plugin/relativeTime";
 import dayjs from "dayjs";
-import { LiaCommentSolid, LiaUserEditSolid } from "react-icons/lia";
+import { LiaUserEditSolid } from "react-icons/lia";
 import EPButton from "../../../components/EP-UI/Button";
 import { MdDeleteOutline } from "react-icons/md";
 import { GrChapterAdd } from "react-icons/gr";
@@ -32,9 +30,9 @@ import {
 import { slugify } from "../../../shared/function";
 import PostedVolumes from "./PostedVolumes";
 import { toast } from "react-toastify";
-import { EStoryStatusKey } from "../../../enums/story.enum";
-import { ERouteEndPointForAuthor } from "../../../enums/route-end-point.enum";
 import AuthorDrawer from "./AuthorDrawer";
+import { BsFiletypePdf, BsInfoCircleFill } from "react-icons/bs";
+import { ERouteEndPointForAuthor } from "../../../enums/route-end-point.enum";
 dayjs.extend(relativeTime);
 
 interface IProps {}
@@ -180,6 +178,7 @@ const PostedStoriesPage: FC<IProps> = (props: IProps) => {
             <Tooltip title="Thêm chương mới">
               <EPButton
                 icon={<GrChapterAdd className="fs-5" />}
+                color="#33bcb7"
                 onClick={() =>
                   navigate(
                     getWriteChapterURL(
@@ -196,15 +195,19 @@ const PostedStoriesPage: FC<IProps> = (props: IProps) => {
                 }
               />
             </Tooltip>
-            {record.storyStatus > EStoryStatusKey.NOT_PUBLIC &&
-              !record.storyStatus && (
-                <Tooltip title="Xem kết quả review">
-                  <EPButton
-                    icon={<LiaCommentSolid className="fs-5" />}
-                    onClick={() => navigate(ERouteEndPointForAuthor.REVIEW)}
-                  />
-                </Tooltip>
-              )}
+            <Tooltip title="Xuất PDF">
+              <EPButton
+                icon={<BsFiletypePdf className="fs-5" />}
+                color="#e89a3c"
+                onClick={() =>
+                  navigate(ERouteEndPointForAuthor.EXPORT_PREVIEW, {
+                    state: {
+                      storyId: record.storyId,
+                    },
+                  })
+                }
+              />
+            </Tooltip>
             <Popconfirm
               title="Xóa truyện"
               description="Bạn có muốn xóa truyện này không?"
@@ -239,10 +242,6 @@ const PostedStoriesPage: FC<IProps> = (props: IProps) => {
     }
   };
 
-  const onChangeSelect = (value: string) => {
-    console.log(`selected ${value}`);
-  };
-
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let timeout: any = null;
   const handleSearch = (event: ChangeEvent<HTMLInputElement>) => {
@@ -262,48 +261,6 @@ const PostedStoriesPage: FC<IProps> = (props: IProps) => {
           prefix={<SearchOutlined />}
           onChange={(e) => handleSearch(e)}
         />
-        <div className="d-flex gap-3">
-          <Select
-            size="large"
-            placeholder="Select a person"
-            optionFilterProp="children"
-            onChange={onChangeSelect}
-            options={[
-              {
-                value: "jack",
-                label: "Jack",
-              },
-              {
-                value: "lucy",
-                label: "Lucy",
-              },
-              {
-                value: "tom",
-                label: "Tom",
-              },
-            ]}
-          />
-          <Select
-            size="large"
-            placeholder="Select a person"
-            optionFilterProp="children"
-            onChange={onChangeSelect}
-            options={[
-              {
-                value: "jack",
-                label: "Jack",
-              },
-              {
-                value: "lucy",
-                label: "Lucy",
-              },
-              {
-                value: "tom",
-                label: "Tom",
-              },
-            ]}
-          />
-        </div>
       </div>
     );
   };

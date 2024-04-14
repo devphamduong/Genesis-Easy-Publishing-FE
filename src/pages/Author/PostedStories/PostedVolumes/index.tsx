@@ -19,7 +19,7 @@ import {
 } from "../../../../services/author-api-service";
 import dayjs from "dayjs";
 import EPButton from "../../../../components/EP-UI/Button";
-import { MdDeleteOutline, MdPublic } from "react-icons/md";
+import { MdDeleteOutline } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import {
   getEditChapterURL,
@@ -169,7 +169,11 @@ const PostedVolumes: FC<IProps> = (props: IProps) => {
                     icon={<LuFileEdit className="fs-5" />}
                     onClick={() =>
                       navigate(
-                        getEditChapterURL(17, record.id, slugify(record.name))
+                        getEditChapterURL(
+                          storyId,
+                          record.id,
+                          slugify(record.name)
+                        )
                       )
                     }
                   />
@@ -267,7 +271,7 @@ const PostedVolumes: FC<IProps> = (props: IProps) => {
       });
     } else {
       res = await addVolume({
-        storyId: 17,
+        storyId: storyId,
         volumeTitle,
       });
     }
@@ -310,7 +314,10 @@ const PostedVolumes: FC<IProps> = (props: IProps) => {
         okText={isEditMode ? "Lưu thay đổi" : "Tạo"}
         cancelText="Hủy"
         onOk={() => handleVolumeActions()}
-        onCancel={() => setIsModalOpen(false)}
+        onCancel={() => {
+          setIsModalOpen(false);
+          setVolumeTitle("");
+        }}
       >
         <Input
           placeholder="Tên của tập"

@@ -111,7 +111,7 @@ export const deleteChapter = (
 };
 
 export const addVolume = (data: {
-  storyId: number;
+  storyId: number | string;
   volumeTitle: string;
 }): Promise<IApiResponse<null>> => {
   return axios.post(`chapters/add_volume`, { ...data });

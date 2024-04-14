@@ -11,7 +11,6 @@
   "dependencies": {
     "@ant-design/icons": "^5.2.6",
     "@reduxjs/toolkit": "^2.2.1",
-    "@types/file-saver": "^2.0.7",
     "@types/react-highlight-words": "^0.16.7",
     "antd": "^5.15.4",
     "antd-img-crop": "^4.21.0",

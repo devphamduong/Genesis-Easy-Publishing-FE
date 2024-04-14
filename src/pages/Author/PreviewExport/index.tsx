@@ -4,8 +4,9 @@ import { useLocation } from "react-router-dom";
 import { IExportPreview } from "../../../interfaces/story.interface";
 import { storyExportPreview } from "../../../services/author-api-service";
 import { Flex, FloatButton } from "antd";
-import { BsFiletypeDoc } from "react-icons/bs";
+import { BsFiletypePdf } from "react-icons/bs";
 import EPExport from "../../../components/EP-Common/Export";
+import { exportPDF } from "../../../shared/function";
 
 interface IProps {}
 
@@ -13,7 +14,7 @@ const PreviewExportPage: FC<IProps> = (props: IProps) => {
   const location = useLocation();
   const storyId: string = location?.state?.storyId;
   const [exportPreview, setExportPreview] = useState<IExportPreview>();
-  const targetRef = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (storyId) {
@@ -30,7 +31,7 @@ const PreviewExportPage: FC<IProps> = (props: IProps) => {
 
   return (
     <div className="export-preview-container">
-      <div className="export-preview-content" ref={targetRef}>
+      <div className="export-preview-content" ref={ref}>
         <div className="text-center story">
           <strong className="story-title fs-4">
             {exportPreview?.storyTitle}
@@ -69,24 +70,21 @@ const PreviewExportPage: FC<IProps> = (props: IProps) => {
             );
           })}
       </div>
-      {targetRef && targetRef.current && (
+      {exportPreview && (
         <Flex align="center" justify="center" className="mt-3">
-          <button
-            onClick={() => console.log(targetRef.current?.innerHTML + "")}
-          >
-            123
-          </button>
           <EPExport
-            customText="Xuất doc"
-            contentToExport={
-              "<p><strong>And Then There Were None</strong></p>\n<p><strong>Tập 1: Nine little boys</strong></p>\n"
-            }
-            storyTitle={exportPreview?.storyTitle}
+            storyTitle={exportPreview.storyTitle}
+            contentToExport={ref.current?.innerHTML}
           />
         </Flex>
       )}
       <FloatButton.Group shape="circle" type="primary">
-        <FloatButton icon={<BsFiletypeDoc />} />
+        <FloatButton
+          icon={<BsFiletypePdf />}
+          onClick={() =>
+            exportPDF(exportPreview!.storyTitle, ref.current?.innerHTML)
+          }
+        />
         <FloatButton.BackTop />
       </FloatButton.Group>
     </div>

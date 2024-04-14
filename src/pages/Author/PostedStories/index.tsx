@@ -31,7 +31,7 @@ import { slugify } from "../../../shared/function";
 import PostedVolumes from "./PostedVolumes";
 import { toast } from "react-toastify";
 import AuthorDrawer from "./AuthorDrawer";
-import { BsFiletypeDoc, BsInfoCircleFill } from "react-icons/bs";
+import { BsFiletypePdf, BsInfoCircleFill } from "react-icons/bs";
 import { ERouteEndPointForAuthor } from "../../../enums/route-end-point.enum";
 dayjs.extend(relativeTime);
 
@@ -195,9 +195,9 @@ const PostedStoriesPage: FC<IProps> = (props: IProps) => {
                 }
               />
             </Tooltip>
-            <Tooltip title="Export">
+            <Tooltip title="Xuất PDF">
               <EPButton
-                icon={<BsFiletypeDoc className="fs-5" />}
+                icon={<BsFiletypePdf className="fs-5" />}
                 color="#e89a3c"
                 onClick={() =>
                   navigate(ERouteEndPointForAuthor.EXPORT_PREVIEW, {

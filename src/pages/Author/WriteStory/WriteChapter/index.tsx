@@ -46,7 +46,10 @@ const WriteChapterPage: FC<IProps> = (props: IProps) => {
     const res = await getVolumes(storyId);
     if (res && res.ec === 0) {
       setVolumes(res.dt);
-      form.setFieldValue("volumeId", res.dt[res.dt.length - 1].volumeId);
+      form.setFieldsValue({
+        storyTitle: storyTitle,
+        volumeId: res.dt[res.dt.length - 1]?.volumeId,
+      });
     } else {
       toast.error(res.em);
     }
@@ -58,12 +61,12 @@ const WriteChapterPage: FC<IProps> = (props: IProps) => {
       form.setFieldsValue({
         storyTitle: res.dt.storyTitle,
         chapterTitle: res.dt.chapterTitle,
-        volumeId: res.dt.volumeId,
+        volumeId: res?.dt?.volumeId,
         chapterPrice: res.dt.chapterPrice,
       });
       handleEditorChange({
-        html: res.dt.chapterContentHtml ?? "",
-        text: res.dt.chapterContentMarkdown ?? "",
+        html: res.dt.chapterContentHtml,
+        text: res.dt.chapterContentMarkdown,
       });
     } else {
       toast.error(res.em);
@@ -97,6 +100,11 @@ const WriteChapterPage: FC<IProps> = (props: IProps) => {
     }
     if (res && res.ec === 0) {
       toast.success(res.em);
+      form.resetFields();
+      handleEditorChange({
+        html: "",
+        text: "",
+      });
     } else {
       toast.error(res.em);
     }
@@ -211,7 +219,7 @@ const WriteChapterPage: FC<IProps> = (props: IProps) => {
                   {mode === "edit" ? (
                     <span>Lưu thay đổi</span>
                   ) : (
-                    <span>Lưu chương mới</span>
+                    <span>Thêm chương mới</span>
                   )}
                 </Button>
               </Form.Item>

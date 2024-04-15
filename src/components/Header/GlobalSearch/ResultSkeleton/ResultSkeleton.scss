@@ -1,0 +1,9 @@
+.result-row-container {
+    .ant-col:nth-child(2) {
+        .ant-skeleton:nth-child(1) {
+            .ant-skeleton-input {
+                width: 50%;
+            }
+        }
+    }
+}

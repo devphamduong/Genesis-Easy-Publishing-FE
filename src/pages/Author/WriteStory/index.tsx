@@ -109,6 +109,7 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
         storyPrice: +res.dt.storyPrice,
         storySale: res.dt.storySale,
       });
+      setPreviewImgName(res.dt.storyImage);
       handleEditorChange({
         html: res.dt.storyDescriptionHtml ?? "",
         text: res.dt.storyDescriptionMarkdown ?? "",
@@ -146,6 +147,7 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
       setDescriptionHTML("");
       if (mode === "edit")
         navigate(`${ERouteEndPointForAuthor.WRITE_STORY}?mode=add`);
+      setPreviewImgName("");
     } else {
       toast.error(res.em);
     }
@@ -157,7 +159,7 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
     const res = await uploadStoryCover(file, storyId!);
     if (res && res.ec === 0) {
       setPreviewImgName(
-        `${import.meta.env.VITE_BACKEND_URL}Assets/images/avatar/${
+        `${import.meta.env.VITE_BACKEND_URL}Assets/images/story/${
           res.dt.fileUploaded
         }`
       );
@@ -173,13 +175,13 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
     beforeUpload: beforeUpload,
     onChange(info) {
       const { status } = info.file;
-      if (status !== "uploading") {
-        console.log(info.file, info.fileList);
-      }
+      // if (status !== "uploading") {
+      //   console.log(info.file, info.fileList);
+      // }
       if (status === "done") {
-        message.success(`${info.file.name} file uploaded successfully.`);
+        message.success(`Cập nhật ảnh thành công.`);
       } else if (status === "error") {
-        message.error(`${info.file.name} file upload failed.`);
+        message.error(`Cập nhật ảnh thất bại.`);
       }
     },
     onDrop(e) {
@@ -199,7 +201,7 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
               onFinish={onFinish}
               initialValues={{ status: 0 }}
             >
-              <Row>
+              <Row gutter={[20, 0]}>
                 <Col span={7}>
                   <Form.Item<IWriteStoryForm>
                     label="Tựa Đề"
@@ -270,7 +272,7 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
                     />
                   </Form.Item>
                 </Col>
-                <Col span={10}>
+                <Col>
                   <Form.Item<IWriteStoryForm>
                     label={
                       <div className="d-flex align-items-center gap-1">
@@ -290,7 +292,7 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
                     }
                     name="status"
                   >
-                    <Radio.Group buttonStyle="solid">
+                    <Radio.Group buttonStyle="solid" size="large">
                       <Radio.Button
                         value={EStoryStatusKey.NOT_PUBLIC}
                         disabled={
@@ -325,7 +327,7 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
                 </Col>
                 {mode === "edit" && (
                   <>
-                    <Col span={7}>
+                    <Col span={4}>
                       <Form.Item<IWriteStoryForm>
                         label="Giá gốc của truyện"
                         name="storyPrice"
@@ -347,7 +349,7 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
                         />
                       </Form.Item>
                     </Col>
-                    <Col span={7}>
+                    <Col span={3}>
                       <Form.Item<IWriteStoryForm>
                         label="Giá SALE"
                         name="storySale"
@@ -388,23 +390,23 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
                   {mode === "edit" ? (
                     <span>Lưu thay đổi</span>
                   ) : (
-                    <span>Lưu truyện mới</span>
+                    <span>Tạo truyện mới</span>
                   )}
                 </Button>
               </Form.Item>
             </Form>
           </Col>
           <Col span={6} className="upload d-flex flex-column gap-3">
-            <Dragger {...propsUpLoad}>
+            <Dragger {...propsUpLoad} showUploadList={false}>
               <p className="ant-upload-drag-icon">
                 <InboxOutlined />
               </p>
               <p className="ant-upload-text">
-                Click or drag file to this area to upload
+                Nhấp hoặc kéo tệp vào khu vực này để tải lên
               </p>
               <p className="ant-upload-hint">
-                Support for a single or bulk upload. Strictly prohibited from
-                uploading company data or other banned files.
+                Hỗ trợ tải lên một lần. Nghiêm cấm tải lên dữ liệu công ty hoặc
+                các tập tin bị cấm khác.
               </p>
             </Dragger>
             <div className="text-center">
@@ -414,7 +416,7 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
                   previewImgName
                     ? `${
                         import.meta.env.VITE_BACKEND_URL
-                      }Assets/images/avatar/${previewImgName}`
+                      }Assets/images/story/${previewImgName}`
                     : "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
                 }
               />

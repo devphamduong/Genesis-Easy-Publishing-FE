@@ -134,7 +134,7 @@ const HeaderAuthor = (props: IProps) => {
     <div className="header-container container-fluid px-5">
       <Row justify={"end"}>
         <Col>
-          <div>Hi {account.username}</div>
+          <div>Xin chào {account.username}</div>
           <strong className="pointer">
             <Popover
               content={popoverMenu()}
@@ -144,7 +144,7 @@ const HeaderAuthor = (props: IProps) => {
               open={isPopoverOpen}
               onOpenChange={(isOpen) => setIPopoverOpen(isOpen)}
             >
-              My Account
+              Tài khoản
             </Popover>
           </strong>
         </Col>

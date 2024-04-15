@@ -73,6 +73,7 @@ const PreviewExportPage: FC<IProps> = (props: IProps) => {
       {exportPreview && (
         <Flex align="center" justify="center" className="mt-3">
           <EPExport
+            customText="Xuất PDF"
             storyTitle={exportPreview.storyTitle}
             contentToExport={ref.current?.innerHTML}
           />

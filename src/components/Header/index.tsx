@@ -177,13 +177,13 @@ const Header: FC<IProps> = (props: IProps) => {
                         type="primary"
                         onClick={() => navigate("/auth/login")}
                       >
-                        Login
+                        Đăng nhập
                       </Button>
                     </Col>
                   ) : (
                     <Col className="d-flex align-items-center gap-5">
                       <div>
-                        <div>Hi {account.username ?? "friend"}</div>
+                        <div>Xin chào {account.username ?? "friend"}</div>
                         <strong className="pointer">
                           <Popover
                             content={popoverMenu()}
@@ -193,7 +193,7 @@ const Header: FC<IProps> = (props: IProps) => {
                             open={isPopoverOpen}
                             onOpenChange={(isOpen) => setIsPopoverOpen(isOpen)}
                           >
-                            My Account
+                            Tài khoản
                           </Popover>
                         </strong>
                       </div>

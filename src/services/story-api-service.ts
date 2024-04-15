@@ -149,10 +149,11 @@ export const uploadStoryCover = (
 ): Promise<IApiResponse<{ fileUploaded: string }>> => {
   const bodyFormData = new FormData();
   bodyFormData.append("image", fileImg);
+  bodyFormData.append("storyId", storyId as string);
   return axios({
     method: "put",
     url: "story/update_storyImage",
-    data: { bodyFormData, storyId },
+    data: bodyFormData,
   });
 };
 

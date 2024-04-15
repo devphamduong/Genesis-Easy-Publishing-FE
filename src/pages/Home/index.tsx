@@ -41,6 +41,9 @@ import {
   ERouteEndPointForUser,
 } from "../../enums/route-end-point.enum";
 const { Paragraph } = Typography;
+import slide1 from "../../assets/css/images/slide1.png";
+import slide2 from "../../assets/css/images/slide2.png";
+import slide3 from "../../assets/css/images/slide3.png";
 
 const HomePage: FC = (props) => {
   const navigate = useNavigate();
@@ -110,10 +113,10 @@ const HomePage: FC = (props) => {
   const contentStyle: React.CSSProperties = {
     margin: 0,
     height: "300px",
-    color: "#fff",
     lineHeight: "160px",
-    textAlign: "center",
-    background: "#364d79",
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "cover",
+    backgroundPosition: "center",
   };
 
   return (
@@ -172,13 +175,28 @@ const HomePage: FC = (props) => {
             <Col span={14} className="content-top-item content-top-item-middle">
               <Carousel autoplay className="content-top-item">
                 <div>
-                  <h3 style={contentStyle}>1</h3>
+                  <div
+                    style={{
+                      backgroundImage: `url(${slide1})`,
+                      ...contentStyle,
+                    }}
+                  ></div>
                 </div>
                 <div>
-                  <h3 style={contentStyle}>2</h3>
+                  <div
+                    style={{
+                      backgroundImage: `url(${slide2})`,
+                      ...contentStyle,
+                    }}
+                  ></div>
                 </div>
                 <div>
-                  <h3 style={contentStyle}>3</h3>
+                  <div
+                    style={{
+                      backgroundImage: `url(${slide3})`,
+                      ...contentStyle,
+                    }}
+                  ></div>
                 </div>
               </Carousel>
             </Col>

@@ -24,12 +24,11 @@ const GlobalSearch: FC<IProps> = (props: IProps) => {
   const [isFocused, setIsFocused] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isExpand, setIsExpand] = useState<boolean>(false);
-  const [isTriggerSearch, setIsTriggerSearch] = useState<boolean>(false);
   const ref = useOutsideClick(isExpand, () => isExpand && setIsExpand(false));
 
   useEffect(() => {
     fetchGlobalSearchStories();
-  }, [isTriggerSearch, searchFilter]);
+  }, [searchText, searchFilter]);
 
   const fetchGlobalSearchStories = async () => {
     setIsLoading(true);
@@ -43,7 +42,6 @@ const GlobalSearch: FC<IProps> = (props: IProps) => {
     const res = await getGlobalSearchStories(query);
     if (res && res.ec === 0) {
       setResult(res.dt);
-      setIsTriggerSearch(false);
     }
     setIsLoading(false);
   };
@@ -54,9 +52,7 @@ const GlobalSearch: FC<IProps> = (props: IProps) => {
     setIsExpand(true);
     setSearchText(newValue);
     clearTimeout(timeout);
-    timeout = setTimeout(() => {
-      setIsTriggerSearch(true);
-    }, 1500);
+    timeout = setTimeout(() => {}, 1500);
   };
 
   const handleFocus = () => {
@@ -160,7 +156,6 @@ const GlobalSearch: FC<IProps> = (props: IProps) => {
             setIsFocused(true);
             setIsExpand(true);
             setSearchText(e.target.value);
-            setIsTriggerSearch(true);
           }}
         />
       </Dropdown>

@@ -57,6 +57,8 @@ const ReviewAChapterPage: FC<IProps> = (props: IProps) => {
           reviewContent: res.dt.review.reviewContent,
         });
       }
+    } else {
+      toast.error(res.em);
     }
   };
 
@@ -90,37 +92,42 @@ const ReviewAChapterPage: FC<IProps> = (props: IProps) => {
   return (
     <div className="review-chapter-container">
       <div className="review-chapter-content">
-        <div className="fs-4">
-          Chương{" "}
-          {mode === "reviewing"
-            ? (reviewChapterInfo as IReviewChapterInfo)?.chapterNumber
-            : (reviewChapterInfo as IReviewDetailChapterInfo).review.chapters
-                .chapterNumber}
-          :{" "}
-          <strong>
-            {mode === "reviewing"
-              ? (reviewChapterInfo as IReviewChapterInfo)?.chapterTitle
-              : (reviewChapterInfo as IReviewDetailChapterInfo).review.chapters
-                  .chapterTitle}
-          </strong>{" "}
-          của truyện{" "}
-          <strong>
-            {mode === "reviewing"
-              ? (reviewChapterInfo as IReviewChapterInfo)?.storyTitle
-              : (reviewChapterInfo as IReviewDetailChapterInfo).review.chapters
-                  .storyTitle}
-          </strong>
-        </div>
-        <div
-          className="my-3 w-75 mx-auto"
-          dangerouslySetInnerHTML={{
-            __html:
-              mode === "reviewing"
-                ? (reviewChapterInfo as IReviewChapterInfo)?.chapterContentHtml
+        {reviewChapterInfo && (
+          <>
+            <div className="fs-4">
+              Chương{" "}
+              {mode === "reviewing"
+                ? (reviewChapterInfo as IReviewChapterInfo)?.chapterNumber
                 : (reviewChapterInfo as IReviewDetailChapterInfo).review
-                    .chapters.chapterContentHtml,
-          }}
-        />
+                    .chapters.chapterNumber}
+              :{" "}
+              <strong>
+                {mode === "reviewing"
+                  ? (reviewChapterInfo as IReviewChapterInfo)?.chapterTitle
+                  : (reviewChapterInfo as IReviewDetailChapterInfo).review
+                      .chapters.chapterTitle}
+              </strong>{" "}
+              của truyện{" "}
+              <strong>
+                {mode === "reviewing"
+                  ? (reviewChapterInfo as IReviewChapterInfo)?.storyTitle
+                  : (reviewChapterInfo as IReviewDetailChapterInfo).review
+                      .chapters.storyTitle}
+              </strong>
+            </div>
+            <div
+              className="my-3 w-75 mx-auto"
+              dangerouslySetInnerHTML={{
+                __html:
+                  mode === "reviewing"
+                    ? (reviewChapterInfo as IReviewChapterInfo)
+                        ?.chapterContentHtml
+                    : (reviewChapterInfo as IReviewDetailChapterInfo).review
+                        .chapters.chapterContentHtml,
+              }}
+            />
+          </>
+        )}
         <div className="rate-area">
           <Form form={form} layout="vertical" onFinish={onFinish}>
             <Form.Item<IReviewChapterForm>

@@ -75,7 +75,7 @@ const LoginPage: FC<IProps> = (props: IProps) => {
               initialValues={{
                 emailOrUsername: "pduong244@gmail.com",
                 password: "123",
-                remember: false,
+                remember: true,
               }}
               onFinish={onFinish}
             >

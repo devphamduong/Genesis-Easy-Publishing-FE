@@ -117,7 +117,7 @@ const WriteChapterPage: FC<IProps> = (props: IProps) => {
         <Row gutter={[16, 16]}>
           <Col span={18}>
             <Form form={form} layout="vertical" onFinish={onFinish}>
-              <Row>
+              <Row gutter={[20, 0]}>
                 <Col span={7}>
                   <Form.Item<IWriteChapterForm>
                     label="Tựa Đề"
@@ -135,7 +135,7 @@ const WriteChapterPage: FC<IProps> = (props: IProps) => {
                     />
                   </Form.Item>
                 </Col>
-                <Col span={7}>
+                <Col span={8}>
                   <Form.Item<IWriteChapterForm>
                     label="Truyện"
                     name="storyTitle"
@@ -143,7 +143,7 @@ const WriteChapterPage: FC<IProps> = (props: IProps) => {
                     <Input size="large" disabled={true} />
                   </Form.Item>
                 </Col>
-                <Col span={7}>
+                <Col span={8}>
                   <Form.Item<IWriteChapterForm>
                     label="Tập"
                     name="volumeId"

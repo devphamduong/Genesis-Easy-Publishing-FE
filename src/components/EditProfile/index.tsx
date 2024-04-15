@@ -5,6 +5,8 @@ import {
   Button,
   DatePicker,
   Form,
+  GetProp,
+  Image,
   Input,
   Select,
   Upload,
@@ -29,6 +31,7 @@ import {
 import ImgCrop from "antd-img-crop";
 import { PlusOutlined } from "@ant-design/icons";
 const mdParser = new MarkdownIt(/* Markdown-it options */);
+type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
 
 interface IProps {}
 
@@ -44,6 +47,14 @@ const beforeUpload = (file) => {
   return isJpgOrPng && isLt2M;
 };
 
+const getBase64 = (file: FileType): Promise<string> =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = (error) => reject(error);
+  });
+
 const EditProfile: FC<IProps> = (props: IProps) => {
   const dispatch = useDispatch();
   const account = useSelector((state: IRootState) => state.account?.user);
@@ -52,6 +63,8 @@ const EditProfile: FC<IProps> = (props: IProps) => {
   const [contentMarkdown, setContentMarkdown] = useState<string>("");
   const [contentHTML, setContentHTML] = useState<string>("");
   const [fileList, setFileList] = useState<UploadFile[]>();
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState("");
 
   useEffect(() => {
     setContentMarkdown(account.descriptionMarkdown ?? "");
@@ -104,13 +117,13 @@ const EditProfile: FC<IProps> = (props: IProps) => {
     const { status } = file;
 
     setFileList(newFileList);
-    if (status !== "uploading") {
-      console.log(status, newFileList);
-    }
+    // if (status !== "uploading") {
+    //   console.log(status, newFileList);
+    // }
     if (status === "done") {
-      message.success(`${status} file uploaded successfully.`);
+      message.success(`Cập nhật ảnh đại diện thành công.`);
     } else if (status === "error") {
-      message.error(`${status} file upload failed.`);
+      message.error(`Cập nhật ảnh đại diện thất bại.`);
     }
   };
 
@@ -126,6 +139,15 @@ const EditProfile: FC<IProps> = (props: IProps) => {
     }
   };
 
+  const handlePreview = async (file: UploadFile) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj as FileType);
+    }
+
+    setPreviewImage(file.url || (file.preview as string));
+    setPreviewOpen(true);
+  };
+
   return (
     <div className="edit-profile-container">
       <div className="edit-profile-content d-flex gap-2">
@@ -138,7 +160,7 @@ const EditProfile: FC<IProps> = (props: IProps) => {
               listType="picture-circle"
               fileList={fileList}
               onChange={onChange}
-              // onPreview={onPreview}
+              onPreview={handlePreview}
               maxCount={1}
             >
               {fileList && fileList.length < 2 && (
@@ -154,6 +176,17 @@ const EditProfile: FC<IProps> = (props: IProps) => {
               )}
             </Upload>
           </ImgCrop>
+          {previewImage && (
+            <Image
+              wrapperStyle={{ display: "none" }}
+              preview={{
+                visible: previewOpen,
+                onVisibleChange: (visible) => setPreviewOpen(visible),
+                afterOpenChange: (visible) => !visible && setPreviewImage(""),
+              }}
+              src={previewImage}
+            />
+          )}
         </div>
         <div className="info">
           <p>

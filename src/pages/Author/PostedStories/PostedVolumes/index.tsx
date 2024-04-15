@@ -139,7 +139,9 @@ const PostedVolumes: FC<IProps> = (props: IProps) => {
         if (record.type === "chapter")
           return (
             <span>
-              {EChapterStatusLabel[EChapterStatusKey[record.status as number]]}
+              {EChapterStatusLabel[
+                EChapterStatusKey[record.status as number]
+              ] ?? "Chưa đủ điều kiện"}
             </span>
           );
       },
@@ -183,7 +185,7 @@ const PostedVolumes: FC<IProps> = (props: IProps) => {
                     <EPButton
                       icon={<PiQuestion className="fs-5" />}
                       onClick={() =>
-                        navigate(getReviewDetailAChapterURL(6, record.id))
+                        navigate(getReviewDetailAChapterURL(storyId, record.id))
                       }
                     />
                   </Tooltip>

@@ -1,6 +1,6 @@
 import { Col, Row, Skeleton } from "antd";
 import { FC } from "react";
-// import "./ResultSkeleton.scss";
+import "./ResultSkeleton.scss";
 
 interface IProps {}
 
@@ -19,8 +19,8 @@ const ResultSkeleton: FC<IProps> = (props: IProps) => {
 
   return Array.from({ length: 5 }, () => {
     return (
-      <Row gutter={[50, 16]}>
-        <Col span={4}>
+      <Row className="result-row-container" style={{ padding: "5px 12px" }}>
+        <Col span={3}>
           <Skeleton.Image
             active
             style={{
@@ -29,7 +29,7 @@ const ResultSkeleton: FC<IProps> = (props: IProps) => {
             }}
           />
         </Col>
-        <Col span={20} className="d-flex flex-column justify-content-between">
+        <Col span={21} className="d-flex flex-column justify-content-between">
           <Skeleton.Input active size="small" />
           <Skeleton.Input active size="small" block />
           <div className="d-flex align-items-center justify-content-between gap-1">

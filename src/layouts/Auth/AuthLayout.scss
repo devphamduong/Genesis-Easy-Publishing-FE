@@ -1,5 +1,16 @@
 .auth-container {
     height: 100vh;
 
-    .auth-content {}
+    .auth-content {
+        .banner {
+            position: relative;
+
+            .name {
+                position: absolute;
+                bottom  : 0;
+                right   : 10px;
+                color   : #fff;
+            }
+        }
+    }
 }

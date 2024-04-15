@@ -5,6 +5,16 @@
                 .ant-upload-list {
                     display       : flex;
                     flex-direction: column;
+
+                    .ant-upload-list-item-container {
+                        .ant-upload-list-item {
+                            .ant-upload-list-item-actions {
+                                .ant-btn:has(.anticon-delete) {
+                                    display: none;
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }

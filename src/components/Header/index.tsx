@@ -5,6 +5,7 @@ import {
   Button,
   Col,
   Drawer,
+  Flex,
   Menu,
   MenuProps,
   Popover,
@@ -30,6 +31,8 @@ import { getPaginationStoriesFollowing } from "../../services/story-api-service"
 import { IStory } from "../../interfaces/story.interface";
 import RowStory from "../RowStory";
 import GlobalSearch from "./GlobalSearch";
+import { IoIosMenu } from "react-icons/io";
+import Sidebar from "./Sidebar";
 
 interface IProps {}
 
@@ -42,8 +45,8 @@ const Header: FC<IProps> = (props: IProps) => {
   const account = useSelector((state: IRootState) => state.account?.user);
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const [followingStories, setFollowingStories] = useState<IStory[]>([]);
-
   const [isPopoverOpen, setIsPopoverOpen] = useState<boolean>(false);
+  const [openSidebar, setOpenSidebar] = useState<boolean>(false);
 
   useEffect(() => {
     openDrawer && fetchStoriesFollowing();
@@ -155,9 +158,9 @@ const Header: FC<IProps> = (props: IProps) => {
     <>
       <Affix>
         <div className="navbar header-container">
-          <div className="container-fluid px-5">
-            <Row align={"middle"} className="w-100">
-              <Col span={13}>
+          <div className="container-fluid px-xl-5">
+            <Row align={"middle"} justify={"space-between"} className="w-100">
+              <Col xl={4}>
                 <Row align={"middle"}>
                   <Col span={4}>
                     <Link className="navbar-brand" to={"/"}>
@@ -166,13 +169,13 @@ const Header: FC<IProps> = (props: IProps) => {
                   </Col>
                 </Row>
               </Col>
-              <Col span={11}>
+              <Col xs={0} lg={18} xl={14}>
                 <Row align={"middle"} justify={"space-between"}>
-                  <Col span={12}>
+                  <Col span={10}>
                     <GlobalSearch />
                   </Col>
                   {!isAuthenticated ? (
-                    <Col>
+                    <Col span={12}>
                       <Button
                         type="primary"
                         onClick={() => navigate("/auth/login")}
@@ -204,10 +207,24 @@ const Header: FC<IProps> = (props: IProps) => {
                   )}
                 </Row>
               </Col>
+              <Col md={4} lg={0}>
+                <Flex justify="end">
+                  <EPButton
+                    icon={<IoIosMenu />}
+                    onClick={() => setOpenSidebar(true)}
+                  />
+                </Flex>
+              </Col>
             </Row>
           </div>
         </div>
       </Affix>
+      <Sidebar
+        open={openSidebar}
+        setOpen={setOpenSidebar}
+        tlt={account.tlt}
+        handleLogout={handleLogout}
+      />
       <Drawer
         className="drawer-header"
         title="Truyện đang theo dõi"

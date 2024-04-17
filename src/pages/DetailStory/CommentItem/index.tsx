@@ -69,10 +69,10 @@ const CommentItem: FC<IProps> = (props: IProps) => {
         {createComment ? (
           <Flex gap={"small"} vertical>
             <Row>
-              <Col span={1}>
+              <Col xs={2} xl={1}>
                 <Avatar icon={<UserOutlined />} />
               </Col>
-              <Col span={23}>
+              <Col xs={22} xl={23}>
                 <TextArea
                   variant="filled"
                   placeholder="Bạn đang nghĩ gì?"
@@ -125,6 +125,7 @@ const CommentItem: FC<IProps> = (props: IProps) => {
                         </span>
                       </div>
                       <Popover
+                        rootClassName="comment-item-actions"
                         content={
                           <div className="d-flex flex-column align-items-center gap-2">
                             {comment.commentWriter ? (

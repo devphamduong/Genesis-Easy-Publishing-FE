@@ -169,13 +169,18 @@ const Header: FC<IProps> = (props: IProps) => {
                   </Col>
                 </Row>
               </Col>
-              <Col xs={0} lg={18} xl={14}>
+              <Col span={14}>
                 <Row align={"middle"} justify={"space-between"}>
-                  <Col span={10}>
+                  <Col xs={0} sm={15} lg={15}>
                     <GlobalSearch />
                   </Col>
                   {!isAuthenticated ? (
-                    <Col span={12}>
+                    <Col
+                      xs={24}
+                      md={5}
+                      lg={5}
+                      className="d-flex d-sm-block justify-content-end justify-content-sm-between"
+                    >
                       <Button
                         type="primary"
                         onClick={() => navigate("/auth/login")}
@@ -184,36 +189,38 @@ const Header: FC<IProps> = (props: IProps) => {
                       </Button>
                     </Col>
                   ) : (
-                    <Col className="d-flex align-items-center gap-5">
+                    <Col className="d-none d-md-block">
+                      <div>Xin chào {account.username ?? "friend"}</div>
                       <div>
-                        <div>Xin chào {account.username ?? "friend"}</div>
-                        <strong className="pointer">
-                          <Popover
-                            content={popoverMenu()}
-                            title={popoverTitle()}
-                            trigger={"click"}
-                            placement="bottomRight"
-                            open={isPopoverOpen}
-                            onOpenChange={(isOpen) => setIsPopoverOpen(isOpen)}
-                          >
-                            Tài khoản
-                          </Popover>
-                        </strong>
-                      </div>
-                      <span>
                         Bạn đang có: <strong>{account.tlt}</strong> TLT
-                      </span>
+                      </div>
+                      <strong className="pointer">
+                        <Popover
+                          content={popoverMenu()}
+                          title={popoverTitle()}
+                          trigger={"click"}
+                          placement="bottomRight"
+                          open={isPopoverOpen}
+                          onOpenChange={(isOpen) => setIsPopoverOpen(isOpen)}
+                        >
+                          Tài khoản
+                        </Popover>
+                      </strong>
                     </Col>
                   )}
+                  <Col
+                    xs={24}
+                    sm={7}
+                    md={0}
+                    className="d-flex justify-content-end d-md-none"
+                  >
+                    <EPButton
+                      type="primary"
+                      icon={<IoIosMenu />}
+                      onClick={() => setOpenSidebar(true)}
+                    />
+                  </Col>
                 </Row>
-              </Col>
-              <Col md={4} lg={0}>
-                <Flex justify="end">
-                  <EPButton
-                    icon={<IoIosMenu />}
-                    onClick={() => setOpenSidebar(true)}
-                  />
-                </Flex>
               </Col>
             </Row>
           </div>

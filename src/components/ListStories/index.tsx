@@ -104,7 +104,7 @@ const ListStories: FC<IProps> = (props: IProps) => {
   const renderItemWithDetailFirstStory = (item: IStory, index: number) => {
     return (
       <Row className="w-100" align={"top"} justify={"space-between"}>
-        <Col span={2}>
+        <Col xl={3} xxl={2}>
           <div className={`rank ${index + 1 <= 3 && `top top-${index + 1}`}`}>
             <span>{index + 1}</span>
           </div>

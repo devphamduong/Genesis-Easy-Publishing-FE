@@ -34,7 +34,7 @@ const Footer: FC<IProps> = (props: IProps) => {
                 Genesis sẽ mang lại cho những trải nghiệm tuyệt vời nhất.
               </div>
             </Col>
-            <Col md={24} lg={13}>
+            <Col xs={24} md={24} lg={13}>
               <Row gutter={[{ md: 16 }, 0]}>
                 <Col xs={12} md={8} className="text-start">
                   {categories &&

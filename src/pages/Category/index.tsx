@@ -147,21 +147,27 @@ const CategoryPage: FC<IProps> = (props: IProps) => {
       <div className="category-content container py-3">
         <Row gutter={[16, 16]}>
           <Col
-            span={19}
-            className="rounded-3"
+            xs={24}
+            xl={19}
+            className="rounded-3 order-lg-1 order-xl-0"
             style={{ backgroundColor: "#f4f4f4" }}
           >
             <Row
               gutter={[16, 16]}
               align={"middle"}
               justify={"space-around"}
-              className="px-3 py-4"
+              className="px-3 py-4 flex-column flex-md-row"
             >
               {stories &&
                 stories.length > 0 &&
                 stories.map((item, index) => {
                   return (
-                    <Col span={4} key={`category-${id}-story-${item.storyId}`}>
+                    <Col
+                      xs={24}
+                      md={12}
+                      xl={4}
+                      key={`category-${id}-story-${item.storyId}`}
+                    >
                       <EPBook3D
                         storyId={item.storyId}
                         imgUrl={item.storyImage}
@@ -176,7 +182,7 @@ const CategoryPage: FC<IProps> = (props: IProps) => {
                 })}
             </Row>
           </Col>
-          <Col span={5}>
+          <Col xs={24} xl={5} className="order-lg-0 order-xl-0">
             <div className="border p-4 rounded-3">
               Kiếm Hiệp là những truyện có bối cảnh cổ trang, nhân vật chính là
               người trong các môn phái võ lâm, tu luyện võ công tâm pháp. Thông
@@ -184,14 +190,14 @@ const CategoryPage: FC<IProps> = (props: IProps) => {
               thượng thừa, thống nhất hoặc quy ẩn giang hồ.
             </div>
           </Col>
-          <Col span={18}>
+          <Col xs={24} xl={18} className="order-lg-2 order-xl-0">
             <div className="fs-5">Truyện Kiếm Hiệp Mới Cập Nhật</div>
             <Divider />
             <Row gutter={[16, 16]}>
               {storiesUpdate && storiesUpdate.length > 0
                 ? storiesUpdate.map((item, index) => {
                     return (
-                      <Col span={12} key={index}>
+                      <Col xs={24} xl={12} key={index}>
                         <RowStory
                           key={`category-${id}-story-update-${item.storyId}`}
                           size={"small"}
@@ -211,24 +217,24 @@ const CategoryPage: FC<IProps> = (props: IProps) => {
               />
             </Col>
           </Col>
-          <Col span={6}>
+          <Col xs={24} xl={6} className="order-lg-3 order-xl-0">
             <ListStories
               stories={storiesMostRead}
-              title="Truyện Kiếm Hiệp Đọc Nhiều Trong Tuần"
+              title="Truyện Kiếm Hiệp Đọc Nhiều"
               displayRead
               displayRank
               showDetailFirstStory
               showMore={false}
             />
           </Col>
-          <Col span={18}>
+          <Col xs={24} xl={18} className="order-lg-4 order-xl-0">
             <div className="fs-5">Truyện Kiếm Hiệp Hoàn Thành</div>
             <Divider />
             <Row gutter={[16, 16]}>
               {storiesCompleted && storiesCompleted.length > 0
                 ? storiesCompleted.map((item, index) => {
                     return (
-                      <Col span={12} key={index}>
+                      <Col xs={24} xl={12} key={index}>
                         <RowStory
                           key={`category-${id}-story-completed-${item.storyId}`}
                           size={"small"}
@@ -248,7 +254,7 @@ const CategoryPage: FC<IProps> = (props: IProps) => {
               />
             </Col>
           </Col>
-          <Col span={6}>
+          <Col xs={24} xl={6} className="order-lg-5 order-xl-0">
             <ListStories
               stories={storiesCompleted.slice(0, 10)}
               displayRead

@@ -7,6 +7,8 @@ import {
   ERouteEndPointForAuthor,
   ERouteEndPointForUser,
 } from "../../../enums/route-end-point.enum";
+import { useSelector } from "react-redux";
+import { IRootState } from "../../../redux/store";
 
 interface IProps {
   open: boolean;
@@ -17,6 +19,9 @@ interface IProps {
 
 const Sidebar: FC<IProps> = (props: IProps) => {
   const { open, setOpen, tlt, handleLogout } = props;
+  const isAuthenticated = useSelector(
+    (state: IRootState) => state.account.isAuthenticated
+  );
   const navigate = useNavigate();
 
   return (
@@ -33,33 +38,41 @@ const Sidebar: FC<IProps> = (props: IProps) => {
       key={"left"}
     >
       <Flex vertical align="start" gap={10}>
-        <Button
-          type="text"
-          block
-          onClick={() => navigate(ERouteEndPointForUser.DASHBOARD)}
-        >
-          {EMenuLabel.PROFILE}
-        </Button>
-        <Button
-          type="text"
-          block
-          onClick={() => navigate(ERouteEndPointForUser.DEPOSIT)}
-        >
-          {EMenuLabel.DEPOSIT}
-        </Button>
-        <Button
-          type="text"
-          block
-          onClick={() => navigate(ERouteEndPointForAuthor.POSTED_STORIES)}
-        >
-          {EMenuLabel.MANAGE}
-        </Button>
-        <span>
-          Bạn đang có: <strong>{tlt}</strong> TLT
-        </span>
-        <Button block onClick={() => handleLogout()}>
-          Đăng xuất
-        </Button>
+        {isAuthenticated ? (
+          <>
+            <Button
+              type="text"
+              block
+              onClick={() => navigate(ERouteEndPointForUser.DASHBOARD)}
+            >
+              {EMenuLabel.PROFILE}
+            </Button>
+            <Button
+              type="text"
+              block
+              onClick={() => navigate(ERouteEndPointForUser.DEPOSIT)}
+            >
+              {EMenuLabel.DEPOSIT}
+            </Button>
+            <Button
+              type="text"
+              block
+              onClick={() => navigate(ERouteEndPointForAuthor.POSTED_STORIES)}
+            >
+              {EMenuLabel.MANAGE}
+            </Button>
+            <span>
+              Bạn đang có: <strong>{tlt}</strong> TLT
+            </span>
+            <Button block onClick={() => handleLogout()}>
+              Đăng xuất
+            </Button>
+          </>
+        ) : (
+          <Button type="primary" block onClick={() => navigate("/auth/login")}>
+            Đăng nhập
+          </Button>
+        )}
       </Flex>
     </Drawer>
   );

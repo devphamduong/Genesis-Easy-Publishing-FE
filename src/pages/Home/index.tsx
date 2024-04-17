@@ -290,9 +290,14 @@ const HomePage: FC = (props) => {
                           })
                         : Array.from({ length: 4 }).map((item, index) => {
                             return (
-                              <Col span={12} className="d-flex" key={index}>
+                              <Col
+                                xs={24}
+                                lg={12}
+                                className="d-flex"
+                                key={index}
+                              >
                                 <Row className="w-100">
-                                  <Col span={4}>
+                                  <Col xs={5} md={3} lg={5} xxl={4}>
                                     <Skeleton.Image
                                       active
                                       style={{
@@ -301,7 +306,7 @@ const HomePage: FC = (props) => {
                                       }}
                                     />
                                   </Col>
-                                  <Col span={20}>
+                                  <Col xs={19} md={21} lg={19} xxl={20}>
                                     <div className="px-2">
                                       <Skeleton
                                         paragraph={{ rows: 6 }}

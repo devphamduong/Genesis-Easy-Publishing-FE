@@ -366,11 +366,11 @@ const HomePage: FC = (props) => {
                 <Col xs={24} md={12} xl={8}>
                   {famousStories?.list && famousStories?.list?.length > 0 ? (
                     <ListStories
-                      urlToNavigate={ERouteEndPointForUser.MOST_READ_IN_WEEK}
+                      urlToNavigate={ERouteEndPointForUser.MOST_READ}
                       showDetailFirstStory
                       displayRank
                       displayChapter
-                      title="Đọc nhiều trong tuần"
+                      title="Truyện được đọc nhiều"
                       stories={[...(topReadStories?.list ?? [])]}
                     />
                   ) : (

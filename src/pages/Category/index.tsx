@@ -220,7 +220,7 @@ const CategoryPage: FC<IProps> = (props: IProps) => {
           <Col xs={24} xl={6} className="order-lg-3 order-xl-0">
             <ListStories
               stories={storiesMostRead}
-              title="Truyện Kiếm Hiệp Đọc Nhiều"
+              title="Truyện Kiếm Hiệp Được Đọc Nhiều"
               displayRead
               displayRank
               showDetailFirstStory

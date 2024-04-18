@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from "react";
-import "./MostReadInWeek.scss";
+import "./MostRead.scss";
 import EPNoResultFound from "../../../components/EP-UI/NoResultFound";
 import { IStory } from "../../../interfaces/story.interface";
 import { useOutletContext } from "react-router-dom";
@@ -12,7 +12,7 @@ import {
 
 interface IProps {}
 
-const MostReadInWeek: FC<IProps> = (props: IProps) => {
+const MostRead: FC<IProps> = (props: IProps) => {
   const [searchTerm, setSearchTerm] = useOutletContext() as [
     string,
     (value: string) => void
@@ -51,8 +51,8 @@ const MostReadInWeek: FC<IProps> = (props: IProps) => {
   };
 
   return (
-    <div className="most-read-in-week-container">
-      <div className="most-read-in-week-content">
+    <div className="most-read-container">
+      <div className="most-read-content">
         <div className="bottom">
           <Spin spinning={isLoading}>
             {stories &&
@@ -72,4 +72,4 @@ const MostReadInWeek: FC<IProps> = (props: IProps) => {
   );
 };
 
-export default MostReadInWeek;
+export default MostRead;

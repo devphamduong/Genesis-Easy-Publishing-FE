@@ -3,7 +3,7 @@ import HomePage from "../pages/Home";
 import { Route, Routes } from "react-router-dom";
 import { FC, useEffect, useState } from "react";
 import RankStories from "../pages/RankStories";
-import MostReadInWeek from "../pages/RankStories/MostReadInWeek";
+import MostRead from "../pages/RankStories/MostRead";
 import { ERouteEndPointForUser } from "../enums/route-end-point.enum";
 import StoriesWithMostFan from "../pages/RankStories/StoriesWithMostFan";
 import TopFullStories from "../pages/RankStories/TopFullStories";
@@ -78,8 +78,8 @@ const AppRoutes: FC<IProps> = (props: IProps) => {
           >
             <Route index element={<RankStories />} />
             <Route
-              path={ERouteEndPointForUser.MOST_READ_IN_WEEK}
-              element={<MostReadInWeek />}
+              path={ERouteEndPointForUser.MOST_READ}
+              element={<MostRead />}
             />
             {/* <Route
               path={ERouteEndPointForUser.MOST_VIP_STORIES_READ}

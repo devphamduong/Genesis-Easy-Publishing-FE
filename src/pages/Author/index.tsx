@@ -13,6 +13,7 @@ import { getStoryDetailURL } from "../../shared/generate-navigate-url";
 import { AiOutlineLike } from "react-icons/ai";
 import { FaRegHeart } from "react-icons/fa6";
 import { GrView } from "react-icons/gr";
+import { useBreakpoint } from "../../hooks/customHooks";
 
 interface IProps {}
 
@@ -22,6 +23,7 @@ const AuthorPage: FC<IProps> = (props: IProps) => {
   const authorId = searchParams.get("authorId");
   const [author, setAuthor] = useState<IAuthor>();
   const [stories, setStories] = useState<IStory[]>([]);
+  const breakpoint = useBreakpoint();
 
   const tabs = [
     {
@@ -99,9 +101,9 @@ const AuthorPage: FC<IProps> = (props: IProps) => {
           </Card>
         </div>
       </div>
-      <div className="author-stories-content container d-flex">
+      <div className="author-stories-content container d-sm-flex">
         <Tabs
-          tabPosition={"left"}
+          tabPosition={breakpoint === "xs" ? "top" : "left"}
           items={tabs}
           onChange={(e) => handleChangeTab(e)}
         />

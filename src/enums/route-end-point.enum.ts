@@ -6,7 +6,7 @@ export enum ERouteEndPointForUser {
   READ_HISTORY = "/user/read-history",
   CHANGE_PASSWORD = "/user/change-password",
   RANK_STORIES = "/rank-stories",
-  MOST_READ_IN_WEEK = "/rank-stories/most-read-in-week",
+  MOST_READ = "/rank-stories/most-read",
   MOST_VIP_STORIES_READ = "/rank-stories/most-vip-read-in-week",
   TOP_FULL_STORIES = "/rank-stories/top-full-stories",
   STORIES_WITH_MOST_FAN = "/rank-stories/stories-with-most-fan",

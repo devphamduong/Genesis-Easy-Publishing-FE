@@ -168,7 +168,7 @@ const ListStories: FC<IProps> = (props: IProps) => {
         size="small"
         header={
           <div className="header d-flex justify-content-between align-items-center">
-            <strong>{title}</strong>
+            <strong className="title">{title}</strong>
             {displayCategory ||
             showDetailFirstStory === !showDetailFirstStory ? (
               <Tooltip title="Danh sách đầy đủ">

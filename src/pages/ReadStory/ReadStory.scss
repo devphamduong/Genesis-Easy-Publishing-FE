@@ -56,7 +56,13 @@
         }
 
         .buttons {
-            margin: 0 230px;
+            &.buttons-margin {
+                margin: 0 230px;
+            }
+
+            &.buttons-remove-margin {
+                margin: 0;
+            }
         }
 
         .text-lighter {

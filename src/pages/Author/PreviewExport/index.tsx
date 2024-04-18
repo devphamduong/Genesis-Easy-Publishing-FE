@@ -79,7 +79,7 @@ const PreviewExportPage: FC<IProps> = (props: IProps) => {
           />
         </Flex>
       )}
-      <FloatButton.Group shape="circle" type="primary">
+      <FloatButton.Group shape="circle">
         <FloatButton
           icon={<BsFiletypePdf />}
           onClick={() =>

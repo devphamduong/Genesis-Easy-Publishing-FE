@@ -150,11 +150,10 @@ const EditProfile: FC<IProps> = (props: IProps) => {
 
   return (
     <div className="edit-profile-container">
-      <div className="edit-profile-content d-flex gap-2">
-        <div className="avatar d-flex">
+      <div className="edit-profile-content d-flex gap-2 flex-column flex-md-row">
+        <div className="avatar">
           <ImgCrop>
             <Upload
-              // action=""
               beforeUpload={beforeUpload}
               customRequest={handleUploadAvatar}
               listType="picture-circle"

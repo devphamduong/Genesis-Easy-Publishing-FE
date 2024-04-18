@@ -128,7 +128,7 @@ const CategoryPage: FC<IProps> = (props: IProps) => {
 
   const amountRowStorySkeleton = (amount: number) => {
     return Array.from({ length: amount }, (_, index) => (
-      <Col span={12} key={index}>
+      <Col xs={24} xl={12} key={index}>
         <RowStorySkeleton />
       </Col>
     ));

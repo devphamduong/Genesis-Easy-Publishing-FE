@@ -2,25 +2,20 @@ import React, { FC, useEffect, useState } from "react";
 import "./AuthorLayout.scss";
 import "../../components/Header/Header.scss";
 import { ICategory } from "../../interfaces/category.interface";
-import { UserOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
-import { Avatar, Button, Col, Layout, Menu, Popover, Row, theme } from "antd";
+import { Layout, Menu, theme } from "antd";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { IRootState } from "../../redux/store";
-import { logoutAction } from "../../redux/account/accountSlice";
-import { toast } from "react-toastify";
-import { logout } from "../../services/auth-api-service";
-import { EMenuKey, EMenuLabel } from "../../enums/menu.enum";
-import {
-  ERouteEndPointForAuthor,
-  ERouteEndPointForUser,
-} from "../../enums/route-end-point.enum";
+import { EMenuLabel } from "../../enums/menu.enum";
+import { ERouteEndPointForAuthor } from "../../enums/route-end-point.enum";
 import { GiBookshelf } from "react-icons/gi";
 import { TbBookUpload } from "react-icons/tb";
 import { GrChapterAdd } from "react-icons/gr";
 import { VscOpenPreview } from "react-icons/vsc";
 import { EUserRole } from "../../enums/user.enum";
+import HeaderAuthor from "./Header";
+import Sidebar from "./Sidebar";
 
 const { Content, Footer, Sider } = Layout;
 
@@ -46,113 +41,6 @@ function getItem(
   } as MenuItem;
 }
 
-const HeaderAuthor = (props: IProps) => {
-  const account = useSelector((state: IRootState) => state.account?.user);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const [isPopoverOpen, setIPopoverOpen] = useState<boolean>(false);
-
-  const popoverTitle = () => {
-    return (
-      <div className="d-flex align-items-center gap-2">
-        <Avatar size="large" icon={<UserOutlined />} />
-        <div>{account.username ?? "vcl"}</div>
-      </div>
-    );
-  };
-
-  const popoverMenu = () => {
-    type MenuItem = Required<MenuProps>["items"][number];
-
-    function getItem(
-      label: React.ReactNode,
-      key: React.Key,
-      icon?: React.ReactNode,
-      children?: MenuItem[],
-      type?: "group"
-    ): MenuItem {
-      return {
-        key,
-        icon,
-        children,
-        label,
-        type,
-      } as MenuItem;
-    }
-
-    const items: MenuProps["items"] = [
-      getItem(<div>Trang chủ</div>, "home", null),
-      getItem(<div>{EMenuLabel.PROFILE}</div>, EMenuKey.PROFILE, null),
-      getItem(<div>{EMenuLabel.DEPOSIT}</div>, EMenuKey.DEPOSIT, null),
-      getItem(
-        <Button block onClick={() => handleLogout()}>
-          Đăng xuất
-        </Button>,
-        "logout",
-        null
-      ),
-    ];
-
-    const onClick: MenuProps["onClick"] = (e) => {
-      const { key } = e;
-      setIPopoverOpen(false);
-      switch (key) {
-        case "home":
-          navigate("/");
-          break;
-        case EMenuKey.PROFILE:
-          navigate(ERouteEndPointForUser.DASHBOARD);
-          break;
-        case EMenuKey.DEPOSIT:
-          navigate(ERouteEndPointForUser.DEPOSIT);
-          break;
-      }
-    };
-
-    return (
-      <Menu
-        className="custom-header-menu"
-        style={{ width: 256, border: "none" }}
-        mode="inline"
-        items={items}
-        onClick={onClick}
-      />
-    );
-  };
-
-  const handleLogout = async () => {
-    const res = await logout();
-    if (res && res.ec === 0) {
-      dispatch(logoutAction());
-      toast.success("Logout successfully");
-      navigate("/");
-    }
-    setIPopoverOpen(false);
-  };
-
-  return (
-    <div className="header-container container-fluid px-5">
-      <Row justify={"end"}>
-        <Col>
-          <div>Xin chào {account.username}</div>
-          <strong className="pointer">
-            <Popover
-              content={popoverMenu()}
-              title={popoverTitle()}
-              trigger={"click"}
-              placement="bottomRight"
-              open={isPopoverOpen}
-              onOpenChange={(isOpen) => setIPopoverOpen(isOpen)}
-            >
-              Tài khoản
-            </Popover>
-          </strong>
-        </Col>
-      </Row>
-    </div>
-  );
-};
-
 const AuthorLayout: FC<IProps> = (props: IProps) => {
   const { categories } = props;
   const role = useSelector((state: IRootState) => state.account?.user.role);
@@ -165,23 +53,13 @@ const AuthorLayout: FC<IProps> = (props: IProps) => {
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
+  const [openSidebar, setOpenSidebar] = useState<boolean>(false);
 
   useEffect(() => {
     setCurrentParams(location.pathname);
   }, [location.pathname]);
 
   const items: MenuItem[] = [
-    getItem(
-      <div
-        onClick={() => navigate("/")}
-        className="text-center"
-        style={{ fontSize: "1.25rem" }}
-      >
-        The Genesis
-      </div>,
-      "home",
-      null
-    ),
     getItem(
       <div onClick={() => navigate(ERouteEndPointForAuthor.POSTED_STORIES)}>
         {EMenuLabel.AUTHOR_POSTED_STORY}
@@ -225,11 +103,18 @@ const AuthorLayout: FC<IProps> = (props: IProps) => {
     <>
       <Layout style={{ minHeight: "100vh" }}>
         <Sider
+          className="d-none d-lg-block"
           collapsible
           collapsed={collapsed}
           onCollapse={(value) => setCollapsed(value)}
         >
-          <div className="demo-logo-vertical" />
+          <div
+            onClick={() => navigate("/")}
+            className="logo-vertical p-2 text-center pointer"
+            style={{ color: "#fff", fontSize: "1.25rem" }}
+          >
+            The Genesis
+          </div>
           <Menu
             theme="dark"
             defaultSelectedKeys={[currentParams]}
@@ -239,7 +124,7 @@ const AuthorLayout: FC<IProps> = (props: IProps) => {
           />
         </Sider>
         <Layout>
-          <HeaderAuthor />
+          <HeaderAuthor setOpen={setOpenSidebar} />
           <Content style={{ margin: "0 16px" }}>
             <div
               style={
@@ -264,6 +149,7 @@ const AuthorLayout: FC<IProps> = (props: IProps) => {
           </Footer>
         </Layout>
       </Layout>
+      <Sidebar open={openSidebar} setOpen={setOpenSidebar} />
     </>
   );
 };

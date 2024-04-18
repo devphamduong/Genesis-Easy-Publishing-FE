@@ -695,9 +695,19 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
               {story?.storyChapters && story.storyChapters.length > 0 && (
                 <Col xs={24} xl={19}>
                   <Divider />
-                  <div className="d-flex gap-md-5 flex-column flex-md-row">
-                    <strong>Mới Cập Nhật</strong>
-                    <div className="d-flex flex-column gap-2 w-75">
+                  <Row
+                    gutter={[{ md: 16 }, 0]}
+                    className="d-flex flex-column flex-md-row"
+                  >
+                    <Col xs={24} md={5} lg={4}>
+                      <strong className="fs-6">Mới Cập Nhật</strong>
+                    </Col>
+                    <Col
+                      xs={24}
+                      md={19}
+                      lg={20}
+                      className="d-flex flex-column gap-2"
+                    >
                       {story?.storyChapters.map((item, index) => {
                         return (
                           <div
@@ -721,12 +731,12 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
                           </div>
                         );
                       })}
-                    </div>
-                  </div>
+                    </Col>
+                  </Row>
                   <Divider />
                 </Col>
               )}
-              <Col xs={24} xl={19}>
+              <Col xs={24} xl={19} className="related-stories">
                 <strong>Có Thể Bạn Cũng Muốn Đọc</strong>
                 <Divider />
                 {relatedStories &&

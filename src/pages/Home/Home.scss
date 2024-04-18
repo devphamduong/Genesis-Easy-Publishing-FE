@@ -4,6 +4,58 @@
             height: 300px;
         }
 
+        @media screen and (min-width:320px) and (max-width: 530px) {
+            .content-top-item-middle {
+                height: 200px;
+
+                .ant-carousel {
+                    height: 200px;
+
+                    .slick-slider {
+                        height: 200px;
+
+                        .slick-list,
+                        .slick-track {
+                            height: inherit;
+                        }
+
+                        .slick-slide {
+                            &>div {
+                                height: inherit;
+
+                                &>div {
+                                    height: inherit;
+                                }
+                            }
+                        }
+
+                        .slide-item {
+                            height: inherit !important;
+                        }
+                    }
+                }
+            }
+
+            .story-container {
+                .story-item {
+                    .ant-row {
+                        .ant-col:nth-child(1) {
+                            max-width: fit-content;
+
+                            .image {
+                                width: 90px;
+                            }
+                        }
+
+                        .ant-col:nth-child(2) {
+                            max-width: 100%;
+                            flex     : unset;
+                        }
+                    }
+                }
+            }
+        }
+
         .more-icon {
             font-size: 24px;
             color    : aqua;

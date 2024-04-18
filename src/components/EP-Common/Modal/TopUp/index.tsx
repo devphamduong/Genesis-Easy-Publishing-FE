@@ -18,6 +18,7 @@ import {
 import { IPropsEPModal } from "../../../../interfaces/global.interface";
 import EPButton from "../../../EP-UI/Button";
 import EPCondition from "../../../EP-UI/Condition";
+import { useBreakpoint } from "../../../../hooks/customHooks";
 
 interface IProps extends IPropsEPModal {}
 
@@ -65,6 +66,7 @@ const EPModalTopUp: FC<IProps> = (props: IProps) => {
   const [chosenPayment, setChosenPayment] = useState<string>(
     EPaymentMethod.VNPAY
   );
+  const breakpoint = useBreakpoint();
 
   const handleCancel = () => {
     setIsModalOpen(false);
@@ -102,7 +104,13 @@ const EPModalTopUp: FC<IProps> = (props: IProps) => {
 
   return (
     <Modal
-      className="w-50"
+      className={`${
+        breakpoint === "xs"
+          ? "w-100"
+          : breakpoint === "sm" || breakpoint === "md" || breakpoint === "lg"
+          ? "w-75"
+          : "w-50"
+      } ep-modal-topup`}
       title="Nạp tiền"
       open={isModalOpen}
       okText="Report"

@@ -1,0 +1,9 @@
+.ant-drawer-content-wrapper:has(.side-bar) {
+    .ant-drawer-content {
+        .ant-drawer-header {
+            .ant-drawer-title {
+                text-align: center;
+            }
+        }
+    }
+}

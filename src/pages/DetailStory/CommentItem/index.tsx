@@ -67,7 +67,7 @@ const CommentItem: FC<IProps> = (props: IProps) => {
     <div className="comment-item-container">
       <div className="comment-item-content">
         {createComment ? (
-          <Flex gap={"small"} vertical>
+          <Flex gap={"small"} vertical className="create-comment">
             <Row>
               <Col xs={2} xl={1}>
                 <Avatar icon={<UserOutlined />} />

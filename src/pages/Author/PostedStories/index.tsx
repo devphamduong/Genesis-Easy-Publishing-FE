@@ -255,7 +255,7 @@ const PostedStoriesPage: FC<IProps> = (props: IProps) => {
     return (
       <div className="d-flex gap-3 justify-content-between">
         <Input
-          className="w-25"
+          className="w-50"
           size="large"
           placeholder="Tìm kiếm"
           prefix={<SearchOutlined />}
@@ -294,6 +294,7 @@ const PostedStoriesPage: FC<IProps> = (props: IProps) => {
             rowKey={"storyId"}
             loading={isLoading}
             pagination={{
+              responsive: true,
               current: currentPage,
               total: totalStories,
               pageSize: pageSize,

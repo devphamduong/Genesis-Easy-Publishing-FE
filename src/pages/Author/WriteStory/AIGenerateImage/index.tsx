@@ -7,7 +7,7 @@ const AIGenerateImage: FC<IProps> = (props: IProps) => {
   return (
     <div className="app-main">
       <>
-        <h2>Generate an Image using Open AI API</h2>
+        <h2>Tạo ảnh bìa cho truyện bằng AI</h2>
 
         <iframe
           src="https://designer.microsoft.com/image-creator"

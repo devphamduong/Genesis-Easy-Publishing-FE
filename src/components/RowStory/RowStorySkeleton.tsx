@@ -17,7 +17,7 @@ const RowStorySkeleton: FC<IProps> = (props: IProps) => {
 
   return (
     <Row gutter={[50, 16]}>
-      <Col span={4}>
+      <Col xs={4} md={3} lg={2} xl={5} xxl={4}>
         <Skeleton.Image
           active
           style={{
@@ -26,7 +26,12 @@ const RowStorySkeleton: FC<IProps> = (props: IProps) => {
           }}
         />
       </Col>
-      <Col span={20} className="d-flex flex-column justify-content-between">
+      <Col
+        xs={20}
+        lg={19}
+        xxl={20}
+        className="d-flex flex-column justify-content-between"
+      >
         <Skeleton.Input active size="small" />
         <Skeleton.Input active size="small" block />
         <div className="d-flex align-items-center justify-content-between gap-1">

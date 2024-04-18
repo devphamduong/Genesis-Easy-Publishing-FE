@@ -134,9 +134,10 @@ const HomePage: FC = (props) => {
               xxl={14}
               className="content-top-item content-top-item-middle"
             >
-              <Carousel autoplay className="content-top-item">
+              <Carousel>
                 <div>
                   <div
+                    className="slide-item"
                     style={{
                       backgroundImage: `url(${slide1})`,
                       ...contentStyle,
@@ -145,6 +146,7 @@ const HomePage: FC = (props) => {
                 </div>
                 <div>
                   <div
+                    className="slide-item"
                     style={{
                       backgroundImage: `url(${slide2})`,
                       ...contentStyle,
@@ -153,6 +155,7 @@ const HomePage: FC = (props) => {
                 </div>
                 <div>
                   <div
+                    className="slide-item"
                     style={{
                       backgroundImage: `url(${slide3})`,
                       ...contentStyle,

@@ -134,6 +134,7 @@ const FollowingPage: FC<IProps> = (props: IProps) => {
           columns={columns}
           dataSource={followingStories}
           pagination={{
+            responsive: true,
             current: currentPage,
             total: totalStories,
             pageSize: pageSize,

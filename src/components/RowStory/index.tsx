@@ -30,8 +30,11 @@ const RowStory: FC<IProps> = (props: IProps) => {
 
   const renderRowDefault = () => {
     return (
-      <Row gutter={[{ sm: 50, md: 90, xxl: 16 }, 16]} className="row-default">
-        <Col xs={4} md={3} lg={2} xl={2} xxl={2}>
+      <Row
+        gutter={[{ sm: 50, md: 0, lg: 80, xl: 90, xxl: 16 }, 16]}
+        className="row-default"
+      >
+        <Col xs={4} sm={4} md={3} lg={2}>
           <VerticalImageHover
             rank={rank}
             imageUrl={story.storyImage}
@@ -41,8 +44,9 @@ const RowStory: FC<IProps> = (props: IProps) => {
         </Col>
         <Col
           xs={19}
+          sm={19}
           md={14}
-          lg={13}
+          lg={15}
           xl={16}
           className="d-flex flex-column justify-content-between"
         >

@@ -160,7 +160,7 @@ const Header: FC<IProps> = (props: IProps) => {
         <div className="navbar header-container">
           <div className="container-fluid px-xl-5">
             <Row align={"middle"} justify={"space-between"} className="w-100">
-              <Col xl={4}>
+              <Col xs={5} xl={4}>
                 <Row align={"middle"}>
                   <Col span={4}>
                     <Link className="navbar-brand" to={"/"}>
@@ -169,7 +169,7 @@ const Header: FC<IProps> = (props: IProps) => {
                   </Col>
                 </Row>
               </Col>
-              <Col span={14}>
+              <Col xs={12} md={14}>
                 <Row align={"middle"} justify={"space-between"}>
                   <Col xs={0} sm={15} lg={15}>
                     <GlobalSearch />

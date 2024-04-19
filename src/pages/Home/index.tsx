@@ -168,7 +168,7 @@ const HomePage: FC = (props) => {
               <Categories setIsOpenDrawer={setIsOpenDrawer} />
             </Col>
             <Col xs={0} lg={6} xxl={5}>
-              <div className="content-top-item-right text-center d-flex flex-column justify-content-evenly content-top-item px-3 py-2">
+              <div className="content-top-item-right text-theme text-center d-flex flex-column justify-content-evenly content-top-item px-3 py-2">
                 <h4>Bạn muốn đăng truyện lên The Genesis?</h4>
                 <div>
                   Chúng tôi sẵn sàng hỗ trợ bạn bất cứ lúc nào. Hãy nhấn vào lựa

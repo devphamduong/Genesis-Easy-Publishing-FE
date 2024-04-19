@@ -2,7 +2,9 @@ import { UserOutlined } from "@ant-design/icons";
 import {
   Affix,
   Avatar,
+  Badge,
   Button,
+  Card,
   Col,
   Drawer,
   Flex,
@@ -33,6 +35,11 @@ import RowStory from "../RowStory";
 import GlobalSearch from "./GlobalSearch";
 import { IoIosMenu } from "react-icons/io";
 import Sidebar from "./Sidebar";
+import { getStoryDetailURL } from "../../shared/generate-navigate-url";
+import { AiOutlineLike } from "react-icons/ai";
+import { GrView } from "react-icons/gr";
+import { FaRegHeart } from "react-icons/fa6";
+import Meta from "antd/es/card/Meta";
 
 interface IProps {}
 
@@ -161,13 +168,9 @@ const Header: FC<IProps> = (props: IProps) => {
           <div className="container-fluid px-xl-5">
             <Row align={"middle"} justify={"space-between"} className="w-100">
               <Col xs={5} xl={4}>
-                <Row align={"middle"}>
-                  <Col span={4}>
-                    <Link className="navbar-brand" to={"/"}>
-                      The Genesis
-                    </Link>
-                  </Col>
-                </Row>
+                <Link className="logo-brand text-theme fs-2" to={"/"}>
+                  The Genesis
+                </Link>
               </Col>
               <Col xs={12} md={14}>
                 <Row align={"middle"} justify={"space-between"}>
@@ -190,7 +193,10 @@ const Header: FC<IProps> = (props: IProps) => {
                     </Col>
                   ) : (
                     <>
-                      <Col xs={0} className="d-md-block">
+                      <Col
+                        xs={0}
+                        className="d-md-block account-info text-theme"
+                      >
                         <div>Xin chào {account.username ?? "friend"}</div>
                         <div>
                           Bạn đang có: <strong>{account.tlt}</strong> TLT
@@ -249,16 +255,46 @@ const Header: FC<IProps> = (props: IProps) => {
           </Button>
         }
       >
-        <div className="d-flex flex-column gap-3">
+        <div className="d-flex flex-wrap gap-3">
           {followingStories &&
             followingStories.length > 0 &&
             followingStories.map((item) => {
               return (
-                <RowStory
-                  key={`header-story-following-${item.storyId}`}
-                  size="small"
-                  story={item}
-                />
+                <Badge.Ribbon
+                  key={`card-story-${item.storyId}`}
+                  text={item.storyPrice + " TLT"}
+                  color="red"
+                >
+                  <Card
+                    key={`following-story-${item.storyId}`}
+                    hoverable
+                    style={{ width: 180 }}
+                    cover={<img alt={item.storyTitle} src={item.storyImage} />}
+                    onClick={() =>
+                      navigate(getStoryDetailURL(item.storyId, item.storyTitle))
+                    }
+                  >
+                    <Meta
+                      title={item.storyTitle}
+                      description={
+                        <div className="d-flex align-items-center justify-content-between flex-wrap">
+                          <div className="d-flex align-items-center">
+                            <AiOutlineLike />
+                            <span>{item.storyInteraction?.like}</span>
+                          </div>
+                          <div className="d-flex align-items-center">
+                            <FaRegHeart />
+                            <span>{item.storyInteraction?.follow}</span>
+                          </div>
+                          <div className="d-flex align-items-center">
+                            <GrView />
+                            <span>{item.storyInteraction?.view}</span>
+                          </div>
+                        </div>
+                      }
+                    />
+                  </Card>
+                </Badge.Ribbon>
               );
             })}
         </div>

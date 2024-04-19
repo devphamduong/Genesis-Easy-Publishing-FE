@@ -4,6 +4,10 @@ body {
   scrollbar-color: unset;
 }
 
+.dark-theme {
+  background-color: #141414;
+}
+
 body {
   box-sizing: border-box;
   margin    : 0;
@@ -106,4 +110,26 @@ body {
   .content-html {
     word-break: break-word;
   }
+
+  .text-theme {
+    color: var(--text-light);
+  }
+}
+
+.ant-app {
+  background-color: var(--body-background-color) !important;
+}
+
+:root {
+  --body-background-color  : #fff;
+  --header-background-color: #f4f4f4;
+  --footer-background-color: #f4f4f4;
+  --text-light             : #212529
+}
+
+[data-theme="dark-theme"] {
+  --body-background-color  : #141414;
+  --header-background-color: #343a40;
+  --footer-background-color: #343a40;
+  --text-light             : #fff
 }

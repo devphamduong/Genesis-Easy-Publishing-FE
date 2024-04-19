@@ -37,7 +37,7 @@
         }
 
         .top {
-            color: white;
+            color: white !important;
 
             &.top-1 {
                 background-color: #4497f8;
@@ -78,6 +78,15 @@
 
         .image-hover {
             cursor: pointer;
+        }
+    }
+}
+
+[data-theme="dark-theme"] {
+
+    .story-item {
+        .rank {
+            color: black;
         }
     }
 }

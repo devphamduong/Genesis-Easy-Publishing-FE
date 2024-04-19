@@ -320,7 +320,7 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
                 label: <strong>Thông Tin Chương Truyện</strong>,
                 children: (
                   <Row>
-                    <Col xs={4} lg={2} className="text-lighter">
+                    <Col xs={4} lg={2} className="text-themeer">
                       Đăng bởi
                     </Col>{" "}
                     <Col xs={20} lg={22}>
@@ -332,7 +332,7 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
                         {chapterContent?.author.userFullname}
                       </Link>
                     </Col>
-                    <Col xs={4} lg={2} className="text-lighter">
+                    <Col xs={4} lg={2} className="text-themeer">
                       Tên truyện
                     </Col>{" "}
                     <Col xs={20} lg={22}>
@@ -344,19 +344,19 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
                         {chapterContent?.story.storyTitle}{" "}
                       </Link>
                     </Col>
-                    <Col xs={4} lg={2} className="text-lighter">
+                    <Col xs={4} lg={2} className="text-themeer">
                       Tên chương
                     </Col>{" "}
                     <Col xs={20} lg={22}>
                       {chapterContent?.chapterTitle}
                     </Col>
-                    <Col xs={4} lg={2} className="text-lighter">
+                    <Col xs={4} lg={2} className="text-themeer">
                       Chương
                     </Col>{" "}
                     <Col xs={20} lg={22}>
                       {chapterContent?.chapterNumber}
                     </Col>
-                    <Col xs={4} lg={2} className="text-lighter">
+                    <Col xs={4} lg={2} className="text-themeer">
                       Thời gian
                     </Col>{" "}
                     <Col xs={20} lg={22}>
@@ -365,7 +365,7 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
                         ({dayjsFrom(chapterContent?.createTime ?? "")})
                       </i>
                     </Col>
-                    <Col xs={4} lg={2} className="text-lighter">
+                    <Col xs={4} lg={2} className="text-themeer">
                       Lượt mua
                     </Col>{" "}
                     <Col xs={20} lg={22}>

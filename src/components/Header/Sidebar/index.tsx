@@ -1,4 +1,4 @@
-import { Button, Drawer, Flex } from "antd";
+import { Button, Drawer, Flex, Typography } from "antd";
 import { FC } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Sidebar.scss";
@@ -9,6 +9,7 @@ import {
 } from "../../../enums/route-end-point.enum";
 import { useSelector } from "react-redux";
 import { IRootState } from "../../../redux/store";
+const { Text } = Typography;
 
 interface IProps {
   open: boolean;
@@ -61,9 +62,9 @@ const Sidebar: FC<IProps> = (props: IProps) => {
             >
               {EMenuLabel.MANAGE}
             </Button>
-            <span>
+            <Text className="tlt-amount">
               Bạn đang có: <strong>{tlt}</strong> TLT
-            </span>
+            </Text>
             <Button block onClick={() => handleLogout()}>
               Đăng xuất
             </Button>

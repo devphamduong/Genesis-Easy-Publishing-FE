@@ -177,7 +177,7 @@ const Header: FC<IProps> = (props: IProps) => {
                   {!isAuthenticated ? (
                     <Col
                       xs={24}
-                      md={5}
+                      sm={7}
                       lg={5}
                       className="d-flex d-sm-block justify-content-end justify-content-sm-between"
                     >
@@ -189,37 +189,39 @@ const Header: FC<IProps> = (props: IProps) => {
                       </Button>
                     </Col>
                   ) : (
-                    <Col className="d-none d-md-block">
-                      <div>Xin chào {account.username ?? "friend"}</div>
-                      <div>
-                        Bạn đang có: <strong>{account.tlt}</strong> TLT
-                      </div>
-                      <strong className="pointer">
-                        <Popover
-                          content={popoverMenu()}
-                          title={popoverTitle()}
-                          trigger={"click"}
-                          placement="bottomRight"
-                          open={isPopoverOpen}
-                          onOpenChange={(isOpen) => setIsPopoverOpen(isOpen)}
-                        >
-                          Tài khoản
-                        </Popover>
-                      </strong>
-                    </Col>
+                    <>
+                      <Col xs={0} className="d-md-block">
+                        <div>Xin chào {account.username ?? "friend"}</div>
+                        <div>
+                          Bạn đang có: <strong>{account.tlt}</strong> TLT
+                        </div>
+                        <strong className="pointer">
+                          <Popover
+                            content={popoverMenu()}
+                            title={popoverTitle()}
+                            trigger={"click"}
+                            placement="bottomRight"
+                            open={isPopoverOpen}
+                            onOpenChange={(isOpen) => setIsPopoverOpen(isOpen)}
+                          >
+                            Tài khoản
+                          </Popover>
+                        </strong>
+                      </Col>
+                      <Col
+                        xs={24}
+                        sm={7}
+                        md={0}
+                        className="d-flex justify-content-end d-md-none"
+                      >
+                        <EPButton
+                          type="primary"
+                          icon={<IoIosMenu />}
+                          onClick={() => setOpenSidebar(true)}
+                        />
+                      </Col>
+                    </>
                   )}
-                  <Col
-                    xs={24}
-                    sm={7}
-                    md={0}
-                    className="d-flex justify-content-end d-md-none"
-                  >
-                    <EPButton
-                      type="primary"
-                      icon={<IoIosMenu />}
-                      onClick={() => setOpenSidebar(true)}
-                    />
-                  </Col>
                 </Row>
               </Col>
             </Row>

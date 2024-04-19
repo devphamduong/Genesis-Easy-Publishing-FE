@@ -102,4 +102,8 @@ body {
     overflow     : hidden;
     text-overflow: ellipsis;
   }
+
+  .content-html {
+    word-break: break-word;
+  }
 }

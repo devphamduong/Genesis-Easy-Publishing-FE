@@ -63,9 +63,9 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
   const [isModalReportOpen, setIsModalReportOpen] = useState<boolean>(false);
   const [isModalBuyChaptersOpen, setIsModalBuyChaptersOpen] =
     useState<boolean>(false);
-  const [isSubmittedLike, setIsSubmittedLike] = useState<boolean>(false);
   const [chapterContent, setChapterContent] = useState<IChapterContent>();
   const [isModalTopUpOpen, setIsModalTopUpOpen] = useState<boolean>(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLightTheme, setIsLightTheme] = useState(true);
   const [fontSize, setFontSize] = useState(14);
   const breakpoint = useBreakpoint();
@@ -92,7 +92,6 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
         userLike: !prevState?.userLike,
       }));
     }
-    setIsSubmittedLike(true);
   };
 
   const showConfirmBuyChapter = (storyId: number | string, price: number) => {
@@ -149,43 +148,6 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
     }
   };
 
-  const handleChangeFontSize = () => {
-    modal.warning({
-      title: <span>Đổi cỡ chữ</span>,
-      icon: <ExclamationCircleFilled />,
-      content: (
-        <InputNumber
-          controls={false}
-          className="custom-font-size"
-          value={fontSize}
-          onChange={(e) => setFontSize(+e!)}
-          addonBefore={
-            <Button
-              // block
-              disabled={fontSize - 1 < 1}
-              type="text"
-              onClick={() => fontSize - 1 >= 1 && setFontSize(fontSize - 1)}
-            >
-              -
-            </Button>
-          }
-          addonAfter={
-            <Button
-              // block
-              disabled={fontSize + 1 >= 72}
-              type="text"
-              onClick={() => fontSize + 1 < 72 && setFontSize(fontSize + 1)}
-            >
-              +
-            </Button>
-          }
-          min={1}
-          max={72}
-        />
-      ),
-    });
-  };
-
   return (
     <>
       <div
@@ -238,58 +200,12 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
               } mx-auto`}
             >
               <div
-                className="no-select"
+                className="no-select content-html"
                 style={{ fontSize: `${fontSize}px` }}
                 dangerouslySetInnerHTML={{
                   __html: chapterContent?.content ?? "",
                 }}
               />
-              {/* <Flex
-                align="center"
-                justify="center"
-                vertical
-                gap={10}
-                className="configs-read-story"
-              >
-                <InputNumber
-                  controls={false}
-                  className="custom-font-size"
-                  value={fontSize}
-                  onChange={(e) => setFontSize(+e!)}
-                  addonBefore={
-                    <Button
-                      // block
-                      disabled={fontSize - 1 < 1}
-                      type="text"
-                      onClick={() =>
-                        fontSize - 1 >= 1 && setFontSize(fontSize - 1)
-                      }
-                    >
-                      -
-                    </Button>
-                  }
-                  addonAfter={
-                    <Button
-                      // block
-                      disabled={fontSize + 1 >= 72}
-                      type="text"
-                      onClick={() =>
-                        fontSize + 1 < 72 && setFontSize(fontSize + 1)
-                      }
-                    >
-                      +
-                    </Button>
-                  }
-                  min={1}
-                  max={72}
-                />
-                <Switch
-                  checkedChildren="Sáng"
-                  unCheckedChildren="Tối"
-                  defaultChecked={isLightTheme}
-                  onChange={() => setIsLightTheme(!isLightTheme)}
-                />
-              </Flex> */}
             </div>
           ) : (
             chapterContent && (
@@ -474,7 +390,7 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
         <FloatButton
           icon={<TbTextSize />}
           tooltip={<span>Cỡ chữ</span>}
-          onClick={() => handleChangeFontSize()}
+          onClick={() => setIsModalOpen(true)}
         />
       </FloatButton.Group>
       <EPModalReport
@@ -496,6 +412,46 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
         isModalOpen={isModalTopUpOpen}
         setIsModalOpen={setIsModalTopUpOpen}
       />
+      <Modal
+        title="Đổi cỡ chữ"
+        closeIcon={null}
+        className="modal-change-font-size"
+        open={isModalOpen}
+        onOk={() => setIsModalOpen(false)}
+        onCancel={() => setIsModalOpen(false)}
+        footer={
+          <Button type="primary" onClick={() => setIsModalOpen(false)}>
+            OK
+          </Button>
+        }
+      >
+        <InputNumber
+          controls={false}
+          className="custom-font-size"
+          value={fontSize}
+          onChange={(e) => setFontSize(+e!)}
+          addonBefore={
+            <Button
+              disabled={fontSize - 1 < 1}
+              type="text"
+              onClick={() => fontSize - 1 >= 1 && setFontSize(fontSize - 1)}
+            >
+              -
+            </Button>
+          }
+          addonAfter={
+            <Button
+              disabled={fontSize + 1 >= 72}
+              type="text"
+              onClick={() => fontSize + 1 < 72 && setFontSize(fontSize + 1)}
+            >
+              +
+            </Button>
+          }
+          min={1}
+          max={72}
+        />
+      </Modal>
     </>
   );
 };

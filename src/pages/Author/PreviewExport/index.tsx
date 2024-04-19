@@ -59,6 +59,7 @@ const PreviewExportPage: FC<IProps> = (props: IProps) => {
                           Chương {itemC.chapterNumber}: {itemC.chapterTitle}
                         </strong>
                         <div
+                          className="content-html"
                           dangerouslySetInnerHTML={{
                             __html: itemC.chapterContentHtml,
                           }}

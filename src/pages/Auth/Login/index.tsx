@@ -73,8 +73,6 @@ const LoginPage: FC<IProps> = (props: IProps) => {
               form={form}
               layout="vertical"
               initialValues={{
-                emailOrUsername: "pduong244@gmail.com",
-                password: "123",
                 remember: true,
               }}
               onFinish={onFinish}

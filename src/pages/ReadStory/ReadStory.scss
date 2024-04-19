@@ -28,32 +28,6 @@
     }
 
     .read-story-content {
-        .content {
-            position: relative;
-
-            .configs-read-story {
-                position: absolute;
-                top     : 50%;
-                right   : -25%;
-
-                .custom-font-size {
-
-                    .ant-input-number-group-addon {
-                        padding: 0;
-                    }
-
-                    .ant-input-number {
-                        width: 40px;
-
-                        .ant-input-number-input-wrap {
-                            input {
-                                text-align: center;
-                            }
-                        }
-                    }
-                }
-            }
-        }
 
         .buttons {
             &.buttons-margin {
@@ -67,6 +41,20 @@
 
         .text-lighter {
             color: #aaa;
+        }
+    }
+}
+
+.modal-change-font-size {
+    .ant-modal-content {
+        .ant-modal-body {
+            .ant-input-number-group-wrapper {
+                width: 120px;
+
+                .ant-input-number-group-addon {
+                    padding: 0;
+                }
+            }
         }
     }
 }

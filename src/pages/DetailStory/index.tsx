@@ -224,7 +224,7 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
   const renderDescription = (description: string) => {
     return (
       <div
-        style={{ wordBreak: "break-word" }}
+        className="content-html"
         dangerouslySetInnerHTML={{
           __html: description,
         }}

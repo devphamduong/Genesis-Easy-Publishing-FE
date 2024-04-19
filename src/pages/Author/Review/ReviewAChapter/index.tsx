@@ -116,7 +116,7 @@ const ReviewAChapterPage: FC<IProps> = (props: IProps) => {
               </strong>
             </div>
             <div
-              className="my-3 w-75 mx-auto review-content"
+              className="my-3 w-75 mx-auto review-content content-html"
               dangerouslySetInnerHTML={{
                 __html:
                   mode === "reviewing"

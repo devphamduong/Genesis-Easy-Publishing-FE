@@ -81,7 +81,9 @@ const AuthorPage: FC<IProps> = (props: IProps) => {
             <Avatar
               size={64}
               icon={<UserOutlined />}
-              src={author?.authorImage}
+              src={`${import.meta.env.VITE_BACKEND_URL}Assets/images/avatar/${
+                author?.authorImage
+              }`}
             />
           </div>
           <div className="name">
@@ -94,6 +96,7 @@ const AuthorPage: FC<IProps> = (props: IProps) => {
             title={`Giới thiệu về tác giả ${author?.authorName}`}
           >
             <div
+              className="content-html"
               dangerouslySetInnerHTML={{
                 __html: author?.authorDescriptionHtml ?? "",
               }}
@@ -112,7 +115,11 @@ const AuthorPage: FC<IProps> = (props: IProps) => {
             stories.length > 0 &&
             stories.map((item, index) => {
               return (
-                <Badge.Ribbon text={item.storyPrice + " TLT"} color="red">
+                <Badge.Ribbon
+                  key={`card-story-${item.storyId}`}
+                  text={item.storyPrice + " TLT"}
+                  color="red"
+                >
                   <Card
                     key={`author-story-${item.storyId}`}
                     hoverable

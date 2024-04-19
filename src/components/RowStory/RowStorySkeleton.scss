@@ -1,0 +1,25 @@
+.row-story-skeleton {
+    .ant-col:nth-child(2) {
+        .ant-skeleton:nth-child(1) {
+            .ant-skeleton-input {
+                width: 50%;
+            }
+        }
+    }
+
+    @media screen and (min-width: 320px) and (max-width: 410px) {
+        row-gap       : unset !important;
+        flex-direction: column;
+
+        .ant-col:nth-child(2) {
+            margin-top: 10px;
+            gap       : 10px;
+        }
+    }
+
+    @media screen and (min-width: 411px) and (max-width: 500px) {
+        .ant-col:nth-child(2) {
+            padding: 0 35px !important;
+        }
+    }
+}

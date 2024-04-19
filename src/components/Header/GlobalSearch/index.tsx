@@ -123,7 +123,7 @@ const GlobalSearch: FC<IProps> = (props: IProps) => {
         menu={{ items }}
         dropdownRender={(menu) => (
           <div
-            className="d-flex gap-2"
+            className={!isLoading ? "d-flex gap-2" : ""}
             key={`menu-search-global`}
             onClick={(e) => e.stopPropagation()}
           >

@@ -134,7 +134,7 @@ const HomePage: FC = (props) => {
               xxl={14}
               className="content-top-item content-top-item-middle"
             >
-              <Carousel>
+              <Carousel autoplay>
                 <div>
                   <div
                     className="slide-item"
@@ -216,7 +216,7 @@ const HomePage: FC = (props) => {
               <Row gutter={[16, 16]}>
                 <Col span={24}>
                   <Card size="small" title="Lựa Chọn Của Biên Tập Viên">
-                    <Row gutter={[30, 16]} className="story-container w-100">
+                    <Row gutter={[28, 16]} className="story-container">
                       {stories && stories.length > 0
                         ? stories?.map((item, index) => {
                             return (
@@ -296,11 +296,11 @@ const HomePage: FC = (props) => {
                               <Col
                                 xs={24}
                                 lg={12}
-                                className="d-flex"
+                                className="d-flex story-item-skeleton"
                                 key={index}
                               >
                                 <Row className="w-100">
-                                  <Col xs={5} md={3} lg={5} xxl={4}>
+                                  <Col xs={4} sm={4} md={3} lg={5} xxl={4}>
                                     <Skeleton.Image
                                       active
                                       style={{
@@ -309,7 +309,7 @@ const HomePage: FC = (props) => {
                                       }}
                                     />
                                   </Col>
-                                  <Col xs={19} md={21} lg={19} xxl={20}>
+                                  <Col xs={24} sm={20} md={21} lg={19} xxl={20}>
                                     <div className="px-2">
                                       <Skeleton
                                         paragraph={{ rows: 6 }}

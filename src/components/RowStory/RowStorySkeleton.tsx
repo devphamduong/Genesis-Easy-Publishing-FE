@@ -1,6 +1,7 @@
 import { FC } from "react";
 import "./RowStory.scss";
 import { Col, Row, Skeleton } from "antd";
+import "./RowStorySkeleton.scss";
 
 interface IProps {
   imgWidth?: number;
@@ -16,7 +17,7 @@ const RowStorySkeleton: FC<IProps> = (props: IProps) => {
   const { imgWidth, imgHight } = props;
 
   return (
-    <Row gutter={[50, 16]}>
+    <Row gutter={[50, 16]} className="row-story-skeleton">
       <Col xs={4} md={3} lg={2} xl={5} xxl={4}>
         <Skeleton.Image
           active

@@ -6,13 +6,8 @@
 
         @media screen and (min-width:320px) and (max-width: 530px) {
             .content-top-item-middle {
-                height: 200px;
-
                 .ant-carousel {
-                    height: 200px;
-
                     .slick-slider {
-                        height: 200px;
 
                         .slick-list,
                         .slick-track {
@@ -56,6 +51,34 @@
             }
         }
 
+        @media screen and (min-width:320px) and (max-width: 370px) {
+            .content-top-item-middle {
+                height: 150px;
+
+                .ant-carousel {
+                    height: 150px;
+
+                    .slick-slider {
+                        height: 150px;
+                    }
+                }
+            }
+        }
+
+        @media screen and (min-width:371px) and (max-width: 530px) {
+            .content-top-item-middle {
+                height: 220px;
+
+                .ant-carousel {
+                    height: 220px;
+
+                    .slick-slider {
+                        height: 220px;
+                    }
+                }
+            }
+        }
+
         .more-icon {
             font-size: 24px;
             color    : aqua;
@@ -85,56 +108,74 @@
                 background-color: unset !important;
             }
         }
-    }
 
-    .slick-list {
-        border-radius: 8px;
-    }
+        .story-container {
+            .story-item {
 
-    .content-top-item-right {
-        background-color: #f4f4f4 !important
-    }
+                .name-text,
+                .author-text {
+                    &:hover {
+                        cursor: pointer;
+                        color : #4497f8;
+                    }
+                }
 
-    .premium-cover {
-        border                : 1px solid red;
-        // background-image   : url('https://i.pinimg.com/736x/b3/09/66/b309668eab49a195f36e4ef37d39a3e4.jpg');
-        // background-size    : cover;
-        // background-repeat  : no-repeat;
-        // background-position: center;
-    }
-}
+                .chapters {
+                    color: #f50;
+                }
 
-.story-container {
-    .story-item {
+                .read {
+                    color: #4497f8;
+                }
 
-        .name-text,
-        .author-text {
-            &:hover {
-                cursor: pointer;
-                color : #4497f8;
+                .text-small {
+                    font-size: 10px;
+                }
+
+                .description {
+                    svg {
+                        font-size: 20px;
+                    }
+
+                    span {
+                        font-size: 12px;
+                    }
+                }
+            }
+
+            @media screen and (min-width:320px) and (max-width: 575px) {
+                .story-item-skeleton {
+                    .ant-row {
+                        .ant-col:nth-child(1) {
+                            max-width: 100%;
+                        }
+
+                        .ant-col:nth-child(2) {
+                            margin-top: 0.5rem;
+
+                            &>div {
+                                padding: 0 !important;
+                            }
+                        }
+                    }
+                }
             }
         }
 
-        .chapters {
-            color: #f50;
+        .slick-list {
+            border-radius: 8px;
         }
 
-        .read {
-            color: #4497f8;
+        .content-top-item-right {
+            background-color: #f4f4f4 !important
         }
 
-        .text-small {
-            font-size: 10px;
-        }
-
-        .description {
-            svg {
-                font-size: 20px;
-            }
-
-            span {
-                font-size: 12px;
-            }
+        .premium-cover {
+            border                : 1px solid red;
+            // background-image   : url('https://i.pinimg.com/736x/b3/09/66/b309668eab49a195f36e4ef37d39a3e4.jpg');
+            // background-size    : cover;
+            // background-repeat  : no-repeat;
+            // background-position: center;
         }
     }
 }

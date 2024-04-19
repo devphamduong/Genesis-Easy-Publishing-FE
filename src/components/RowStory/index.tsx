@@ -97,8 +97,11 @@ const RowStory: FC<IProps> = (props: IProps) => {
 
   const renderRowSmall = () => {
     return (
-      <Row gutter={[{ xs: 0, lg: 80, xxl: 50 }, 16]} className="row-small">
-        <Col xs={4} md={3} lg={2} xl={4}>
+      <Row
+        gutter={[{ xs: 0, lg: 80, xl: 90, xxl: 50 }, 16]}
+        className="row-small"
+      >
+        <Col xs={4} sm={4} md={3} lg={2} xl={4}>
           <VerticalImageHover
             rank={rank}
             imageUrl={story.storyImage}
@@ -108,9 +111,10 @@ const RowStory: FC<IProps> = (props: IProps) => {
         </Col>
         <Col
           xs={20}
+          sm={20}
           md={21}
           lg={22}
-          xl={20}
+          xl={19}
           className="d-flex flex-column justify-content-between"
         >
           <Link

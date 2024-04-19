@@ -208,7 +208,7 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
               initialValues={{ status: 0 }}
             >
               <Row gutter={[20, 0]}>
-                <Col xs={24} md={12}>
+                <Col xs={24} md={12} className="storyTitle">
                   <Form.Item<IWriteStoryForm>
                     label="Tựa Đề"
                     name="storyTitle"
@@ -249,7 +249,7 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
                     />
                   </Form.Item>
                 </Col> */}
-                <Col xs={24} md={12}>
+                <Col xs={24} md={12} className="categoryIds">
                   <Form.Item<IWriteStoryForm>
                     label="Thể loại"
                     name="categoryIds"
@@ -278,7 +278,7 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
                     />
                   </Form.Item>
                 </Col>
-                <Col>
+                <Col className="status">
                   <Form.Item<IWriteStoryForm>
                     label={
                       <div className="d-flex align-items-center gap-1">
@@ -333,7 +333,7 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
                 </Col>
                 {mode === "edit" && (
                   <>
-                    <Col xs={8} md={6} xl={6}>
+                    <Col xs={24} sm={8} md={6} xl={6} className="storyPrice">
                       <Form.Item<IWriteStoryForm>
                         label="Giá gốc của truyện"
                         name="storyPrice"
@@ -355,7 +355,7 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
                         />
                       </Form.Item>
                     </Col>
-                    <Col xs={6} md={4} xl={4}>
+                    <Col xs={24} sm={6} md={4} xl={4} className="storySale">
                       <Form.Item<IWriteStoryForm>
                         label="Giá SALE"
                         name="storySale"

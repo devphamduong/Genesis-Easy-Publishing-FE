@@ -1,0 +1,18 @@
+.transaction-history-container {
+    .transaction-history-content {
+        .ant-table-wrapper {
+            .ant-table {
+                .ant-table-title {
+                    .sum-transaction {
+                        .transaction-in-out {
+                            @media screen and (min-width: 320px) and (max-width: 431px) {
+                                gap           : 10px;
+                                flex-direction: column;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

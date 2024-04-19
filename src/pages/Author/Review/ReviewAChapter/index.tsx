@@ -94,7 +94,7 @@ const ReviewAChapterPage: FC<IProps> = (props: IProps) => {
       <div className="review-chapter-content">
         {reviewChapterInfo && (
           <>
-            <div className="fs-4">
+            <div className="fs-4 review-title">
               Chương{" "}
               {mode === "reviewing"
                 ? (reviewChapterInfo as IReviewChapterInfo)?.chapterNumber
@@ -116,7 +116,7 @@ const ReviewAChapterPage: FC<IProps> = (props: IProps) => {
               </strong>
             </div>
             <div
-              className="my-3 w-75 mx-auto"
+              className="my-3 w-75 mx-auto review-content content-html"
               dangerouslySetInnerHTML={{
                 __html:
                   mode === "reviewing"
@@ -196,7 +196,7 @@ const ReviewAChapterPage: FC<IProps> = (props: IProps) => {
               </Checkbox>
             </Form.Item>
             <Form.Item<IReviewChapterForm> name="reviewContent">
-              <div className="my-3 w-50 mx-auto">
+              <div className="my-3 w-50 mx-auto reviewContent">
                 <TextArea
                   value={form.getFieldValue("reviewContent")}
                   disabled={mode === "readOnly"}

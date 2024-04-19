@@ -2,7 +2,7 @@ import { FC } from "react";
 import "./RowStory.scss";
 import VerticalImageHover from "../VerticalImageHover";
 import { IStory } from "../../interfaces/story.interface";
-import { Button, Col, Divider, Row, Skeleton, Typography } from "antd";
+import { Button, Col, Divider, Row, Typography } from "antd";
 import { FaPenFancy } from "react-icons/fa6";
 import { Link, useNavigate } from "react-router-dom";
 import { ClockCircleOutlined } from "@ant-design/icons";
@@ -30,8 +30,11 @@ const RowStory: FC<IProps> = (props: IProps) => {
 
   const renderRowDefault = () => {
     return (
-      <Row gutter={[16, 16]}>
-        <Col span={2}>
+      <Row
+        gutter={[{ sm: 50, md: 0, lg: 80, xl: 90, xxl: 16 }, 16]}
+        className="row-default"
+      >
+        <Col xs={4} sm={4} md={3} lg={2}>
           <VerticalImageHover
             rank={rank}
             imageUrl={story.storyImage}
@@ -39,16 +42,23 @@ const RowStory: FC<IProps> = (props: IProps) => {
             height={imgHight ?? 120}
           />
         </Col>
-        <Col span={19} className="d-flex flex-column justify-content-between">
+        <Col
+          xs={19}
+          sm={19}
+          md={14}
+          lg={15}
+          xl={16}
+          className="d-flex flex-column justify-content-between"
+        >
           <Link
             className="link-hover name"
             to={getStoryDetailURL(story.storyId, story.storyTitle)}
           >
             <strong>{story.storyTitle}</strong>
           </Link>
-          <Text ellipsis={true} className="description">
-            <span>{story.storyDescription}</span>
-          </Text>
+          <div className="d-md-none w-50 chapters text-center py-1">
+            {story.storyChapterNumber} Chương
+          </div>
           <div
             className="d-flex align-items-center gap-1 author"
             onClick={() =>
@@ -73,7 +83,7 @@ const RowStory: FC<IProps> = (props: IProps) => {
             {story.storyCategories[0]?.categoryName}
           </Button>
         </Col>
-        <Col span={3}>
+        <Col xs={0} md={7} lg={7} xl={5}>
           <div className="chapters text-center py-1">
             {story.storyChapterNumber} Chương
           </div>
@@ -87,8 +97,11 @@ const RowStory: FC<IProps> = (props: IProps) => {
 
   const renderRowSmall = () => {
     return (
-      <Row gutter={[50, 16]}>
-        <Col span={4}>
+      <Row
+        gutter={[{ xs: 0, lg: 80, xl: 90, xxl: 50 }, 16]}
+        className="row-small"
+      >
+        <Col xs={4} sm={4} md={3} lg={2} xl={4}>
           <VerticalImageHover
             rank={rank}
             imageUrl={story.storyImage}
@@ -96,7 +109,14 @@ const RowStory: FC<IProps> = (props: IProps) => {
             height={imgHight ?? 120}
           />
         </Col>
-        <Col span={20} className="d-flex flex-column justify-content-between">
+        <Col
+          xs={20}
+          sm={20}
+          md={21}
+          lg={22}
+          xl={19}
+          className="d-flex flex-column justify-content-between"
+        >
           <Link
             className="link-hover name"
             to={getStoryDetailURL(story.storyId, story.storyTitle)}

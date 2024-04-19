@@ -16,6 +16,7 @@ import {
   ExclamationCircleFilled,
   HeartOutlined,
   LeftOutlined,
+  MoonOutlined,
   RightOutlined,
   WarningOutlined,
 } from "@ant-design/icons";
@@ -46,7 +47,9 @@ import { updateAccountBalance } from "../../redux/account/accountSlice";
 import { EUpdateBalanceAction } from "../../enums/transaction.enum";
 import { IUpdateBalanceAction } from "../../interfaces/transaction.interface";
 import dayjs from "dayjs";
-const { confirm } = Modal;
+import { useBreakpoint } from "../../hooks/customHooks";
+import { PiMagicWand } from "react-icons/pi";
+import { TbTextSize } from "react-icons/tb";
 
 interface IProps {}
 
@@ -60,11 +63,12 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
   const [isModalReportOpen, setIsModalReportOpen] = useState<boolean>(false);
   const [isModalBuyChaptersOpen, setIsModalBuyChaptersOpen] =
     useState<boolean>(false);
-  const [isSubmittedLike, setIsSubmittedLike] = useState<boolean>(false);
   const [chapterContent, setChapterContent] = useState<IChapterContent>();
   const [isModalTopUpOpen, setIsModalTopUpOpen] = useState<boolean>(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLightTheme, setIsLightTheme] = useState(true);
   const [fontSize, setFontSize] = useState(14);
+  const breakpoint = useBreakpoint();
 
   useEffect(() => {
     fetchChapterContent();
@@ -88,7 +92,6 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
         userLike: !prevState?.userLike,
       }));
     }
-    setIsSubmittedLike(true);
   };
 
   const showConfirmBuyChapter = (storyId: number | string, price: number) => {
@@ -156,7 +159,13 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
             <strong>{chapterContent?.chapterTitle}</strong> của truyện{" "}
             <strong>{chapterContent?.story.storyTitle}</strong>
           </div>
-          <div className="buttons">
+          <div
+            className={`buttons ${
+              breakpoint !== "xs" && breakpoint !== "sm"
+                ? "buttons-margin"
+                : "buttons-remove-margin"
+            }`}
+          >
             <Row gutter={[10, 10]}>
               <Col span={12}>
                 <Button
@@ -185,60 +194,18 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
             </Row>
           </div>
           {chapterContent && chapterContent?.owned ? (
-            <div className="content w-75 mx-auto">
+            <div
+              className={`content ${
+                breakpoint !== "xs" && breakpoint !== "sm" ? "w-75" : ""
+              } mx-auto`}
+            >
               <div
-                className="no-select"
+                className="no-select content-html"
                 style={{ fontSize: `${fontSize}px` }}
                 dangerouslySetInnerHTML={{
                   __html: chapterContent?.content ?? "",
                 }}
               />
-              <Flex
-                align="center"
-                justify="center"
-                vertical
-                gap={10}
-                className="configs-read-story"
-              >
-                <InputNumber
-                  controls={false}
-                  className="custom-font-size"
-                  value={fontSize}
-                  onChange={(e) => setFontSize(+e!)}
-                  addonBefore={
-                    <Button
-                      // block
-                      disabled={fontSize - 1 < 1}
-                      type="text"
-                      onClick={() =>
-                        fontSize - 1 >= 1 && setFontSize(fontSize - 1)
-                      }
-                    >
-                      -
-                    </Button>
-                  }
-                  addonAfter={
-                    <Button
-                      // block
-                      disabled={fontSize + 1 >= 72}
-                      type="text"
-                      onClick={() =>
-                        fontSize + 1 < 72 && setFontSize(fontSize + 1)
-                      }
-                    >
-                      +
-                    </Button>
-                  }
-                  min={1}
-                  max={72}
-                />
-                <Switch
-                  checkedChildren="Sáng"
-                  unCheckedChildren="Tối"
-                  defaultChecked={isLightTheme}
-                  onChange={() => setIsLightTheme(!isLightTheme)}
-                />
-              </Flex>
             </div>
           ) : (
             chapterContent && (
@@ -310,7 +277,13 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
               Report
             </EPButton>
           </div>
-          <div className="buttons">
+          <div
+            className={`buttons ${
+              breakpoint !== "xs" && breakpoint !== "sm"
+                ? "buttons-margin"
+                : "buttons-remove-margin"
+            }`}
+          >
             <Row gutter={[10, 10]}>
               <Col span={12}>
                 <Button
@@ -347,10 +320,10 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
                 label: <strong>Thông Tin Chương Truyện</strong>,
                 children: (
                   <Row>
-                    <Col span={2} className="text-lighter">
+                    <Col xs={4} lg={2} className="text-lighter">
                       Đăng bởi
                     </Col>{" "}
-                    <Col span={22}>
+                    <Col xs={20} lg={22}>
                       <Link
                         to={getAuthorDetailURL(chapterContent?.author.userId)}
                         className="author link-hover"
@@ -359,10 +332,10 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
                         {chapterContent?.author.userFullname}
                       </Link>
                     </Col>
-                    <Col span={2} className="text-lighter">
+                    <Col xs={4} lg={2} className="text-lighter">
                       Tên truyện
                     </Col>{" "}
-                    <Col span={22}>
+                    <Col xs={20} lg={22}>
                       <Link
                         to={getStoryDetailURL(id!, chapter!.split(".")[0])}
                         className="name link-hover"
@@ -371,27 +344,33 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
                         {chapterContent?.story.storyTitle}{" "}
                       </Link>
                     </Col>
-                    <Col span={2} className="text-lighter">
+                    <Col xs={4} lg={2} className="text-lighter">
                       Tên chương
                     </Col>{" "}
-                    <Col span={22}>{chapterContent?.chapterTitle}</Col>
-                    <Col span={2} className="text-lighter">
+                    <Col xs={20} lg={22}>
+                      {chapterContent?.chapterTitle}
+                    </Col>
+                    <Col xs={4} lg={2} className="text-lighter">
                       Chương
                     </Col>{" "}
-                    <Col span={22}>{chapterContent?.chapterNumber}</Col>
-                    <Col span={2} className="text-lighter">
+                    <Col xs={20} lg={22}>
+                      {chapterContent?.chapterNumber}
+                    </Col>
+                    <Col xs={4} lg={2} className="text-lighter">
                       Thời gian
                     </Col>{" "}
-                    <Col span={22}>
+                    <Col xs={20} lg={22}>
                       {dayjs(chapterContent?.createTime).format("DD/MM/YYYY")}{" "}
                       <i className="time">
                         ({dayjsFrom(chapterContent?.createTime ?? "")})
                       </i>
                     </Col>
-                    <Col span={2} className="text-lighter">
+                    <Col xs={4} lg={2} className="text-lighter">
                       Lượt mua
                     </Col>{" "}
-                    <Col span={22}>{chapterContent?.userPurchaseChapter}</Col>
+                    <Col xs={20} lg={22}>
+                      {chapterContent?.userPurchaseChapter}
+                    </Col>
                   </Row>
                 ),
               },
@@ -400,7 +379,20 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
           />
         </div>
       </div>
-      <FloatButton.BackTop />
+      <FloatButton.BackTop style={{ right: 94 }} />
+      <FloatButton.Group shape="circle" trigger="click" icon={<PiMagicWand />}>
+        <FloatButton
+          icon={<MoonOutlined />}
+          tooltip={isLightTheme ? <span>Sáng</span> : <span>Tối</span>}
+          type={isLightTheme ? "default" : "primary"}
+          onClick={() => setIsLightTheme(!isLightTheme)}
+        />
+        <FloatButton
+          icon={<TbTextSize />}
+          tooltip={<span>Cỡ chữ</span>}
+          onClick={() => setIsModalOpen(true)}
+        />
+      </FloatButton.Group>
       <EPModalReport
         isModalOpen={isModalReportOpen}
         setIsModalOpen={setIsModalReportOpen}
@@ -420,6 +412,46 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
         isModalOpen={isModalTopUpOpen}
         setIsModalOpen={setIsModalTopUpOpen}
       />
+      <Modal
+        title="Đổi cỡ chữ"
+        closeIcon={null}
+        className="modal-change-font-size"
+        open={isModalOpen}
+        onOk={() => setIsModalOpen(false)}
+        onCancel={() => setIsModalOpen(false)}
+        footer={
+          <Button type="primary" onClick={() => setIsModalOpen(false)}>
+            OK
+          </Button>
+        }
+      >
+        <InputNumber
+          controls={false}
+          className="custom-font-size"
+          value={fontSize}
+          onChange={(e) => setFontSize(+e!)}
+          addonBefore={
+            <Button
+              disabled={fontSize - 1 < 1}
+              type="text"
+              onClick={() => fontSize - 1 >= 1 && setFontSize(fontSize - 1)}
+            >
+              -
+            </Button>
+          }
+          addonAfter={
+            <Button
+              disabled={fontSize + 1 >= 72}
+              type="text"
+              onClick={() => fontSize + 1 < 72 && setFontSize(fontSize + 1)}
+            >
+              +
+            </Button>
+          }
+          min={1}
+          max={72}
+        />
+      </Modal>
     </>
   );
 };

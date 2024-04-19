@@ -6,6 +6,7 @@ import "./RankStoriesLayout.scss";
 import { ICategory } from "../../interfaces/category.interface";
 import EPFilter from "../../components/EP-Common/Filter";
 import EPCover from "../../components/EP-UI/Cover";
+import { useBreakpoint } from "../../hooks/customHooks";
 
 type MenuItem = Required<MenuProps>["items"][number];
 function getItem(
@@ -33,10 +34,8 @@ const items: MenuProps["items"] = [
   { type: "divider" },
 
   getItem(
-    <Link to={ERouteEndPointForUser.MOST_READ_IN_WEEK}>
-      Đọc nhiều trong tuần
-    </Link>,
-    ERouteEndPointForUser.MOST_READ_IN_WEEK,
+    <Link to={ERouteEndPointForUser.MOST_READ}>Truyện được đọc nhiều</Link>,
+    ERouteEndPointForUser.MOST_READ,
     null
   ),
   // getItem(
@@ -75,10 +74,29 @@ const RankStoriesLayout: FC<IProps> = (props: IProps) => {
   const [currentParams, setCurrentParams] = useState<string>(
     ERouteEndPointForUser.RANK_STORIES
   );
+  const breakpoint = useBreakpoint();
 
   useEffect(() => {
     setCurrentParams(location.pathname);
   }, [location.pathname]);
+
+  const menuAndFilterTpl = () => {
+    return (
+      <>
+        <Menu
+          defaultSelectedKeys={[currentParams]}
+          selectedKeys={[currentParams]}
+          mode={
+            breakpoint === "lg" || breakpoint === "xl" || breakpoint === "xxl"
+              ? "inline"
+              : "horizontal"
+          }
+          items={items}
+        />
+        <EPFilter searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+      </>
+    );
+  };
 
   return (
     <div className="rank-stories-layout-container">
@@ -92,23 +110,16 @@ const RankStoriesLayout: FC<IProps> = (props: IProps) => {
       />
       <div className="rank-stories-layout-content container py-3">
         <Row gutter={[16, 10]}>
-          <Col span={5} className="left">
-            <Affix offsetTop={70}>
-              <div>
-                <Menu
-                  defaultSelectedKeys={[currentParams]}
-                  selectedKeys={[currentParams]}
-                  mode="inline"
-                  items={items}
-                />
-                <EPFilter
-                  searchTerm={searchTerm}
-                  setSearchTerm={setSearchTerm}
-                />
-              </div>
-            </Affix>
+          <Col xs={24} lg={5} className="left">
+            {breakpoint === "xs" ||
+            breakpoint === "sm" ||
+            breakpoint === "md" ? (
+              menuAndFilterTpl()
+            ) : (
+              <Affix offsetTop={70}>{menuAndFilterTpl()}</Affix>
+            )}
           </Col>
-          <Col span={19} className="right">
+          <Col xs={24} lg={19} className="right">
             <Outlet context={[searchTerm, setSearchTerm]} />
           </Col>
         </Row>

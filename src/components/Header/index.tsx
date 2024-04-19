@@ -5,6 +5,7 @@ import {
   Button,
   Col,
   Drawer,
+  Flex,
   Menu,
   MenuProps,
   Popover,
@@ -30,6 +31,8 @@ import { getPaginationStoriesFollowing } from "../../services/story-api-service"
 import { IStory } from "../../interfaces/story.interface";
 import RowStory from "../RowStory";
 import GlobalSearch from "./GlobalSearch";
+import { IoIosMenu } from "react-icons/io";
+import Sidebar from "./Sidebar";
 
 interface IProps {}
 
@@ -42,8 +45,8 @@ const Header: FC<IProps> = (props: IProps) => {
   const account = useSelector((state: IRootState) => state.account?.user);
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const [followingStories, setFollowingStories] = useState<IStory[]>([]);
-
   const [isPopoverOpen, setIsPopoverOpen] = useState<boolean>(false);
+  const [openSidebar, setOpenSidebar] = useState<boolean>(false);
 
   useEffect(() => {
     openDrawer && fetchStoriesFollowing();
@@ -155,9 +158,9 @@ const Header: FC<IProps> = (props: IProps) => {
     <>
       <Affix>
         <div className="navbar header-container">
-          <div className="container-fluid px-5">
-            <Row align={"middle"} className="w-100">
-              <Col span={13}>
+          <div className="container-fluid px-xl-5">
+            <Row align={"middle"} justify={"space-between"} className="w-100">
+              <Col xs={5} xl={4}>
                 <Row align={"middle"}>
                   <Col span={4}>
                     <Link className="navbar-brand" to={"/"}>
@@ -166,13 +169,18 @@ const Header: FC<IProps> = (props: IProps) => {
                   </Col>
                 </Row>
               </Col>
-              <Col span={11}>
+              <Col xs={12} md={14}>
                 <Row align={"middle"} justify={"space-between"}>
-                  <Col span={12}>
+                  <Col xs={0} sm={15} lg={15}>
                     <GlobalSearch />
                   </Col>
                   {!isAuthenticated ? (
-                    <Col>
+                    <Col
+                      xs={24}
+                      sm={7}
+                      lg={5}
+                      className="d-flex d-sm-block justify-content-end justify-content-sm-between"
+                    >
                       <Button
                         type="primary"
                         onClick={() => navigate("/auth/login")}
@@ -181,9 +189,12 @@ const Header: FC<IProps> = (props: IProps) => {
                       </Button>
                     </Col>
                   ) : (
-                    <Col className="d-flex align-items-center gap-5">
-                      <div>
+                    <>
+                      <Col xs={0} className="d-md-block">
                         <div>Xin chào {account.username ?? "friend"}</div>
+                        <div>
+                          Bạn đang có: <strong>{account.tlt}</strong> TLT
+                        </div>
                         <strong className="pointer">
                           <Popover
                             content={popoverMenu()}
@@ -196,11 +207,20 @@ const Header: FC<IProps> = (props: IProps) => {
                             Tài khoản
                           </Popover>
                         </strong>
-                      </div>
-                      <span>
-                        Bạn đang có: <strong>{account.tlt}</strong> TLT
-                      </span>
-                    </Col>
+                      </Col>
+                      <Col
+                        xs={24}
+                        sm={7}
+                        md={0}
+                        className="d-flex justify-content-end d-md-none"
+                      >
+                        <EPButton
+                          type="primary"
+                          icon={<IoIosMenu />}
+                          onClick={() => setOpenSidebar(true)}
+                        />
+                      </Col>
+                    </>
                   )}
                 </Row>
               </Col>
@@ -208,6 +228,12 @@ const Header: FC<IProps> = (props: IProps) => {
           </div>
         </div>
       </Affix>
+      <Sidebar
+        open={openSidebar}
+        setOpen={setOpenSidebar}
+        tlt={account.tlt}
+        handleLogout={handleLogout}
+      />
       <Drawer
         className="drawer-header"
         title="Truyện đang theo dõi"

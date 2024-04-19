@@ -224,6 +224,7 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
   const renderDescription = (description: string) => {
     return (
       <div
+        className="content-html"
         dangerouslySetInnerHTML={{
           __html: description,
         }}
@@ -444,16 +445,19 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
         <div className="detail-story-content container py-3">
           {/* <Badge.Ribbon text="Hippies" color="cyan"> */}
           <Row align={"middle"} className="top mb-3">
-            <Col span={12}>
+            <Col xs={24} xl={14}>
               <Row gutter={[12, 10]}>
-                <Col span={6}>
+                <Col xs={9} sm={9} md={7} lg={5} xl={6}>
                   <VerticalImageHover
                     height={240}
                     imageUrl={story?.storyImage ?? ""}
                   ></VerticalImageHover>
                 </Col>
                 <Col
-                  span={18}
+                  xs={24}
+                  md={17}
+                  lg={19}
+                  xl={18}
                   className="d-flex flex-column justify-content-between"
                 >
                   <div className="d-flex flex-column gap-2">
@@ -565,7 +569,7 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
                 </Col>
               </Row>
             </Col>
-            <Col span={5} className="price">
+            <Col className="price">
               <table>
                 <tbody>
                   <tr>
@@ -616,7 +620,7 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
               onChange={(key: string) => setCurrentTab(key)}
             />
             <Row gutter={[16, 10]}>
-              <Col span={19}>
+              <Col xs={24} xl={19}>
                 {currentTab === ETabsKey.DESCRIPTION
                   ? renderDescription(story?.storyDescription ?? "")
                   : currentTab === ETabsKey.CHAPTER
@@ -624,7 +628,7 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
                   : renderListComment()}
               </Col>
               <Col
-                span={5}
+                xl={5}
                 className="author-info d-flex flex-column align-items-center gap-3 py-4 text-center"
               >
                 <div>
@@ -690,11 +694,21 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
                 </div>
               </Col>
               {story?.storyChapters && story.storyChapters.length > 0 && (
-                <Col span={19}>
+                <Col xs={24} xl={19}>
                   <Divider />
-                  <div className="d-flex gap-5 ">
-                    <strong>Mới Cập Nhật</strong>
-                    <div className="d-flex flex-column gap-2 w-75">
+                  <Row
+                    gutter={[{ md: 16 }, 0]}
+                    className="d-flex flex-column flex-md-row"
+                  >
+                    <Col xs={24} md={5} lg={4}>
+                      <strong className="fs-6">Mới Cập Nhật</strong>
+                    </Col>
+                    <Col
+                      xs={24}
+                      md={19}
+                      lg={20}
+                      className="d-flex flex-column gap-2"
+                    >
                       {story?.storyChapters.map((item, index) => {
                         return (
                           <div
@@ -718,12 +732,12 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
                           </div>
                         );
                       })}
-                    </div>
-                  </div>
+                    </Col>
+                  </Row>
                   <Divider />
                 </Col>
               )}
-              <Col span={19}>
+              <Col xs={24} xl={19} className="related-stories">
                 <strong>Có Thể Bạn Cũng Muốn Đọc</strong>
                 <Divider />
                 {relatedStories &&

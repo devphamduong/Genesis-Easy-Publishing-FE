@@ -6,6 +6,7 @@ import Footer from "../../../components/Footer";
 import { Col, Menu, MenuProps, Row } from "antd";
 import { ERouteEndPointForUser } from "../../../enums/route-end-point.enum";
 import { EMenuLabel } from "../../../enums/menu.enum";
+import { useBreakpoint } from "../../../hooks/customHooks";
 
 interface IProps {
   categories: ICategory[];
@@ -33,6 +34,7 @@ const ProfileLayout: FC<IProps> = (props: IProps) => {
   const [currentParams, setCurrentParams] = useState<string>(
     ERouteEndPointForUser.DASHBOARD
   );
+  const breakpoint = useBreakpoint();
 
   useEffect(() => {
     setCurrentParams(location.pathname);
@@ -88,15 +90,21 @@ const ProfileLayout: FC<IProps> = (props: IProps) => {
       <Header />
       <div className="user-dashboard-layout-content container py-3">
         <Row gutter={[16, 10]}>
-          <Col span={5}>
+          <Col xs={24} lg={5}>
             <Menu
               defaultSelectedKeys={[currentParams]}
               selectedKeys={[currentParams]}
-              mode="inline"
+              mode={
+                breakpoint === "lg" ||
+                breakpoint === "xl" ||
+                breakpoint === "xxl"
+                  ? "inline"
+                  : "horizontal"
+              }
               items={items}
             />
           </Col>
-          <Col span={19}>
+          <Col xs={24} lg={19}>
             <Outlet context={categories} />
           </Col>
         </Row>

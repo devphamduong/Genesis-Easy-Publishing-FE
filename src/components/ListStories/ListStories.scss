@@ -1,6 +1,10 @@
 .list-story-container {
     .header {
         height: 25px;
+
+        .title {
+            text-transform: capitalize;
+        }
     }
 
     .icon-go-to {

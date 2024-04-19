@@ -6,6 +6,10 @@
                     display       : flex;
                     flex-direction: column;
 
+                    @media screen and (min-width: 320px) and (max-width: 767px) {
+                        flex-direction: row;
+                    }
+
                     .ant-upload-list-item-container {
                         .ant-upload-list-item {
                             .ant-upload-list-item-actions {

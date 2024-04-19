@@ -1,22 +1,13 @@
 import { FC, useEffect, useState } from "react";
 import "./EPModalWithdraw.scss";
-import {
-  Button,
-  Card,
-  Col,
-  Form,
-  FormProps,
-  InputNumber,
-  Modal,
-  Row,
-} from "antd";
+import { Card, Col, Form, FormProps, InputNumber, Modal, Row } from "antd";
 import { toast } from "react-toastify";
 import { IPropsEPModal } from "../../../../interfaces/global.interface";
-import EPButton from "../../../EP-UI/Button";
 import EPCondition from "../../../EP-UI/Condition";
 import { IWithdrawForm } from "../../../../interfaces/transaction.interface";
 import { EBankImage, EBankTye } from "../../../../enums/transaction.enum";
 import { sendWithdrawRequest } from "../../../../services/transaction-api-service";
+import { useBreakpoint } from "../../../../hooks/customHooks";
 
 interface IProps extends IPropsEPModal {}
 
@@ -33,6 +24,7 @@ const EPModalWithdraw: FC<IProps> = (props: IProps) => {
       image: string;
     }[]
   >([]);
+  const breakpoint = useBreakpoint();
 
   useEffect(() => {
     if (isModalOpen) {
@@ -79,7 +71,13 @@ const EPModalWithdraw: FC<IProps> = (props: IProps) => {
 
   return (
     <Modal
-      className="w-50 ep-modal-withdraw"
+      className={`${
+        breakpoint === "xs"
+          ? "w-100"
+          : breakpoint === "sm" || breakpoint === "md" || breakpoint === "lg"
+          ? "w-75"
+          : "w-50"
+      } ep-modal-withdraw`}
       title="Tạo yêu cầu rút tiền"
       open={isModalOpen}
       okText="Tạo yêu cầu"
@@ -105,7 +103,7 @@ const EPModalWithdraw: FC<IProps> = (props: IProps) => {
         </Card>
         <Form form={form} className="mt-3" layout="inline" onFinish={onFinish}>
           <Row className="w-100" gutter={[16, 16]}>
-            <Col span={12}>
+            <Col xs={24} lg={12}>
               <Form.Item<IWithdrawForm>
                 name="bankAccount"
                 label="Số tài khoản"
@@ -119,7 +117,7 @@ const EPModalWithdraw: FC<IProps> = (props: IProps) => {
                 <InputNumber size="large" className="w-100" min={1} />
               </Form.Item>
             </Col>
-            <Col span={12}>
+            <Col xs={24} lg={12}>
               <Form.Item<IWithdrawForm>
                 name="amount"
                 label="Số TLT muốn rút"

@@ -107,6 +107,7 @@ const ReviewPage: FC<IProps> = (props: IProps) => {
             rowKey={"storyId"}
             loading={isLoading}
             pagination={{
+              responsive: true,
               current: currentPage,
               total: totalStories,
               pageSize: pageSize,

@@ -43,7 +43,7 @@ const ListStories: FC<IProps> = (props: IProps) => {
     return (
       <Row className="w-100" align={"middle"} justify={"space-between"}>
         {displayRank === true && (
-          <Col span={2}>
+          <Col xl={3} xxl={2}>
             <div
               className={`rank ${index + 1 <= 3 ? `top top-${index + 1}` : ""}`}
             >
@@ -104,7 +104,7 @@ const ListStories: FC<IProps> = (props: IProps) => {
   const renderItemWithDetailFirstStory = (item: IStory, index: number) => {
     return (
       <Row className="w-100" align={"top"} justify={"space-between"}>
-        <Col span={2}>
+        <Col xl={3} xxl={2}>
           <div className={`rank ${index + 1 <= 3 && `top top-${index + 1}`}`}>
             <span>{index + 1}</span>
           </div>
@@ -168,7 +168,7 @@ const ListStories: FC<IProps> = (props: IProps) => {
         size="small"
         header={
           <div className="header d-flex justify-content-between align-items-center">
-            <strong>{title}</strong>
+            <strong className="title">{title}</strong>
             {displayCategory ||
             showDetailFirstStory === !showDetailFirstStory ? (
               <Tooltip title="Danh sách đầy đủ">

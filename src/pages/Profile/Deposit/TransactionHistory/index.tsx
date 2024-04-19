@@ -76,11 +76,11 @@ const TransactionHistoryPage: FC<IProps> = (props: IProps) => {
   const renderHeader = () => {
     return (
       <div className="sum-transaction mt-2">
-        <div>
+        <div className="transaction-label">
           <strong className="fs-4">Lịch sử giao dịch</strong>
         </div>
         {wallet && (
-          <div className="d-flex align-items-center justify-content-between">
+          <div className="transaction-in-out d-flex align-items-center justify-content-between">
             <Tag
               icon={<GoArrowDown className="fs-4" />}
               color="success"
@@ -126,6 +126,7 @@ const TransactionHistoryPage: FC<IProps> = (props: IProps) => {
           columns={columns}
           dataSource={transactionHistory}
           pagination={{
+            responsive: true,
             current: currentPage,
             total: totalTransactions,
             pageSize: pageSize,

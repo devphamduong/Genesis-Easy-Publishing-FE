@@ -15,8 +15,8 @@ const Footer: FC<IProps> = (props: IProps) => {
     <div className="footer-container text-start">
       <Row className="container gap-3">
         <Col span={24}>
-          <Row justify={"space-between"}>
-            <Col span={9}>
+          <Row gutter={[0, { md: 16 }]} justify={"space-between"}>
+            <Col md={24} lg={9}>
               <div className="description">
                 Chào mừng bạn đến với{" "}
                 <strong>
@@ -34,9 +34,9 @@ const Footer: FC<IProps> = (props: IProps) => {
                 Genesis sẽ mang lại cho những trải nghiệm tuyệt vời nhất.
               </div>
             </Col>
-            <Col span={13}>
-              <Row>
-                <Col span={8} className="text-start">
+            <Col xs={24} md={24} lg={13}>
+              <Row gutter={[{ md: 16 }, 0]}>
+                <Col xs={12} md={8} className="text-start">
                   {categories &&
                     categories.length > 0 &&
                     categories.slice(0, 8)?.map((item, index) => {
@@ -49,7 +49,7 @@ const Footer: FC<IProps> = (props: IProps) => {
                       );
                     })}
                 </Col>
-                <Col span={8} className="text-start">
+                <Col xs={12} md={8} className="text-start">
                   {categories &&
                     categories.length > 0 &&
                     categories.slice(9, 17)?.map((item, index) => {
@@ -62,7 +62,7 @@ const Footer: FC<IProps> = (props: IProps) => {
                       );
                     })}
                 </Col>
-                <Col span={8} className="text-start">
+                <Col xs={12} md={8} className="text-start">
                   {categories &&
                     categories.length > 0 &&
                     categories.slice(18, 25)?.map((item, index) => {

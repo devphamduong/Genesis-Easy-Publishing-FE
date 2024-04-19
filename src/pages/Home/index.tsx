@@ -44,13 +44,14 @@ const { Paragraph } = Typography;
 import slide1 from "../../assets/css/images/slide1.png";
 import slide2 from "../../assets/css/images/slide2.png";
 import slide3 from "../../assets/css/images/slide3.png";
+import Categories from "./Categories";
 
 const HomePage: FC = (props) => {
   const navigate = useNavigate();
+  const categories: ICategory[] = useOutletContext();
   const isAuthenticated = useSelector(
     (state: IRootState) => state.account.isAuthenticated
   );
-  const categories: ICategory[] = useOutletContext();
   const [isOpenDrawer, setIsOpenDrawer] = useState<boolean>(false);
   const [stories, setStories] = useState<IStory[]>([]);
   const [famousStories, setFamousStories] = useState<IPaginationStory>();
@@ -113,7 +114,6 @@ const HomePage: FC = (props) => {
   const contentStyle: React.CSSProperties = {
     margin: 0,
     height: "300px",
-    lineHeight: "160px",
     backgroundRepeat: "no-repeat",
     backgroundSize: "cover",
     backgroundPosition: "center",
@@ -124,58 +124,20 @@ const HomePage: FC = (props) => {
       <div className="home-container container py-3">
         <div className="home-content">
           <Row gutter={[16, 16]} className="content-top">
-            <Col span={5} className="content-top-item">
-              <Row
-                justify={"start"}
-                align={"middle"}
-                className="content-top-item rounded-3 content-top-item-left py-2 position-relative"
-              >
-                {categories && categories.length > 0 ? (
-                  categories?.slice(0, 14).map((item, index) => {
-                    return (
-                      <Col
-                        span={12}
-                        key={`cate-${item.categoryId}-${item.categoryName}`}
-                        onClick={() =>
-                          navigate(
-                            getCategoryDetailURL(
-                              item.categoryId,
-                              item.categoryName
-                            )
-                          )
-                        }
-                      >
-                        <div className="d-flex align-items-center px-2 category gap-2">
-                          <div className="icon">{item.icon ?? "O"}</div>
-                          <div>
-                            <strong className="name">
-                              {item.categoryName}
-                            </strong>
-                            <div className="amount">
-                              {kFormatter(item.storiesNumber!)}
-                            </div>
-                          </div>
-                        </div>
-                      </Col>
-                    );
-                  })
-                ) : (
-                  <Col span={24} className="d-flex justify-content-center">
-                    <Loading />
-                  </Col>
-                )}
-                <div className="more-icon position-absolute bottom-0 end-0">
-                  <PiDotsThreeCircleLight
-                    className="pointer"
-                    onClick={() => setIsOpenDrawer(true)}
-                  />
-                </div>
-              </Row>
+            <Col xs={0} md={8} lg={6} xxl={5} className="content-top-item">
+              <Categories setIsOpenDrawer={setIsOpenDrawer} />
             </Col>
-            <Col span={14} className="content-top-item content-top-item-middle">
-              <Carousel autoplay className="content-top-item">
+            <Col
+              xs={24}
+              md={16}
+              lg={12}
+              xxl={14}
+              className="content-top-item content-top-item-middle"
+            >
+              <Carousel autoplay>
                 <div>
                   <div
+                    className="slide-item"
                     style={{
                       backgroundImage: `url(${slide1})`,
                       ...contentStyle,
@@ -184,6 +146,7 @@ const HomePage: FC = (props) => {
                 </div>
                 <div>
                   <div
+                    className="slide-item"
                     style={{
                       backgroundImage: `url(${slide2})`,
                       ...contentStyle,
@@ -192,6 +155,7 @@ const HomePage: FC = (props) => {
                 </div>
                 <div>
                   <div
+                    className="slide-item"
                     style={{
                       backgroundImage: `url(${slide3})`,
                       ...contentStyle,
@@ -200,18 +164,18 @@ const HomePage: FC = (props) => {
                 </div>
               </Carousel>
             </Col>
-            <Col span={5}>
+            <Col xs={24} md={0} className="content-top-item">
+              <Categories setIsOpenDrawer={setIsOpenDrawer} />
+            </Col>
+            <Col xs={0} lg={6} xxl={5}>
               <div className="content-top-item-right text-center d-flex flex-column justify-content-evenly content-top-item px-3 py-2">
                 <h4>Bạn muốn đăng truyện lên The Genesis?</h4>
                 <div>
                   Chúng tôi sẵn sàng hỗ trợ bạn bất cứ lúc nào. Hãy nhấn vào lựa
                   chọn bên dưới.
                 </div>
-                <Button size="large" type="primary">
-                  Hướng dẫn đăng truyện
-                </Button>
+                <Button type="primary">Hướng dẫn đăng truyện</Button>
                 <Button
-                  size="large"
                   type="primary"
                   onClick={() =>
                     navigate(ERouteEndPointForAuthor.POSTED_STORIES)
@@ -222,7 +186,7 @@ const HomePage: FC = (props) => {
                 {!isAuthenticated && <i>(Cần đăng nhập để xem thông tin)</i>}
               </div>
             </Col>
-            <Col span={5}>
+            <Col xs={0} xl={5}>
               <Row gutter={[16, 16]}>
                 <Col className="w-100">
                   {newestStories?.list && newestStories?.list?.length > 0 ? (
@@ -248,26 +212,27 @@ const HomePage: FC = (props) => {
                 </Col>
               </Row>
             </Col>
-            <Col span={19}>
+            <Col xs={24} xl={19}>
               <Row gutter={[16, 16]}>
                 <Col span={24}>
                   <Card size="small" title="Lựa Chọn Của Biên Tập Viên">
-                    <Row gutter={[30, 16]} className="story-container w-100">
+                    <Row gutter={[28, 16]} className="story-container">
                       {stories && stories.length > 0
                         ? stories?.map((item, index) => {
                             return (
                               <Col
-                                span={12}
+                                xs={24}
+                                lg={12}
                                 className="d-flex story-item"
                                 key={`story-${item.storyId}-${item.storyTitle}`}
                               >
                                 <Row>
-                                  <Col span={4}>
+                                  <Col xs={4} md={3} lg={4}>
                                     <VerticalImageHover
                                       imageUrl={item.storyImage}
                                     />
                                   </Col>
-                                  <Col span={20}>
+                                  <Col xs={20} md={21} lg={20}>
                                     <div className="px-2">
                                       <div>
                                         <strong
@@ -328,9 +293,14 @@ const HomePage: FC = (props) => {
                           })
                         : Array.from({ length: 4 }).map((item, index) => {
                             return (
-                              <Col span={12} className="d-flex" key={index}>
+                              <Col
+                                xs={24}
+                                lg={12}
+                                className="d-flex story-item-skeleton"
+                                key={index}
+                              >
                                 <Row className="w-100">
-                                  <Col span={4}>
+                                  <Col xs={4} sm={4} md={3} lg={5} xxl={4}>
                                     <Skeleton.Image
                                       active
                                       style={{
@@ -339,7 +309,7 @@ const HomePage: FC = (props) => {
                                       }}
                                     />
                                   </Col>
-                                  <Col span={20}>
+                                  <Col xs={24} sm={20} md={21} lg={19} xxl={20}>
                                     <div className="px-2">
                                       <Skeleton
                                         paragraph={{ rows: 6 }}
@@ -354,7 +324,35 @@ const HomePage: FC = (props) => {
                     </Row>
                   </Card>
                 </Col>
-                <Col span={8}>
+                <Col xs={24} xl={0}>
+                  <Row gutter={[16, 16]}>
+                    <Col className="w-100" xs={24} sm={12}>
+                      {newestStories?.list &&
+                      newestStories?.list?.length > 0 ? (
+                        <ListStories
+                          displayCategory
+                          title="Truyện Mới Cập Nhật"
+                          stories={[...(newestStories?.list ?? [])]}
+                        />
+                      ) : (
+                        <ListStoriesSkeleton />
+                      )}
+                    </Col>
+                    <Col className="w-100" xs={24} sm={12}>
+                      {topReadStories?.list &&
+                      topReadStories?.list?.length > 0 ? (
+                        <ListStories
+                          displayRead
+                          title="Sáng Tác Nhiều Người Đọc"
+                          stories={[...(topReadStories?.list ?? [])]}
+                        />
+                      ) : (
+                        <ListStoriesSkeleton />
+                      )}
+                    </Col>
+                  </Row>
+                </Col>
+                <Col xs={24} md={12} xl={8}>
                   {famousStories?.list && famousStories?.list?.length > 0 ? (
                     <ListStories
                       urlToNavigate={ERouteEndPointForUser.RANK_STORIES}
@@ -368,21 +366,21 @@ const HomePage: FC = (props) => {
                     <ListStoriesSkeleton />
                   )}
                 </Col>
-                <Col span={8}>
+                <Col xs={24} md={12} xl={8}>
                   {famousStories?.list && famousStories?.list?.length > 0 ? (
                     <ListStories
-                      urlToNavigate={ERouteEndPointForUser.MOST_READ_IN_WEEK}
+                      urlToNavigate={ERouteEndPointForUser.MOST_READ}
                       showDetailFirstStory
                       displayRank
                       displayChapter
-                      title="Đọc nhiều trong tuần"
+                      title="Truyện được đọc nhiều"
                       stories={[...(topReadStories?.list ?? [])]}
                     />
                   ) : (
                     <ListStoriesSkeleton />
                   )}
                 </Col>
-                <Col span={8}>
+                <Col xs={24} md={12} xl={8}>
                   {famousStories?.list && famousStories?.list?.length > 0 ? (
                     <ListStories
                       urlToNavigate={
@@ -408,7 +406,13 @@ const HomePage: FC = (props) => {
             {storiesByCategory && storiesByCategory.length > 0
               ? storiesByCategory.slice(0, 8)?.map((item, index) => {
                   return (
-                    <Col span={6} key={`category-item-${item.categoryId}`}>
+                    <Col
+                      xs={24}
+                      md={12}
+                      lg={8}
+                      xl={6}
+                      key={`category-item-${item.categoryId}`}
+                    >
                       <ListStories
                         displayRank
                         displayRead
@@ -423,7 +427,7 @@ const HomePage: FC = (props) => {
                   );
                 })
               : Array.from({ length: 4 }).map((item, index) => (
-                  <Col span={6} key={index}>
+                  <Col xs={24} md={12} lg={12} xl={6} key={index}>
                     <ListStoriesSkeleton />
                   </Col>
                 ))}

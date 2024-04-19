@@ -59,6 +59,7 @@ const PreviewExportPage: FC<IProps> = (props: IProps) => {
                           Chương {itemC.chapterNumber}: {itemC.chapterTitle}
                         </strong>
                         <div
+                          className="content-html"
                           dangerouslySetInnerHTML={{
                             __html: itemC.chapterContentHtml,
                           }}
@@ -79,7 +80,7 @@ const PreviewExportPage: FC<IProps> = (props: IProps) => {
           />
         </Flex>
       )}
-      <FloatButton.Group shape="circle" type="primary">
+      <FloatButton.Group shape="circle">
         <FloatButton
           icon={<BsFiletypePdf />}
           onClick={() =>

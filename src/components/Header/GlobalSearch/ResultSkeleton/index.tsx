@@ -19,8 +19,12 @@ const ResultSkeleton: FC<IProps> = (props: IProps) => {
 
   return Array.from({ length: 5 }, () => {
     return (
-      <Row className="result-row-container" style={{ padding: "5px 12px" }}>
-        <Col span={3}>
+      <Row
+        gutter={[10, 10]}
+        className="result-row-container"
+        style={{ padding: "5px 12px" }}
+      >
+        <Col sm={6} md={5} lg={5} xl={4} xxl={3}>
           <Skeleton.Image
             active
             style={{
@@ -29,7 +33,12 @@ const ResultSkeleton: FC<IProps> = (props: IProps) => {
             }}
           />
         </Col>
-        <Col span={21} className="d-flex flex-column justify-content-between">
+        <Col
+          sm={24}
+          md={19}
+          lg={19}
+          className="d-flex flex-column justify-content-between gap-2 gap-md-0"
+        >
           <Skeleton.Input active size="small" />
           <Skeleton.Input active size="small" block />
           <div className="d-flex align-items-center justify-content-between gap-1">

@@ -16,10 +16,10 @@ const EPCover: FC<IProps> = (props: IProps) => {
       className="ep-cover d-flex flex-column align-items-center justify-content-center"
       style={{ ...style, backgroundImage: `url(${imgUrl})` }}
     >
-      <div className="title">
+      <div className="title text-center">
         <strong>{title}</strong>
       </div>
-      <div className="sub-title">
+      <div className="sub-title text-center">
         <strong>{subTitle}</strong>
       </div>
     </div>

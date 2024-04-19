@@ -6,7 +6,7 @@ import { IStory } from "../../../interfaces/story.interface";
 import dayjs from "dayjs";
 import EPTag from "../../EP-UI/Tag";
 import { getGlobalSearchStories } from "../../../services/story-api-service";
-import { useOutsideClick } from "../../../hooks/customHooks";
+import { useBreakpoint, useOutsideClick } from "../../../hooks/customHooks";
 import VerticalImageHover from "../../VerticalImageHover";
 import { Link } from "react-router-dom";
 import {
@@ -25,6 +25,7 @@ const GlobalSearch: FC<IProps> = (props: IProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isExpand, setIsExpand] = useState<boolean>(false);
   const ref = useOutsideClick(isExpand, () => isExpand && setIsExpand(false));
+  const breakpoint = useBreakpoint();
 
   useEffect(() => {
     fetchGlobalSearchStories();
@@ -46,6 +47,7 @@ const GlobalSearch: FC<IProps> = (props: IProps) => {
     setIsLoading(false);
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let timeout: any = null;
   const handleSearch = (newValue: string) => {
     setIsFocused(true);
@@ -67,10 +69,10 @@ const GlobalSearch: FC<IProps> = (props: IProps) => {
       key: item.storyId + "",
       label: (
         <Row gutter={[10, 10]}>
-          <Col span={3}>
+          <Col sm={6} md={5} lg={5} xl={4} xxl={3}>
             <VerticalImageHover imageUrl={item.storyImage} />
           </Col>
-          <Col span={21}>
+          <Col sm={24} md={19} lg={19}>
             <div className="d-flex justify-content-between">
               <span>
                 Tác giả:{" "}
@@ -120,7 +122,11 @@ const GlobalSearch: FC<IProps> = (props: IProps) => {
       <Dropdown
         menu={{ items }}
         dropdownRender={(menu) => (
-          <div className="d-flex gap-2" onClick={(e) => e.stopPropagation()}>
+          <div
+            className={!isLoading ? "d-flex gap-2" : ""}
+            key={`menu-search-global`}
+            onClick={(e) => e.stopPropagation()}
+          >
             {isLoading ? (
               <Flex vertical gap={8} className="loading-skeleton">
                 <ResultSkeleton />
@@ -136,15 +142,17 @@ const GlobalSearch: FC<IProps> = (props: IProps) => {
                 />
               </Flex>
             )}
-            <Divider type="vertical" />
-            <SearchFilter
-              searchFilter={searchFilter}
-              setSearchFilter={setSearchFilter}
-            />
+            <Divider type="vertical" className="d-none d-lg-block" />
+            <div className="d-none d-lg-block filter">
+              <SearchFilter
+                searchFilter={searchFilter}
+                setSearchFilter={setSearchFilter}
+              />
+            </div>
           </div>
         )}
         open={isExpand}
-        overlayClassName="custom-global-search-dropdown"
+        overlayClassName={`custom-global-search-dropdown ${breakpoint}`}
       >
         <Input
           variant="filled"

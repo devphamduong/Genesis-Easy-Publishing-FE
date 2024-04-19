@@ -1,0 +1,25 @@
+.comment-item-container {
+    .comment-item-content {
+        .create-comment {
+            .ant-row {
+                @media screen and (min-width: 320px) and (max-width: 420px) {
+                    justify-content: space-between;
+
+                    .ant-col:nth-child(1) {}
+
+                    .ant-col:nth-child(2) {
+                        max-width: 88%;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.comment-item-actions {
+    .ant-popover-content {
+        .ant-popover-inner {
+            padding: 0;
+        }
+    }
+}

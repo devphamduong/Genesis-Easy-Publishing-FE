@@ -85,6 +85,12 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
   useEffect(() => {
     if (storyId && mode === "edit") {
       fetchStoryInformation();
+    } else {
+      form.resetFields();
+      handleEditorChange({
+        html: "",
+        text: "",
+      });
     }
   }, [storyId]);
 
@@ -194,7 +200,7 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
     <div className="write-story-container my-3">
       <div className="write-story-content">
         <Row gutter={[16, 16]}>
-          <Col span={18}>
+          <Col xs={24} xl={18}>
             <Form
               form={form}
               layout="vertical"
@@ -202,7 +208,7 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
               initialValues={{ status: 0 }}
             >
               <Row gutter={[20, 0]}>
-                <Col span={7}>
+                <Col xs={24} md={12} className="storyTitle">
                   <Form.Item<IWriteStoryForm>
                     label="Tựa Đề"
                     name="storyTitle"
@@ -219,7 +225,7 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
                     />
                   </Form.Item>
                 </Col>
-                <Col span={7}>
+                {/* <Col span={7}>
                   <Form.Item<IWriteStoryForm>
                     label={
                       <div className="d-flex align-items-center gap-1">
@@ -242,8 +248,8 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
                       placeholder="Loại truyện mà bạn sắp viết"
                     />
                   </Form.Item>
-                </Col>
-                <Col span={7}>
+                </Col> */}
+                <Col xs={24} md={12} className="categoryIds">
                   <Form.Item<IWriteStoryForm>
                     label="Thể loại"
                     name="categoryIds"
@@ -272,7 +278,7 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
                     />
                   </Form.Item>
                 </Col>
-                <Col>
+                <Col className="status">
                   <Form.Item<IWriteStoryForm>
                     label={
                       <div className="d-flex align-items-center gap-1">
@@ -282,7 +288,7 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
                             <span>
                               "Truyện của bạn chỉ có thể đổi trạng thái khi đã
                               đạt đủ điều kiện (mặc định truyện chưa đủ điều
-                              kiện sẽ có trạng thái "Chưa đủ điều kiện")
+                              kiện sẽ có trạng thái "Ẩn truyện")
                             </span>
                           }
                         >
@@ -327,7 +333,7 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
                 </Col>
                 {mode === "edit" && (
                   <>
-                    <Col span={4}>
+                    <Col xs={24} sm={8} md={6} xl={6} className="storyPrice">
                       <Form.Item<IWriteStoryForm>
                         label="Giá gốc của truyện"
                         name="storyPrice"
@@ -349,7 +355,7 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
                         />
                       </Form.Item>
                     </Col>
-                    <Col span={3}>
+                    <Col xs={24} sm={6} md={4} xl={4} className="storySale">
                       <Form.Item<IWriteStoryForm>
                         label="Giá SALE"
                         name="storySale"
@@ -357,11 +363,9 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
                         <InputNumber
                           addonBefore={"%"}
                           size="large"
-                          formatter={(value) =>
-                            `${value}`.replace(/\B(?=(\d{2})+(?!\d))/g, ",")
-                          }
-                          parser={(value) => value!.replace(/\$\s?|(,*)/g, "")}
                           className="w-100"
+                          min={0}
+                          max={100}
                         />
                       </Form.Item>
                     </Col>
@@ -396,13 +400,13 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
               </Form.Item>
             </Form>
           </Col>
-          <Col span={6} className="upload d-flex flex-column gap-3">
+          <Col xl={6} className="upload d-flex flex-column gap-3">
             <Dragger {...propsUpLoad} showUploadList={false}>
               <p className="ant-upload-drag-icon">
                 <InboxOutlined />
               </p>
               <p className="ant-upload-text">
-                Nhấp hoặc kéo tệp vào khu vực này để tải lên
+                Nhấp hoặc kéo tệp vào khu vực này để tải bìa truyện lên
               </p>
               <p className="ant-upload-hint">
                 Hỗ trợ tải lên một lần. Nghiêm cấm tải lên dữ liệu công ty hoặc

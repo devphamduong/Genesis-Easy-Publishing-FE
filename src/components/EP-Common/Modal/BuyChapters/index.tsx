@@ -31,6 +31,7 @@ import {
 import { toast } from "react-toastify";
 import { updateAccountBalance } from "../../../../redux/account/accountSlice";
 import { EUpdateBalanceAction } from "../../../../enums/transaction.enum";
+import { useBreakpoint } from "../../../../hooks/customHooks";
 
 interface IProps extends IPropsEPModal {
   storyId?: number | string;
@@ -80,6 +81,7 @@ const EPModalBuyChapters: FC<IProps> = (props: IProps) => {
   const [numberOfChaptersSucceed, setNumberOfChaptersSucceed] =
     useState<number>(0);
   const [isBuyFull, setIsBuyFull] = useState(false);
+  const breakpoint = useBreakpoint();
 
   useEffect(() => {
     isModalOpen === true && fetchInformationBuyMultipleChapters();
@@ -204,7 +206,7 @@ const EPModalBuyChapters: FC<IProps> = (props: IProps) => {
           <Form
             form={form}
             className="mt-3"
-            layout="inline"
+            layout={breakpoint === "xs" ? "vertical" : "inline"}
             onFinish={onFinish}
             initialValues={{
               from: 1,
@@ -212,7 +214,7 @@ const EPModalBuyChapters: FC<IProps> = (props: IProps) => {
             }}
           >
             <Row className="w-100" gutter={[16, 16]}>
-              <Col span={12}>
+              <Col xs={24} lg={12}>
                 <Form.Item<IFormBuyChapters>
                   name="from"
                   label="Từ chương"
@@ -226,7 +228,7 @@ const EPModalBuyChapters: FC<IProps> = (props: IProps) => {
                   />
                 </Form.Item>
               </Col>
-              <Col span={12}>
+              <Col xs={24} lg={12}>
                 <Form.Item<IFormBuyChapters>
                   name="to"
                   label="Đến chương"
@@ -240,14 +242,14 @@ const EPModalBuyChapters: FC<IProps> = (props: IProps) => {
                   />
                 </Form.Item>
               </Col>
-              <Col span={12}>
+              <Col xs={24} lg={12}>
                 <Form.Item>
                   <Button block size="large" type="primary" htmlType="submit">
                     MUA CHƯƠNG
                   </Button>
                 </Form.Item>
               </Col>
-              <Col span={12}>
+              <Col xs={24} lg={12}>
                 <Form.Item>
                   <Button
                     block

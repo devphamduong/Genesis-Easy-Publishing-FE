@@ -24,4 +24,8 @@
 
 .ant-drawer-content-wrapper:has(.drawer-posted-stories) {
     width: 70vw !important;
+
+    @media screen and (min-width: 320px) and (max-width: 991px) {
+        width: 90vw !important;
+    }
 }

@@ -23,6 +23,8 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import TextArea from "antd/es/input/TextArea";
 import { UserOutlined } from "@ant-design/icons";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
+import { IRootState } from "../../../redux/store";
 
 interface IProps {
   createComment?: boolean;
@@ -37,6 +39,7 @@ const CommentItem: FC<IProps> = (props: IProps) => {
   const [isDisplayButtonComment, setIsDisplayButtonComment] =
     useState<boolean>(false);
   const [commentContent, setCommentContent] = useState<string>("");
+  const account = useSelector((state: IRootState) => state.account?.user);
 
   const handleCommentAction = (
     option: "create" | "edit" | "delete",
@@ -70,7 +73,12 @@ const CommentItem: FC<IProps> = (props: IProps) => {
           <Flex gap={"small"} vertical className="create-comment">
             <Row>
               <Col xs={2} xl={1}>
-                <Avatar icon={<UserOutlined />} />
+                <Avatar
+                  icon={<UserOutlined />}
+                  src={`${
+                    import.meta.env.VITE_BACKEND_URL
+                  }Assets/images/avatar/${account.userImage}`}
+                />
               </Col>
               <Col xs={22} xl={23}>
                 <TextArea
@@ -106,7 +114,7 @@ const CommentItem: FC<IProps> = (props: IProps) => {
           </Flex>
         ) : (
           comment && (
-            <List.Item>
+            <List.Item className="comment-item">
               <List.Item.Meta
                 avatar={
                   <Avatar

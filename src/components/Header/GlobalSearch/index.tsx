@@ -14,6 +14,7 @@ import {
   getStoryDetailURL,
 } from "../../../shared/generate-navigate-url";
 import ResultSkeleton from "./ResultSkeleton";
+import useLocalStorage from "use-local-storage";
 
 interface IProps {}
 
@@ -26,6 +27,7 @@ const GlobalSearch: FC<IProps> = (props: IProps) => {
   const [isExpand, setIsExpand] = useState<boolean>(false);
   const ref = useOutsideClick(isExpand, () => isExpand && setIsExpand(false));
   const breakpoint = useBreakpoint();
+  const [isDarkMode, setIsDarkMode] = useLocalStorage("isDarkTheme", false);
 
   useEffect(() => {
     fetchGlobalSearchStories();
@@ -123,7 +125,8 @@ const GlobalSearch: FC<IProps> = (props: IProps) => {
         menu={{ items }}
         dropdownRender={(menu) => (
           <div
-            className={!isLoading ? "d-flex gap-2" : ""}
+            className={`d-flex gap-2 ${isDarkMode ? "dark" : "light"}-theme`}
+            data-theme="123"
             key={`menu-search-global`}
             onClick={(e) => e.stopPropagation()}
           >

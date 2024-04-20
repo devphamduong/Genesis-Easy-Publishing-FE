@@ -168,7 +168,7 @@ const HomePage: FC = (props) => {
               <Categories setIsOpenDrawer={setIsOpenDrawer} />
             </Col>
             <Col xs={0} lg={6} xxl={5}>
-              <div className="content-top-item-right text-center d-flex flex-column justify-content-evenly content-top-item px-3 py-2">
+              <div className="rounded-3 content-top-item-right text-theme text-center d-flex flex-column justify-content-evenly content-top-item px-3 py-2">
                 <h4>Bạn muốn đăng truyện lên The Genesis?</h4>
                 <div>
                   Chúng tôi sẵn sàng hỗ trợ bạn bất cứ lúc nào. Hãy nhấn vào lựa
@@ -355,6 +355,7 @@ const HomePage: FC = (props) => {
                 <Col xs={24} md={12} xl={8}>
                   {famousStories?.list && famousStories?.list?.length > 0 ? (
                     <ListStories
+                      showMore
                       urlToNavigate={ERouteEndPointForUser.RANK_STORIES}
                       showDetailFirstStory
                       displayRank
@@ -369,6 +370,7 @@ const HomePage: FC = (props) => {
                 <Col xs={24} md={12} xl={8}>
                   {famousStories?.list && famousStories?.list?.length > 0 ? (
                     <ListStories
+                      showMore
                       urlToNavigate={ERouteEndPointForUser.MOST_READ}
                       showDetailFirstStory
                       displayRank
@@ -383,6 +385,7 @@ const HomePage: FC = (props) => {
                 <Col xs={24} md={12} xl={8}>
                   {famousStories?.list && famousStories?.list?.length > 0 ? (
                     <ListStories
+                      showMore
                       urlToNavigate={
                         ERouteEndPointForUser.STORIES_LATEST_BY_CHAPTER
                       }
@@ -416,6 +419,7 @@ const HomePage: FC = (props) => {
                       <ListStories
                         displayRank
                         displayRead
+                        showMore
                         urlToNavigate={getCategoryDetailURL(
                           item.categoryId,
                           item.categoryName

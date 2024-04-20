@@ -12,7 +12,7 @@ const ProfilePage: FC<IProps> = (props: IProps) => {
   return (
     <div className="dashboard-container">
       <div className="dashboard-content">
-        <div className="info">
+        <div className="info text-theme">
           <strong className="fs-4">Hey, {account.username}</strong>
           <EditProfile />
         </div>

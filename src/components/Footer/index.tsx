@@ -42,7 +42,7 @@ const Footer: FC<IProps> = (props: IProps) => {
                     categories.slice(0, 8)?.map((item, index) => {
                       return (
                         <div key={`footer-category-${item.categoryId}`}>
-                          <span className="category">
+                          <span className="category link-hover pointer">
                             Truyện {item.categoryName}
                           </span>
                         </div>
@@ -55,7 +55,7 @@ const Footer: FC<IProps> = (props: IProps) => {
                     categories.slice(9, 17)?.map((item, index) => {
                       return (
                         <div key={`footer-category-${item.categoryId}`}>
-                          <span className="category">
+                          <span className="category link-hover pointer">
                             Truyện {item.categoryName}
                           </span>
                         </div>
@@ -68,7 +68,7 @@ const Footer: FC<IProps> = (props: IProps) => {
                     categories.slice(18, 25)?.map((item, index) => {
                       return (
                         <div key={`footer-category-${item.categoryId}`}>
-                          <span className="category">
+                          <span className="category link-hover pointer">
                             Truyện {item.categoryName}
                           </span>
                         </div>

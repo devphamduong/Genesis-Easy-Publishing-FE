@@ -1,11 +1,9 @@
 .footer-container {
-    border-top         : 1px solid #ddd;
-    background-color   : #f4f4f4;
-    // position        : fixed;
-    bottom             : 0;
-    text-align         : center;
-    // width           : 100vw;
-    padding            : 15px 0;
+    border-top      : 1px solid #ddd;
+    background-color: var(--footer-background-color);
+    bottom          : 0;
+    text-align      : center;
+    padding         : 15px 0;
 
     .category {
         color: #888;
@@ -13,13 +11,19 @@
 
     .description {
         font-size: 13px;
+        color    : var(--text-light);
     }
+}
 
-    .category {
-        cursor: pointer;
+[data-theme="dark-theme"] {
+    .footer-container {
 
-        &:hover {
-            color: #4497f8;
+        .category {
+            cursor: pointer;
+
+            &:hover {
+                color: #fff;
+            }
         }
     }
 }

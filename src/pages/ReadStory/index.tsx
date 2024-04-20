@@ -5,18 +5,15 @@ import {
   Button,
   Col,
   Descriptions,
-  Flex,
   FloatButton,
   InputNumber,
   Modal,
   Row,
-  Switch,
 } from "antd";
 import {
   ExclamationCircleFilled,
   HeartOutlined,
   LeftOutlined,
-  MoonOutlined,
   RightOutlined,
   WarningOutlined,
 } from "@ant-design/icons";
@@ -66,7 +63,6 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
   const [chapterContent, setChapterContent] = useState<IChapterContent>();
   const [isModalTopUpOpen, setIsModalTopUpOpen] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isLightTheme, setIsLightTheme] = useState(true);
   const [fontSize, setFontSize] = useState(14);
   const breakpoint = useBreakpoint();
 
@@ -150,10 +146,8 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
 
   return (
     <>
-      <div
-        className={`read-story-container ${!isLightTheme ? "dark-theme" : ""}`}
-      >
-        <div className="read-story-content container py-3 d-flex flex-column gap-3">
+      <div className={`read-story-container`}>
+        <div className="read-story-content container py-3 d-flex flex-column gap-3 text-theme">
           <div className="fs-4 text-center">
             Chương {chapterContent?.chapterNumber}:{" "}
             <strong>{chapterContent?.chapterTitle}</strong> của truyện{" "}
@@ -320,7 +314,7 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
                 label: <strong>Thông Tin Chương Truyện</strong>,
                 children: (
                   <Row>
-                    <Col xs={4} lg={2} className="text-lighter">
+                    <Col xs={4} lg={2}>
                       Đăng bởi
                     </Col>{" "}
                     <Col xs={20} lg={22}>
@@ -332,7 +326,7 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
                         {chapterContent?.author.userFullname}
                       </Link>
                     </Col>
-                    <Col xs={4} lg={2} className="text-lighter">
+                    <Col xs={4} lg={2}>
                       Tên truyện
                     </Col>{" "}
                     <Col xs={20} lg={22}>
@@ -344,19 +338,19 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
                         {chapterContent?.story.storyTitle}{" "}
                       </Link>
                     </Col>
-                    <Col xs={4} lg={2} className="text-lighter">
+                    <Col xs={4} lg={2}>
                       Tên chương
                     </Col>{" "}
                     <Col xs={20} lg={22}>
                       {chapterContent?.chapterTitle}
                     </Col>
-                    <Col xs={4} lg={2} className="text-lighter">
+                    <Col xs={4} lg={2}>
                       Chương
                     </Col>{" "}
                     <Col xs={20} lg={22}>
                       {chapterContent?.chapterNumber}
                     </Col>
-                    <Col xs={4} lg={2} className="text-lighter">
+                    <Col xs={4} lg={2}>
                       Thời gian
                     </Col>{" "}
                     <Col xs={20} lg={22}>
@@ -365,7 +359,7 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
                         ({dayjsFrom(chapterContent?.createTime ?? "")})
                       </i>
                     </Col>
-                    <Col xs={4} lg={2} className="text-lighter">
+                    <Col xs={4} lg={2}>
                       Lượt mua
                     </Col>{" "}
                     <Col xs={20} lg={22}>
@@ -381,12 +375,6 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
       </div>
       <FloatButton.BackTop style={{ right: 94 }} />
       <FloatButton.Group shape="circle" trigger="click" icon={<PiMagicWand />}>
-        <FloatButton
-          icon={<MoonOutlined />}
-          tooltip={isLightTheme ? <span>Sáng</span> : <span>Tối</span>}
-          type={isLightTheme ? "default" : "primary"}
-          onClick={() => setIsLightTheme(!isLightTheme)}
-        />
         <FloatButton
           icon={<TbTextSize />}
           tooltip={<span>Cỡ chữ</span>}

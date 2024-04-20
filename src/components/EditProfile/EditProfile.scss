@@ -24,3 +24,11 @@
         }
     }
 }
+
+[data-theme="dark-theme"] {
+    .ant-upload {
+        button {
+            color: var(--text-light);
+        }
+    }
+}

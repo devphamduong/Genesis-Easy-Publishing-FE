@@ -11,7 +11,11 @@ const AuthLayout: FC<IProps> = (props: IProps) => {
   return (
     <div className="auth-container">
       <div className="auth-content py-5 container h-100">
-        <Row className="h-100" align={"middle"} justify={"space-between"}>
+        <Row
+          className="h-100 text-theme"
+          align={"middle"}
+          justify={"space-between"}
+        >
           <Col xs={24} lg={8}>
             <Outlet />
             <div className="text-center">

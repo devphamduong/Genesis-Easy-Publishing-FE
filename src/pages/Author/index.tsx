@@ -86,7 +86,7 @@ const AuthorPage: FC<IProps> = (props: IProps) => {
               }`}
             />
           </div>
-          <div className="name">
+          <div className="name text-theme">
             <span>Tác giả: </span> <strong>{author?.authorName}</strong>
           </div>
         </div>

@@ -224,7 +224,7 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
   const renderDescription = (description: string) => {
     return (
       <div
-        className="content-html"
+        className="content-html text-theme"
         dangerouslySetInnerHTML={{
           __html: description,
         }}
@@ -285,6 +285,7 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
         ),
       },
     ];
+
     return (
       <Table
         columns={columns}
@@ -443,7 +444,6 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
     <>
       <div className="detail-story-container">
         <div className="detail-story-content container py-3">
-          {/* <Badge.Ribbon text="Hippies" color="cyan"> */}
           <Row align={"middle"} className="top mb-3">
             <Col xs={24} xl={14}>
               <Row gutter={[12, 10]}>
@@ -461,11 +461,11 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
                   className="d-flex flex-column justify-content-between"
                 >
                   <div className="d-flex flex-column gap-2">
-                    <div className="title">
+                    <div className="title text-theme">
                       <strong>{story?.storyTitle}</strong>
                     </div>
                     <span
-                      className="author"
+                      className="author text-theme link-hover"
                       onClick={() =>
                         navigate(getAuthorDetailURL(story?.storyAuthor.userId))
                       }
@@ -490,7 +490,7 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
                       </Space>
                     </div>
                   </div>
-                  <div className="d-flex flex-column gap-2">
+                  <div className="d-flex flex-column gap-2 text-theme">
                     <Space split={<Divider type="vertical" />}>
                       <div>
                         {kFormatter(story?.storyChapterNumber ?? 0)}{" "}
@@ -569,7 +569,7 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
                 </Col>
               </Row>
             </Col>
-            <Col className="price">
+            <Col className="price text-theme">
               <table>
                 <tbody>
                   <tr>
@@ -611,7 +611,6 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
               <div></div>
             </Col>
           </Row>
-          {/* </Badge.Ribbon> */}
           <div className="bottom">
             <Tabs
               defaultActiveKey={currentTab}
@@ -629,12 +628,14 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
               </Col>
               <Col
                 xl={5}
-                className="author-info d-flex flex-column align-items-center gap-3 py-4 text-center"
+                className="author-info d-flex flex-column align-items-center gap-3 py-4 text-center text-theme"
               >
                 <div>
                   <Avatar
                     size={120}
-                    src={author?.authorImage}
+                    src={`${
+                      import.meta.env.VITE_BACKEND_URL
+                    }Assets/images/avatar/${author?.authorImage}`}
                     icon={<UserOutlined />}
                   />
                 </div>
@@ -701,7 +702,7 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
                     className="d-flex flex-column flex-md-row"
                   >
                     <Col xs={24} md={5} lg={4}>
-                      <strong className="fs-6">Mới Cập Nhật</strong>
+                      <strong className="fs-6 text-theme">Mới Cập Nhật</strong>
                     </Col>
                     <Col
                       xs={24}
@@ -716,7 +717,7 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
                             className="d-flex align-items-center justify-content-between"
                           >
                             <Link
-                              className="link-hover fs-6"
+                              className="link-hover fs-6 text-theme"
                               to={getStoryReadURL(
                                 id!,
                                 slug!,

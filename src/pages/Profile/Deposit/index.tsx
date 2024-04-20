@@ -33,7 +33,7 @@ const DepositPage: FC<IProps> = (props: IProps) => {
   return (
     <>
       <div className="deposit-container">
-        <div className="deposit-content">
+        <div className="deposit-content text-theme">
           <div>
             Số dư: <strong>{wallet?.fund}</strong> TLT
           </div>

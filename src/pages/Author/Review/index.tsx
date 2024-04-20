@@ -44,11 +44,7 @@ const ReviewPage: FC<IProps> = (props: IProps) => {
       render(value: string, record: IStory) {
         return (
           <span
-            // onClick={() => {
-            //   setCurrentStory(record);
-            //   setOpenDrawer(true);
-            // }}
-            className="pointer custom-title-hover"
+            className="pointer custom-title-hover text-theme"
             onClick={() => {
               setCurrentStory(record);
               setOpenDrawer(true);

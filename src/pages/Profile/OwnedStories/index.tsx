@@ -9,6 +9,7 @@ import Meta from "antd/es/card/Meta";
 import { AiOutlineLike } from "react-icons/ai";
 import { FaRegHeart } from "react-icons/fa6";
 import { GrView } from "react-icons/gr";
+import EPNoResultFound from "../../../components/EP-UI/NoResultFound";
 
 interface IProps {}
 
@@ -41,46 +42,49 @@ const OwnedStoriesPage: FC<IProps> = (props: IProps) => {
     <>
       <div className="d-flex gap-5 flex-wrap justify-content-evenly">
         {stories &&
-          stories.length > 0 &&
-          stories.map((item, index) => {
-            return (
-              <Badge.Ribbon
-                key={`owned-story-${item.storyId}`}
-                text={item.storyPrice + " TLT"}
-                color="red"
-              >
-                <Card
+          (stories.length > 0 ? (
+            stories.map((item, index) => {
+              return (
+                <Badge.Ribbon
                   key={`owned-story-${item.storyId}`}
-                  hoverable
-                  style={{ width: 180 }}
-                  cover={<img alt={item.storyTitle} src={item.storyImage} />}
-                  onClick={() =>
-                    navigate(getStoryDetailURL(item.storyId, item.storyTitle))
-                  }
+                  text={item.storyPrice + " TLT"}
+                  color="red"
                 >
-                  <Meta
-                    title={item.storyTitle}
-                    description={
-                      <div className="d-flex align-items-center justify-content-between flex-wrap">
-                        <div className="d-flex align-items-center">
-                          <AiOutlineLike />
-                          <span>{item.storyInteraction?.like}</span>
-                        </div>
-                        <div className="d-flex align-items-center">
-                          <FaRegHeart />
-                          <span>{item.storyInteraction?.follow}</span>
-                        </div>
-                        <div className="d-flex align-items-center">
-                          <GrView />
-                          <span>{item.storyInteraction?.view}</span>
-                        </div>
-                      </div>
+                  <Card
+                    key={`owned-story-${item.storyId}`}
+                    hoverable
+                    style={{ width: 180 }}
+                    cover={<img alt={item.storyTitle} src={item.storyImage} />}
+                    onClick={() =>
+                      navigate(getStoryDetailURL(item.storyId, item.storyTitle))
                     }
-                  />
-                </Card>
-              </Badge.Ribbon>
-            );
-          })}
+                  >
+                    <Meta
+                      title={item.storyTitle}
+                      description={
+                        <div className="d-flex align-items-center justify-content-between flex-wrap">
+                          <div className="d-flex align-items-center">
+                            <AiOutlineLike />
+                            <span>{item.storyInteraction?.like}</span>
+                          </div>
+                          <div className="d-flex align-items-center">
+                            <FaRegHeart />
+                            <span>{item.storyInteraction?.follow}</span>
+                          </div>
+                          <div className="d-flex align-items-center">
+                            <GrView />
+                            <span>{item.storyInteraction?.view}</span>
+                          </div>
+                        </div>
+                      }
+                    />
+                  </Card>
+                </Badge.Ribbon>
+              );
+            })
+          ) : (
+            <EPNoResultFound />
+          ))}
       </div>
       {stories.length > 0 && (
         <Pagination

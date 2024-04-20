@@ -140,7 +140,7 @@ const CategoryPage: FC<IProps> = (props: IProps) => {
         imgUrl={categoryDetail?.categoryBanner ?? ""}
         title={
           <span className="text-capitalize">
-            Truyện {categoryDetail ? categoryDetail?.categoryName : null}
+            Truyện {categoryDetail?.categoryName}
           </span>
         }
       />
@@ -156,7 +156,7 @@ const CategoryPage: FC<IProps> = (props: IProps) => {
               gutter={[16, 16]}
               align={"middle"}
               justify={"space-around"}
-              className="px-3 py-4 flex-column flex-md-row"
+              className="px-3 py-4 flex-column flex-md-row ep-3d-stories"
             >
               {stories &&
                 stories.length > 0 &&
@@ -183,11 +183,8 @@ const CategoryPage: FC<IProps> = (props: IProps) => {
             </Row>
           </Col>
           <Col xs={24} xl={5} className="order-lg-0 order-xl-0">
-            <div className="border p-4 rounded-3">
-              Kiếm Hiệp là những truyện có bối cảnh cổ trang, nhân vật chính là
-              người trong các môn phái võ lâm, tu luyện võ công tâm pháp. Thông
-              thường kết thúc truyện, võ công của nhân vật chính sẽ đạt đến mức
-              thượng thừa, thống nhất hoặc quy ẩn giang hồ.
+            <div className="border p-4 rounded-3 text-theme">
+              {categoryDetail?.categoryDescription}
             </div>
           </Col>
           <Col xs={24} xl={18} className="order-lg-2 order-xl-0">
@@ -224,7 +221,6 @@ const CategoryPage: FC<IProps> = (props: IProps) => {
               displayRead
               displayRank
               showDetailFirstStory
-              showMore={false}
             />
           </Col>
           <Col xs={24} xl={18} className="order-lg-4 order-xl-0">

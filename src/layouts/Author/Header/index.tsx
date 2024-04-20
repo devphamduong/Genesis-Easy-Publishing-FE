@@ -36,7 +36,7 @@ const HeaderAuthor: FC<IProps> = (props: IProps) => {
             account.userImage
           }`}
         />
-        <div>{account.username ?? "vcl"}</div>
+        <div>{account.username ?? ""}</div>
       </div>
     );
   };

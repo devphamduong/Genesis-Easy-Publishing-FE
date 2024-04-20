@@ -170,7 +170,9 @@ const CategoryPage: FC<IProps> = (props: IProps) => {
                     >
                       <EPBook3D
                         storyId={item.storyId}
-                        imgUrl={item.storyImage}
+                        imgUrl={`${
+                          import.meta.env.VITE_BACKEND_URL
+                        }Assets/images/story/${item.storyImage}`}
                         isShowTitle
                         title={item.storyTitle}
                         description={item.storyDescription}

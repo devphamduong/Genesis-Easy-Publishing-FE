@@ -3,12 +3,25 @@ import "./HeaderAuthor.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { IRootState } from "../../../redux/store";
 import { useNavigate } from "react-router-dom";
-import { Avatar, Button, Col, Menu, MenuProps, Popover, Row } from "antd";
-import { UserOutlined } from "@ant-design/icons";
+import {
+  Avatar,
+  Button,
+  Col,
+  Flex,
+  Menu,
+  MenuProps,
+  Popover,
+  Row,
+  Switch,
+} from "antd";
+import { MoonOutlined, SunOutlined, UserOutlined } from "@ant-design/icons";
 import { EMenuKey, EMenuLabel } from "../../../enums/menu.enum";
 import { ERouteEndPointForUser } from "../../../enums/route-end-point.enum";
 import { logout } from "../../../services/auth-api-service";
-import { logoutAction } from "../../../redux/account/accountSlice";
+import {
+  changeThemeAction,
+  logoutAction,
+} from "../../../redux/account/accountSlice";
 import { toast } from "react-toastify";
 import EPButton from "../../../components/EP-UI/Button";
 import { IoIosMenu } from "react-icons/io";
@@ -21,9 +34,12 @@ interface IProps {
 const HeaderAuthor: FC<IProps> = (props: IProps) => {
   const { setOpen } = props;
   const account = useSelector((state: IRootState) => state.account?.user);
+  const isDarkTheme = useSelector(
+    (state: IRootState) => state.account.isDarkTheme
+  );
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [isPopoverOpen, setIPopoverOpen] = useState<boolean>(false);
+  const [isPopoverOpen, setIsPopoverOpen] = useState<boolean>(false);
   const breakpoint = useBreakpoint();
 
   const popoverTitle = () => {
@@ -65,6 +81,20 @@ const HeaderAuthor: FC<IProps> = (props: IProps) => {
       getItem(<div>{EMenuLabel.PROFILE}</div>, EMenuKey.PROFILE, null),
       getItem(<div>{EMenuLabel.DEPOSIT}</div>, EMenuKey.DEPOSIT, null),
       getItem(
+        <Flex align="center" justify="space-between">
+          Giao diện
+          <Switch
+            className="me-2"
+            checkedChildren={<MoonOutlined />}
+            unCheckedChildren={<SunOutlined />}
+            value={isDarkTheme}
+            onChange={(e) => dispatch(changeThemeAction(e))}
+          />
+        </Flex>,
+        "theme",
+        null
+      ),
+      getItem(
         <Button block onClick={() => handleLogout()}>
           Đăng xuất
         </Button>,
@@ -75,18 +105,22 @@ const HeaderAuthor: FC<IProps> = (props: IProps) => {
 
     const onClick: MenuProps["onClick"] = (e) => {
       const { key } = e;
-      setIPopoverOpen(false);
       switch (key) {
         case "home":
-          navigate("/");
+          handleNavigateAndClose("/");
           break;
         case EMenuKey.PROFILE:
-          navigate(ERouteEndPointForUser.DASHBOARD);
+          handleNavigateAndClose(ERouteEndPointForUser.DASHBOARD);
           break;
         case EMenuKey.DEPOSIT:
-          navigate(ERouteEndPointForUser.DEPOSIT);
+          handleNavigateAndClose(ERouteEndPointForUser.DEPOSIT);
           break;
       }
+    };
+
+    const handleNavigateAndClose = (endpoint: string) => {
+      navigate(endpoint);
+      setIsPopoverOpen(false);
     };
 
     return (
@@ -107,7 +141,7 @@ const HeaderAuthor: FC<IProps> = (props: IProps) => {
       toast.success("Logout successfully");
       navigate("/");
     }
-    setIPopoverOpen(false);
+    setIsPopoverOpen(false);
   };
 
   return (
@@ -136,7 +170,7 @@ const HeaderAuthor: FC<IProps> = (props: IProps) => {
               trigger={"click"}
               placement="bottomRight"
               open={isPopoverOpen}
-              onOpenChange={(isOpen) => setIPopoverOpen(isOpen)}
+              onOpenChange={(isOpen) => setIsPopoverOpen(isOpen)}
             >
               Tài khoản
             </Popover>

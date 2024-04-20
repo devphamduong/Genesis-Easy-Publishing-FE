@@ -60,7 +60,7 @@ import { toast } from "react-toastify";
 import EPModalReport from "../../components/EP-Common/Modal/Report";
 import { FcVip } from "react-icons/fc";
 import { buyStory } from "../../services/transaction-api-service";
-import { updateAccountBalance } from "../../redux/account/accountSlice";
+import { updateAccountBalanceAction } from "../../redux/account/accountSlice";
 import { EUpdateBalanceAction } from "../../enums/transaction.enum";
 import { IUpdateBalanceAction } from "../../interfaces/transaction.interface";
 import CommentItem from "./CommentItem";
@@ -430,7 +430,7 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
       toast.success(res.em);
       fetchStoryById();
       dispatch(
-        updateAccountBalance({
+        updateAccountBalanceAction({
           updateAction: EUpdateBalanceAction.BUY,
           amount: price,
         } as IUpdateBalanceAction)
@@ -450,7 +450,9 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
                 <Col xs={9} sm={9} md={7} lg={5} xl={6}>
                   <VerticalImageHover
                     height={240}
-                    imageUrl={story?.storyImage ?? ""}
+                    imageUrl={`${
+                      import.meta.env.VITE_BACKEND_URL
+                    }Assets/images/story/${story?.storyImage}`}
                   ></VerticalImageHover>
                 </Col>
                 <Col
@@ -673,7 +675,11 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
                   <VerticalImageHover
                     height={120}
                     width={80}
-                    imageUrl={author?.authorNewestStory?.storyImage ?? ""}
+                    imageUrl={`${
+                      import.meta.env.VITE_BACKEND_URL
+                    }Assets/images/story/${
+                      author?.authorNewestStory?.storyImage
+                    }`}
                   ></VerticalImageHover>
                   <Link
                     className="link-hover"

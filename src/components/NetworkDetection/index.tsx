@@ -4,7 +4,8 @@ import { LuRefreshCw } from "react-icons/lu";
 import { Flex } from "antd";
 import "./NetworkDetection.scss";
 import { VscDebugDisconnect } from "react-icons/vsc";
-import useLocalStorage from "use-local-storage";
+import { IRootState } from "../../redux/store";
+import { useSelector } from "react-redux";
 
 interface IProps {
   children?: React.ReactNode;
@@ -21,7 +22,9 @@ const NetworkDetection: FC<IProps> = (props: IProps) => {
       return false;
     }
   });
-  const [isDarkMode, setIsDarkMode] = useLocalStorage("isDarkTheme", false);
+  const isDarkTheme = useSelector(
+    (state: IRootState) => state.account.isDarkTheme
+  );
 
   useEffect(() => {
     window.ononline = (e) => {
@@ -44,8 +47,8 @@ const NetworkDetection: FC<IProps> = (props: IProps) => {
   ) : (
     <div
       style={{ height: "100vh" }}
-      className={`${isDarkMode ? "dark" : "light"}-theme`}
-      data-theme={`${isDarkMode ? "dark" : "light"}-theme`}
+      className={`${isDarkTheme ? "dark" : "light"}-theme`}
+      data-theme={`${isDarkTheme ? "dark" : "light"}-theme`}
     >
       <Flex
         align="center"

@@ -152,7 +152,9 @@ const ListStories: FC<IProps> = (props: IProps) => {
             <EPBook3D
               storyId={item.storyId}
               title={item.storyTitle}
-              imgUrl={item.storyImage}
+              imgUrl={`${import.meta.env.VITE_BACKEND_URL}Assets/images/story/${
+                item.storyImage
+              }`}
               width={60}
               height={90}
             />

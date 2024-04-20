@@ -40,7 +40,7 @@ import EPModalBuyChapters from "../../components/EP-Common/Modal/BuyChapters";
 import EPModalTopUp from "../../components/EP-Common/Modal/TopUp";
 import { buySingleChapter } from "../../services/transaction-api-service";
 import { toast } from "react-toastify";
-import { updateAccountBalance } from "../../redux/account/accountSlice";
+import { updateAccountBalanceAction } from "../../redux/account/accountSlice";
 import { EUpdateBalanceAction } from "../../enums/transaction.enum";
 import { IUpdateBalanceAction } from "../../interfaces/transaction.interface";
 import dayjs from "dayjs";
@@ -134,7 +134,7 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
       toast.success(res.em);
       fetchChapterContent();
       dispatch(
-        updateAccountBalance({
+        updateAccountBalanceAction({
           updateAction: EUpdateBalanceAction.BUY,
           amount: price,
         } as IUpdateBalanceAction)

@@ -29,7 +29,7 @@ import {
   getTransactionBuyMultipleChapters,
 } from "../../../../services/transaction-api-service";
 import { toast } from "react-toastify";
-import { updateAccountBalance } from "../../../../redux/account/accountSlice";
+import { updateAccountBalanceAction } from "../../../../redux/account/accountSlice";
 import { EUpdateBalanceAction } from "../../../../enums/transaction.enum";
 import { useBreakpoint } from "../../../../hooks/customHooks";
 
@@ -132,7 +132,7 @@ const EPModalBuyChapters: FC<IProps> = (props: IProps) => {
       setNumberOfChaptersSucceed(res.dt.chapter_buy);
       toast.success(`Bạn đã mua ${res.dt.chapter_buy} chương thành công`);
       dispatch(
-        updateAccountBalance({
+        updateAccountBalanceAction({
           updateAction: EUpdateBalanceAction.BUY,
           amount: res.dt.amount,
         } as IUpdateBalanceAction)

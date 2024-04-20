@@ -229,7 +229,9 @@ const HomePage: FC = (props) => {
                                 <Row>
                                   <Col xs={4} md={3} lg={4}>
                                     <VerticalImageHover
-                                      imageUrl={item.storyImage}
+                                      imageUrl={`${
+                                        import.meta.env.VITE_BACKEND_URL
+                                      }Assets/images/story/${item.storyImage}`}
                                     />
                                   </Col>
                                   <Col xs={20} md={21} lg={20}>

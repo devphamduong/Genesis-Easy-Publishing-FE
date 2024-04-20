@@ -1,18 +1,20 @@
 import { FC, useEffect, useState } from "react";
 import AppRoutes from "./routes/AppRoutes";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getAccount } from "./services/auth-api-service";
 import { getAccountAction } from "./redux/account/accountSlice";
 import { ConfigProvider, theme } from "antd";
 import NetworkDetection from "./components/NetworkDetection";
-import useLocalStorage from "use-local-storage";
+import { IRootState } from "./redux/store";
 
 interface IProps {}
 
 const AppMain: FC<IProps> = (props: IProps) => {
   const dispatch = useDispatch();
   const { defaultAlgorithm, darkAlgorithm } = theme;
-  const [isDarkMode, setIsDarkMode] = useLocalStorage("isDarkTheme", false);
+  const isDarkTheme = useSelector(
+    (state: IRootState) => state.account.isDarkTheme
+  );
 
   useEffect(() => {
     fetchAccount();
@@ -34,13 +36,13 @@ const AppMain: FC<IProps> = (props: IProps) => {
   return (
     <ConfigProvider
       theme={{
-        algorithm: isDarkMode ? darkAlgorithm : defaultAlgorithm,
+        algorithm: isDarkTheme ? darkAlgorithm : defaultAlgorithm,
       }}
     >
       <NetworkDetection>
         <div
-          className={`${isDarkMode ? "dark" : "light"}-theme`}
-          data-theme={`${isDarkMode ? "dark" : "light"}-theme`}
+          className={`${isDarkTheme ? "dark" : "light"}-theme`}
+          data-theme={`${isDarkTheme ? "dark" : "light"}-theme`}
         >
           <AppRoutes />
         </div>

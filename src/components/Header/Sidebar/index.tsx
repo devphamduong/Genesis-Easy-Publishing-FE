@@ -1,4 +1,4 @@
-import { Button, Drawer, Flex, Typography } from "antd";
+import { Button, Drawer, Flex, Switch, Typography } from "antd";
 import { FC } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Sidebar.scss";
@@ -7,8 +7,10 @@ import {
   ERouteEndPointForAuthor,
   ERouteEndPointForUser,
 } from "../../../enums/route-end-point.enum";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { IRootState } from "../../../redux/store";
+import { MoonOutlined, SunOutlined } from "@ant-design/icons";
+import { changeThemeAction } from "../../../redux/account/accountSlice";
 const { Text } = Typography;
 
 interface IProps {
@@ -23,7 +25,11 @@ const Sidebar: FC<IProps> = (props: IProps) => {
   const isAuthenticated = useSelector(
     (state: IRootState) => state.account.isAuthenticated
   );
+  const isDarkTheme = useSelector(
+    (state: IRootState) => state.account.isDarkTheme
+  );
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   return (
     <Drawer
@@ -42,6 +48,7 @@ const Sidebar: FC<IProps> = (props: IProps) => {
         {isAuthenticated ? (
           <>
             <Button
+              className="text-start"
               type="text"
               block
               onClick={() => navigate(ERouteEndPointForUser.DASHBOARD)}
@@ -49,6 +56,7 @@ const Sidebar: FC<IProps> = (props: IProps) => {
               {EMenuLabel.PROFILE}
             </Button>
             <Button
+              className="text-start"
               type="text"
               block
               onClick={() => navigate(ERouteEndPointForUser.DEPOSIT)}
@@ -56,12 +64,23 @@ const Sidebar: FC<IProps> = (props: IProps) => {
               {EMenuLabel.DEPOSIT}
             </Button>
             <Button
+              className="text-start"
               type="text"
               block
               onClick={() => navigate(ERouteEndPointForAuthor.POSTED_STORIES)}
             >
               {EMenuLabel.MANAGE}
             </Button>
+            <Flex align="center" justify="space-between" className="w-100">
+              <Text>Giao diện</Text>
+              <Switch
+                className="me-2"
+                checkedChildren={<MoonOutlined />}
+                unCheckedChildren={<SunOutlined />}
+                value={isDarkTheme}
+                onChange={(e) => dispatch(changeThemeAction(e))}
+              />
+            </Flex>
             <Text className="tlt-amount">
               Bạn đang có: <strong>{tlt}</strong> TLT
             </Text>

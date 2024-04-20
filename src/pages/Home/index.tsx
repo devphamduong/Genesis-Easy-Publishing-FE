@@ -32,8 +32,6 @@ import {
   getStoryDetailURL,
 } from "../../shared/generate-navigate-url";
 import ListStoriesSkeleton from "../../components/ListStories/ListStoriesSkeleton";
-import Loading from "../../components/Loading";
-import { PiDotsThreeCircleLight } from "react-icons/pi";
 import { useSelector } from "react-redux";
 import { IRootState } from "../../redux/store";
 import {
@@ -44,6 +42,8 @@ const { Paragraph } = Typography;
 import slide1 from "../../assets/css/images/slide1.png";
 import slide2 from "../../assets/css/images/slide2.png";
 import slide3 from "../../assets/css/images/slide3.png";
+import homeBanner1 from "../../assets/css/images/home-banner1.jpg";
+import homeBanner2 from "../../assets/css/images/home-banner2.jpg";
 import Categories from "./Categories";
 
 const HomePage: FC = (props) => {
@@ -404,8 +404,13 @@ const HomePage: FC = (props) => {
               </Row>
             </Col>
             <Col span={24}>
-              <div className="premium-cover text-center p-3">
-                PREMIUM MEMBER
+              <div
+                className="home-banner text-center p-3 pointer"
+                style={{ backgroundImage: `url(${homeBanner1})` }}
+                onClick={() => navigate(ERouteEndPointForUser.RANK_STORIES)}
+              >
+                <h3 className="logo">The Genesis</h3>
+                <h4 className="text">bảng xếp hạng</h4>
               </div>
             </Col>
             {storiesByCategory && storiesByCategory.length > 0
@@ -438,8 +443,13 @@ const HomePage: FC = (props) => {
                   </Col>
                 ))}
             <Col span={24}>
-              <div className="premium-cover text-center p-3">
-                HƯỚNG DẪN ĐĂNG TRUYỆN
+              <div
+                className="home-banner text-center p-3 pointer"
+                style={{ backgroundImage: `url(${homeBanner2})` }}
+                onClick={() => navigate(ERouteEndPointForAuthor.POSTED_STORIES)}
+              >
+                <h3 className="logo">The Genesis</h3>
+                <h4 className="text">trung tâm xuất bản</h4>
               </div>
             </Col>
           </Row>

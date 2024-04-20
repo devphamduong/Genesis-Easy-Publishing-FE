@@ -170,12 +170,33 @@
             background-color: var(--header-background-color);
         }
 
-        .premium-cover {
-            border                : 1px solid red;
-            // background-image   : url('https://i.pinimg.com/736x/b3/09/66/b309668eab49a195f36e4ef37d39a3e4.jpg');
-            // background-size    : cover;
-            // background-repeat  : no-repeat;
-            // background-position: center;
+        .home-banner {
+            height             : 60px;
+            background-size    : cover;
+            background-repeat  : no-repeat;
+            background-position: center;
+            position           : relative;
+
+            .logo,
+            .text {
+                position: absolute;
+                color   : white;
+                text-shadow: 3px 0px 7px rgba(81, 67, 21, 0.8),
+                    -3px 0px 7px rgba(81, 67, 21, 0.8),
+                    0px 4px 7px rgba(81, 67, 21, 0.8);
+            }
+
+            .logo {
+                top : 0;
+                left: 10px;
+            }
+
+            .text {
+                text-transform: uppercase;
+                top           : 50%;
+                left          : 50%;
+                transform     : translate(-50%, -50%);
+            }
         }
     }
 }

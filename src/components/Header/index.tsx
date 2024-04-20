@@ -79,7 +79,7 @@ const Header: FC<IProps> = (props: IProps) => {
               account.userImage
             }`}
           />
-          <div>{account.username ?? "vcl"}</div>
+          <div>{account.username ?? ""}</div>
         </div>
         <EPButton
           icon={<PiBookmarks />}
@@ -124,7 +124,7 @@ const Header: FC<IProps> = (props: IProps) => {
             className="me-2"
             checkedChildren={<MoonOutlined />}
             unCheckedChildren={<SunOutlined />}
-            defaultChecked
+            defaultChecked={isDarkMode}
             onChange={(e) => setIsDarkMode(e)}
           />
         </Flex>,

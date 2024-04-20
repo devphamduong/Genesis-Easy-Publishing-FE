@@ -97,7 +97,7 @@ const PostedVolumes: FC<IProps> = (props: IProps) => {
             className={
               record.type === "chapter" &&
               record.status === EChapterStatusKey.NOT_QUALIFY
-                ? `pointer custom-title-hover`
+                ? `pointer`
                 : ""
             }
           >

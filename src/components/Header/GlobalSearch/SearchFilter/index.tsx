@@ -98,7 +98,6 @@ const SearchFilter: FC<IProps> = (props: IProps) => {
           <Select
             onClick={(e) => e.stopPropagation()}
             onChange={(e) => handleChangeFilter("authorId", e)}
-            defaultValue={options[0]?.value}
             allowClear
             virtual
             placeholder="Truyện theo tác giả"
@@ -107,7 +106,7 @@ const SearchFilter: FC<IProps> = (props: IProps) => {
             labelRender={(props) => {
               const { label, value } = props;
               const authorImage = filters.author.find(
-                (item) => item.authorId === value
+                (item) => item.authorId === +value
               )?.authorImage;
               return (
                 <div className="d-flex align-items-center gap-2">
@@ -128,7 +127,7 @@ const SearchFilter: FC<IProps> = (props: IProps) => {
             optionRender={(props) => {
               const { data, value } = props;
               const authorImage = filters.author.find(
-                (item) => item.authorId === value
+                (item) => item.authorId === +value!
               )?.authorImage;
               return (
                 <>
@@ -150,7 +149,7 @@ const SearchFilter: FC<IProps> = (props: IProps) => {
             }}
           />
         )}
-        <div>
+        <>
           <InputNumber
             addonBefore="Từ"
             addonAfter="TLT"
@@ -165,7 +164,7 @@ const SearchFilter: FC<IProps> = (props: IProps) => {
             value={filterValues.to}
             onChange={(e) => handleChangeFilter("to", e)}
           />
-        </div>
+        </>
         <Select
           mode="multiple"
           allowClear

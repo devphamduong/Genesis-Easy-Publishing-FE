@@ -4,7 +4,6 @@
     bottom          : 0;
     text-align      : center;
     padding         : 15px 0;
-    color           : var(--text-theme);
 
     .category {
         color: #888;
@@ -12,6 +11,7 @@
 
     .description {
         font-size: 13px;
+        color    : var(--text-light);
     }
 }
 

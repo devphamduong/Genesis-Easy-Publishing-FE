@@ -1,32 +1,5 @@
 .read-story-container {
 
-    &.dark-theme {
-        background-color: #333;
-        color           : #fff;
-
-        button:not(.ant-btn-dangerous) {
-            color: #fff;
-        }
-
-        .ant-descriptions {
-            .ant-descriptions-view {
-                border-color: #fff;
-
-                .ant-descriptions-row {
-                    border-bottom-color: #fff;
-
-                    .ant-descriptions-item-label {
-                        color: #fff;
-                    }
-
-                    .ant-descriptions-item-content {
-                        color: #fff;
-                    }
-                }
-            }
-        }
-    }
-
     .read-story-content {
 
         .buttons {
@@ -37,10 +10,6 @@
             &.buttons-remove-margin {
                 margin: 0;
             }
-        }
-
-        .text-themeer {
-            color: #aaa;
         }
     }
 }

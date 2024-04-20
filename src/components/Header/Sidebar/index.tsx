@@ -29,7 +29,7 @@ const Sidebar: FC<IProps> = (props: IProps) => {
     <Drawer
       className="side-bar"
       title={
-        <Link className="navbar-brand text-center" to={"/"}>
+        <Link className="navbar-brand text-center fs-4" to={"/"}>
           The Genesis
         </Link>
       }

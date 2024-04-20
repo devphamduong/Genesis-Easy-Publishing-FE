@@ -285,6 +285,7 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
         ),
       },
     ];
+
     return (
       <Table
         columns={columns}

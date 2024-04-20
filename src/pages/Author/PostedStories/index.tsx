@@ -124,7 +124,7 @@ const PostedStoriesPage: FC<IProps> = (props: IProps) => {
               setCurrentStory(record);
               setOpenDrawer(true);
             }}
-            className="pointer custom-title-hover"
+            className="pointer custom-title-hover text-theme"
           >
             <Highlighter
               highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}

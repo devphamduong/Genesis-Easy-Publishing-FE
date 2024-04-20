@@ -111,7 +111,7 @@ const HeaderAuthor: FC<IProps> = (props: IProps) => {
   };
 
   return (
-    <div className="header-container container-fluid px-5">
+    <div className="header-container container-fluid px-5 text-theme">
       <Row
         justify={
           breakpoint === "xs" || breakpoint === "sm" || breakpoint === "md"

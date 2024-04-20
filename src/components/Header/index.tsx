@@ -1,4 +1,4 @@
-import { UserOutlined } from "@ant-design/icons";
+import { MoonOutlined, SunOutlined, UserOutlined } from "@ant-design/icons";
 import {
   Affix,
   Avatar,
@@ -12,6 +12,7 @@ import {
   MenuProps,
   Popover,
   Row,
+  Switch,
 } from "antd";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -31,7 +32,6 @@ import EPButton from "../EP-UI/Button";
 import { PiBookmarks } from "react-icons/pi";
 import { getPaginationStoriesFollowing } from "../../services/story-api-service";
 import { IStory } from "../../interfaces/story.interface";
-import RowStory from "../RowStory";
 import GlobalSearch from "./GlobalSearch";
 import { IoIosMenu } from "react-icons/io";
 import Sidebar from "./Sidebar";
@@ -40,6 +40,7 @@ import { AiOutlineLike } from "react-icons/ai";
 import { GrView } from "react-icons/gr";
 import { FaRegHeart } from "react-icons/fa6";
 import Meta from "antd/es/card/Meta";
+import useLocalStorage from "use-local-storage";
 
 interface IProps {}
 
@@ -54,6 +55,7 @@ const Header: FC<IProps> = (props: IProps) => {
   const [followingStories, setFollowingStories] = useState<IStory[]>([]);
   const [isPopoverOpen, setIsPopoverOpen] = useState<boolean>(false);
   const [openSidebar, setOpenSidebar] = useState<boolean>(false);
+  const [isDarkMode, setIsDarkMode] = useLocalStorage("isDarkTheme", false);
 
   useEffect(() => {
     openDrawer && fetchStoriesFollowing();
@@ -116,6 +118,20 @@ const Header: FC<IProps> = (props: IProps) => {
       getItem(<div>{EMenuLabel.DEPOSIT}</div>, EMenuKey.DEPOSIT, null),
       getItem(<div>{EMenuLabel.MANAGE}</div>, EMenuKey.MANAGE, null),
       getItem(
+        <Flex align="center" justify="space-between">
+          Giao diện{" "}
+          <Switch
+            className="me-2"
+            checkedChildren={<MoonOutlined />}
+            unCheckedChildren={<SunOutlined />}
+            defaultChecked
+            onChange={(e) => setIsDarkMode(e)}
+          />
+        </Flex>,
+        "theme",
+        null
+      ),
+      getItem(
         <Button block onClick={() => handleLogout()}>
           Đăng xuất
         </Button>,
@@ -125,17 +141,16 @@ const Header: FC<IProps> = (props: IProps) => {
     ];
 
     const onClick: MenuProps["onClick"] = (e) => {
-      const { key } = e;
-      setIsPopoverOpen(false);
+      const { key, domEvent } = e;
       switch (key) {
         case EMenuKey.PROFILE:
-          navigate(ERouteEndPointForUser.DASHBOARD);
+          handleNavigateAndClose(ERouteEndPointForUser.DASHBOARD);
           break;
         case EMenuKey.DEPOSIT:
-          navigate(ERouteEndPointForUser.DEPOSIT);
+          handleNavigateAndClose(ERouteEndPointForUser.DEPOSIT);
           break;
         case EMenuKey.MANAGE:
-          navigate(ERouteEndPointForAuthor.POSTED_STORIES);
+          handleNavigateAndClose(ERouteEndPointForAuthor.POSTED_STORIES);
           break;
       }
     };
@@ -149,6 +164,11 @@ const Header: FC<IProps> = (props: IProps) => {
         onClick={onClick}
       />
     );
+  };
+
+  const handleNavigateAndClose = (endpoint: string) => {
+    navigate(endpoint);
+    setIsPopoverOpen(false);
   };
 
   const handleLogout = async () => {
@@ -167,7 +187,7 @@ const Header: FC<IProps> = (props: IProps) => {
         <div className="navbar header-container">
           <div className="container-fluid px-xl-5">
             <Row align={"middle"} justify={"space-between"} className="w-100">
-              <Col xs={5} xl={4}>
+              <Col>
                 <Link className="logo-brand text-theme fs-2" to={"/"}>
                   The Genesis
                 </Link>

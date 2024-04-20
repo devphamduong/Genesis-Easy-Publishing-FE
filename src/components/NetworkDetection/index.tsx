@@ -4,6 +4,7 @@ import { LuRefreshCw } from "react-icons/lu";
 import { Flex } from "antd";
 import "./NetworkDetection.scss";
 import { VscDebugDisconnect } from "react-icons/vsc";
+import useLocalStorage from "use-local-storage";
 
 interface IProps {
   children?: React.ReactNode;
@@ -20,6 +21,7 @@ const NetworkDetection: FC<IProps> = (props: IProps) => {
       return false;
     }
   });
+  const [isDarkMode, setIsDarkMode] = useLocalStorage("isDarkTheme", false);
 
   useEffect(() => {
     window.ononline = (e) => {
@@ -40,39 +42,45 @@ const NetworkDetection: FC<IProps> = (props: IProps) => {
   return status && !isFirstTimeLostConnection ? (
     children
   ) : (
-    <Flex
-      align="center"
-      justify="center"
-      className="network-detection-container"
-      style={{
-        position: "fixed",
-        top: "50%",
-        left: "50%",
-        width: "30%",
-        transform: "translate(-50%, -50%)",
-      }}
+    <div
+      style={{ height: "100vh" }}
+      className={`${isDarkMode ? "dark" : "light"}-theme`}
+      data-theme={`${isDarkMode ? "dark" : "light"}-theme`}
     >
       <Flex
         align="center"
-        vertical
-        gap={30}
-        className="network-detection-content"
+        justify="center"
+        className="network-detection-container text-theme"
+        style={{
+          position: "fixed",
+          top: "50%",
+          left: "50%",
+          width: "30%",
+          transform: "translate(-50%, -50%)",
+        }}
       >
-        <VscDebugDisconnect className="network-detection-icon" />
-        <p className="network-detection-text fs-5 text-center">
-          Không thể kết nối. Vui lòng kiểm tra lại đường truyền mạng của bạn.
-        </p>
-        <EPButton
-          extraClassName="re-connect-button"
-          size="large"
-          icon={<LuRefreshCw />}
-          type="default"
-          onClick={() => handleReconnect()}
+        <Flex
+          align="center"
+          vertical
+          gap={30}
+          className="network-detection-content"
         >
-          Làm mới
-        </EPButton>
+          <VscDebugDisconnect className="network-detection-icon" />
+          <p className="network-detection-text fs-5 text-center">
+            Không thể kết nối. Vui lòng kiểm tra lại đường truyền mạng của bạn.
+          </p>
+          <EPButton
+            extraClassName="re-connect-button"
+            size="large"
+            icon={<LuRefreshCw />}
+            type="default"
+            onClick={() => handleReconnect()}
+          >
+            Làm mới
+          </EPButton>
+        </Flex>
       </Flex>
-    </Flex>
+    </div>
   );
 };
 

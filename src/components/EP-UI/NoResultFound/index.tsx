@@ -5,7 +5,7 @@ interface IProps {}
 
 const EPNoResultFound: FC<IProps> = (props: IProps) => {
   return (
-    <div className="search-message-empty-container">
+    <div className="search-message-empty-container text-theme">
       <span className="search-message-empty-decal">
         <span className="search-message-empty-decal-eyes">:</span>
         <span>(</span>

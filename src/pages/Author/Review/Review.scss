@@ -1,12 +1,10 @@
 .stories-review-container {
     .stories-review-content {
         .custom-title-hover {
-            --s: 0.1em;
+            --s           : 0.1em;
             /* the thickness of the line */
-            --c: #1095c1;
+            --c           : #1095c1;
             /* the color */
-
-            color         : #0000;
             padding-bottom: var(--s);
             background    :
                 linear-gradient(90deg, var(--c) 50%, #000 0) calc(100% - var(--_p, 0%))/200% 100%,

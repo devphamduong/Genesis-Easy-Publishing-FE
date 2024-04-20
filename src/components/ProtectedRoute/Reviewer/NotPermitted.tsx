@@ -21,7 +21,7 @@ function NotPermitted() {
         transform: "translate(-50%, -50%)",
       }}
       status="403"
-      title="403"
+      title="401"
       subTitle="Oops, bạn không có quyền truy cập vào trang này."
       extra={
         <>

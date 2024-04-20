@@ -3,7 +3,7 @@ import AppRoutes from "./routes/AppRoutes";
 import { useDispatch } from "react-redux";
 import { getAccount } from "./services/auth-api-service";
 import { getAccountAction } from "./redux/account/accountSlice";
-import { ConfigProvider, FloatButton, theme } from "antd";
+import { ConfigProvider, theme } from "antd";
 import NetworkDetection from "./components/NetworkDetection";
 import useLocalStorage from "use-local-storage";
 
@@ -31,18 +31,12 @@ const AppMain: FC<IProps> = (props: IProps) => {
     }
   };
 
-  const handleClick = () => {
-    setIsDarkMode((previousValue) => !previousValue);
-    localStorage.setItem(`isDarkTheme`, !isDarkMode + "");
-  };
-
   return (
     <ConfigProvider
       theme={{
         algorithm: isDarkMode ? darkAlgorithm : defaultAlgorithm,
       }}
     >
-      <FloatButton style={{ left: 24 }} onClick={handleClick} />
       <NetworkDetection>
         <div
           className={`${isDarkMode ? "dark" : "light"}-theme`}

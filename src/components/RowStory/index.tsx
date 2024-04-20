@@ -153,7 +153,7 @@ const RowStory: FC<IProps> = (props: IProps) => {
 
   return (
     <div className="row-story-container">
-      <div className="row-story-content">
+      <div className="row-story-content text-theme">
         {!size || size === "default" ? renderRowDefault() : renderRowSmall()}
       </div>
     </div>

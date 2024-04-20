@@ -1,12 +1,20 @@
 .custom-global-search-dropdown {
     width           : 60vw !important;
     background-color: #fff;
-    box-shadow      : 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+    box-shadow      : rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
     padding         : 0 5px;
     border-radius   : 8px;
 
+    &:has(.dark-theme) {
+        background-color   : #141414;
+        // box-shadow      : rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
+    }
+
     &.xs {
-        .ant-dropdown-menu {
+
+        .ant-dropdown-menu,
+        .loading-skeleton,
+        .no-matching {
             display: none;
         }
     }

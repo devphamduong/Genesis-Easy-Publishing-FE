@@ -169,19 +169,12 @@ const ListStories: FC<IProps> = (props: IProps) => {
         header={
           <div className="header d-flex justify-content-between align-items-center">
             <strong className="title">{title}</strong>
-            {displayCategory ||
-            showDetailFirstStory === !showDetailFirstStory ? (
+            {showMore && (
               <Tooltip title="Danh sách đầy đủ">
                 <Link to={urlToNavigate!} className="d-none icon-go-to">
                   <FaArrowRightLong />
                 </Link>
               </Tooltip>
-            ) : (
-              (showMore === undefined || showMore) && (
-                <Link to={urlToNavigate!} className="d-none icon-go-to">
-                  <FaArrowRightLong />
-                </Link>
-              )
             )}
           </div>
         }

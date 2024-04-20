@@ -37,7 +37,9 @@ const RowStory: FC<IProps> = (props: IProps) => {
         <Col xs={4} sm={4} md={3} lg={2}>
           <VerticalImageHover
             rank={rank}
-            imageUrl={story.storyImage}
+            imageUrl={`${import.meta.env.VITE_BACKEND_URL}Assets/images/story/${
+              story.storyImage
+            }`}
             width={imgWidth ?? 80}
             height={imgHight ?? 120}
           />
@@ -104,7 +106,9 @@ const RowStory: FC<IProps> = (props: IProps) => {
         <Col xs={4} sm={4} md={3} lg={2} xl={4}>
           <VerticalImageHover
             rank={rank}
-            imageUrl={story.storyImage}
+            imageUrl={`${import.meta.env.VITE_BACKEND_URL}Assets/images/story/${
+              story.storyImage
+            }`}
             width={imgWidth ?? 80}
             height={imgHight ?? 120}
           />

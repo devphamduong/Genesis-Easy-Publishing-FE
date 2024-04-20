@@ -12,7 +12,7 @@ import { IRootState } from "../../redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { PacmanLoader } from "react-spinners";
-import { updateAccountBalance } from "../../redux/account/accountSlice";
+import { updateAccountBalanceAction } from "../../redux/account/accountSlice";
 import { IUpdateBalanceAction } from "../../interfaces/transaction.interface";
 
 const { Paragraph, Text } = Typography;
@@ -42,7 +42,7 @@ const PaymentConfirmPage: FC<IProps> = (props: IProps) => {
       if (res && res.ec === 0) {
         toast.success(res.em);
         dispatch(
-          updateAccountBalance({
+          updateAccountBalanceAction({
             updateAction: EUpdateBalanceAction.TOPUP,
             amount: res.dt.amount,
           } as IUpdateBalanceAction)

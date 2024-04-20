@@ -25,8 +25,8 @@ import { IRootState } from "../../redux/store";
 import { updateAvatar, updateProfile } from "../../services/auth-api-service";
 import { toast } from "react-toastify";
 import {
-  updateUserAvatar,
-  updateUserInfo,
+  updateUserAvatarAction,
+  updateUserInfoAction,
 } from "../../redux/account/accountSlice";
 import ImgCrop from "antd-img-crop";
 import { PlusOutlined } from "@ant-design/icons";
@@ -103,7 +103,7 @@ const EditProfile: FC<IProps> = (props: IProps) => {
     const res = await updateProfile(payload);
     if (res && res.ec === 0) {
       dispatch(
-        updateUserInfo({ ...payload, access_token: res.dt.access_token })
+        updateUserInfoAction({ ...payload, access_token: res.dt.access_token })
       );
       toast.success(res.em);
     } else {
@@ -132,7 +132,7 @@ const EditProfile: FC<IProps> = (props: IProps) => {
     const res = await updateAvatar(file);
     if (res && res.ec === 0) {
       const newAvatar = res.dt.fileUploaded;
-      dispatch(updateUserAvatar(newAvatar));
+      dispatch(updateUserAvatarAction(newAvatar));
       onSuccess("ok");
     } else {
       onError("An error occurred");

@@ -20,7 +20,10 @@ import "./Header.scss";
 import { FC } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { logoutAction } from "../../redux/account/accountSlice";
+import {
+  changeThemeAction,
+  logoutAction,
+} from "../../redux/account/accountSlice";
 import { logout } from "../../services/auth-api-service";
 import { IRootState } from "../../redux/store";
 import { EMenuKey, EMenuLabel } from "../../enums/menu.enum";
@@ -40,7 +43,6 @@ import { AiOutlineLike } from "react-icons/ai";
 import { GrView } from "react-icons/gr";
 import { FaRegHeart } from "react-icons/fa6";
 import Meta from "antd/es/card/Meta";
-import useLocalStorage from "use-local-storage";
 
 interface IProps {}
 
@@ -50,12 +52,14 @@ const Header: FC<IProps> = (props: IProps) => {
   const isAuthenticated = useSelector(
     (state: IRootState) => state.account.isAuthenticated
   );
+  const isDarkTheme = useSelector(
+    (state: IRootState) => state.account.isDarkTheme
+  );
   const account = useSelector((state: IRootState) => state.account?.user);
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const [followingStories, setFollowingStories] = useState<IStory[]>([]);
   const [isPopoverOpen, setIsPopoverOpen] = useState<boolean>(false);
   const [openSidebar, setOpenSidebar] = useState<boolean>(false);
-  const [isDarkMode, setIsDarkMode] = useLocalStorage("isDarkTheme", false);
 
   useEffect(() => {
     openDrawer && fetchStoriesFollowing();
@@ -119,13 +123,13 @@ const Header: FC<IProps> = (props: IProps) => {
       getItem(<div>{EMenuLabel.MANAGE}</div>, EMenuKey.MANAGE, null),
       getItem(
         <Flex align="center" justify="space-between">
-          Giao diện{" "}
+          Giao diện
           <Switch
             className="me-2"
             checkedChildren={<MoonOutlined />}
             unCheckedChildren={<SunOutlined />}
-            defaultChecked={isDarkMode}
-            onChange={(e) => setIsDarkMode(e)}
+            value={isDarkTheme}
+            onChange={(e) => dispatch(changeThemeAction(e))}
           />
         </Flex>,
         "theme",
@@ -155,6 +159,11 @@ const Header: FC<IProps> = (props: IProps) => {
       }
     };
 
+    const handleNavigateAndClose = (endpoint: string) => {
+      navigate(endpoint);
+      setIsPopoverOpen(false);
+    };
+
     return (
       <Menu
         className="custom-header-menu"
@@ -164,11 +173,6 @@ const Header: FC<IProps> = (props: IProps) => {
         onClick={onClick}
       />
     );
-  };
-
-  const handleNavigateAndClose = (endpoint: string) => {
-    navigate(endpoint);
-    setIsPopoverOpen(false);
   };
 
   const handleLogout = async () => {

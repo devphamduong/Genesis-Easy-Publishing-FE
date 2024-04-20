@@ -30,7 +30,6 @@
     "recharts": "^2.12.2",
     "redux-persist": "^6.0.0",
     "sass": "^1.70.0",
-    "use-local-storage": "^3.0.0",
     "uuid": "^9.0.1"
   },
   "devDependencies": {

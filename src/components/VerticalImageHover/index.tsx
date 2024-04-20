@@ -3,7 +3,7 @@ import "./VerticalImageHover.scss";
 import { FaCrown } from "react-icons/fa6";
 
 interface IProps {
-  imageUrl: string;
+  imageUrl?: string;
   rank?: number;
   height?: number;
   width?: number;

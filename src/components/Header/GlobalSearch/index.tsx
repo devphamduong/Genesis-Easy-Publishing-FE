@@ -14,7 +14,8 @@ import {
   getStoryDetailURL,
 } from "../../../shared/generate-navigate-url";
 import ResultSkeleton from "./ResultSkeleton";
-import useLocalStorage from "use-local-storage";
+import { useSelector } from "react-redux";
+import { IRootState } from "../../../redux/store";
 
 interface IProps {}
 
@@ -27,7 +28,9 @@ const GlobalSearch: FC<IProps> = (props: IProps) => {
   const [isExpand, setIsExpand] = useState<boolean>(false);
   const ref = useOutsideClick(isExpand, () => isExpand && setIsExpand(false));
   const breakpoint = useBreakpoint();
-  const [isDarkMode, setIsDarkMode] = useLocalStorage("isDarkTheme", false);
+  const isDarkTheme = useSelector(
+    (state: IRootState) => state.account.isDarkTheme
+  );
 
   useEffect(() => {
     fetchGlobalSearchStories();
@@ -72,7 +75,11 @@ const GlobalSearch: FC<IProps> = (props: IProps) => {
       label: (
         <Row gutter={[10, 10]}>
           <Col sm={6} md={5} lg={5} xl={4} xxl={3}>
-            <VerticalImageHover imageUrl={item.storyImage} />
+            <VerticalImageHover
+              imageUrl={`${
+                import.meta.env.VITE_BACKEND_URL
+              }Assets/images/story/${item.storyImage}`}
+            />
           </Col>
           <Col sm={24} md={19} lg={19}>
             <div className="d-flex justify-content-between">
@@ -125,7 +132,7 @@ const GlobalSearch: FC<IProps> = (props: IProps) => {
         menu={{ items }}
         dropdownRender={(menu) => (
           <div
-            className={`d-flex gap-2 ${isDarkMode ? "dark" : "light"}-theme`}
+            className={`d-flex gap-2 ${isDarkTheme ? "dark" : "light"}-theme`}
             data-theme="123"
             key={`menu-search-global`}
             onClick={(e) => e.stopPropagation()}

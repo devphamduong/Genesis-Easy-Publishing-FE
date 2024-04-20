@@ -7,6 +7,7 @@ import { IUser } from "../../interfaces/auth.interface";
 const initialState: {
   isAuthenticated: boolean;
   isLoading: boolean;
+  isDarkTheme: boolean;
   user: IUser;
 } = {
   isAuthenticated: false,
@@ -27,6 +28,7 @@ const initialState: {
     tlt: 0,
     role: EUserRole.NORMAL_USER,
   },
+  isDarkTheme: JSON.parse(localStorage.getItem("isDarkMode") || "false"),
 };
 
 export const accountSlice = createSlice({
@@ -48,10 +50,10 @@ export const accountSlice = createSlice({
       state.isAuthenticated = false;
       state.user = initialState.user;
     },
-    updateUserAvatar: (state, action) => {
+    updateUserAvatarAction: (state, action) => {
       state.user.userImage = action.payload;
     },
-    updateUserInfo: (state, action) => {
+    updateUserInfoAction: (state, action) => {
       const {
         userFullname,
         gender,
@@ -71,7 +73,7 @@ export const accountSlice = createSlice({
       state.user.descriptionMarkdown = descriptionMarkdown;
       state.user.descriptionHTML = descriptionHTML;
     },
-    updateAccountBalance: (state, action) => {
+    updateAccountBalanceAction: (state, action) => {
       const { updateAction, amount }: IUpdateBalanceAction = action.payload;
       switch (updateAction) {
         case EUpdateBalanceAction.BUY:
@@ -82,6 +84,10 @@ export const accountSlice = createSlice({
           break;
       }
     },
+    changeThemeAction: (state, action) => {
+      localStorage.setItem("isDarkTheme", action.payload);
+      state.isDarkTheme = action.payload;
+    },
   },
   extraReducers: (builder) => {},
 });
@@ -90,9 +96,10 @@ export const {
   loginAction,
   getAccountAction,
   logoutAction,
-  updateUserAvatar,
-  updateUserInfo,
-  updateAccountBalance,
+  updateUserAvatarAction,
+  updateUserInfoAction,
+  updateAccountBalanceAction,
+  changeThemeAction,
 } = accountSlice.actions;
 
 export default accountSlice.reducer;

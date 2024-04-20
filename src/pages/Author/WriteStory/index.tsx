@@ -164,11 +164,7 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
     const { file, onSuccess, onError } = options;
     const res = await uploadStoryCover(file, storyId!);
     if (res && res.ec === 0) {
-      setPreviewImgName(
-        `${import.meta.env.VITE_BACKEND_URL}Assets/images/story/${
-          res.dt.fileUploaded
-        }`
-      );
+      setPreviewImgName(res.dt.fileUploaded);
       onSuccess("ok");
     } else {
       onError("An error occurred");
@@ -225,30 +221,6 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
                     />
                   </Form.Item>
                 </Col>
-                {/* <Col span={7}>
-                  <Form.Item<IWriteStoryForm>
-                    label={
-                      <div className="d-flex align-items-center gap-1">
-                        <span>Loại Truyện</span>
-                        <Tooltip title="Hãy lựa chọn cho đúng vì bạn không thể thay đổi sau này.">
-                          <BsInfoCircleFill className="pointer" />
-                        </Tooltip>
-                      </div>
-                    }
-                    name="type"
-                    // rules={[
-                    //   {
-                    //     required: true,
-                    //     message: "Loại truyện không được để trống!",
-                    //   },
-                    // ]}
-                  >
-                    <Input
-                      size="large"
-                      placeholder="Loại truyện mà bạn sắp viết"
-                    />
-                  </Form.Item>
-                </Col> */}
                 <Col xs={24} md={12} className="categoryIds">
                   <Form.Item<IWriteStoryForm>
                     label="Thể loại"
@@ -416,13 +388,9 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
             <div className="text-center">
               <Image
                 width={200}
-                src={
-                  previewImgName
-                    ? `${
-                        import.meta.env.VITE_BACKEND_URL
-                      }Assets/images/story/${previewImgName}`
-                    : "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-                }
+                src={`${
+                  import.meta.env.VITE_BACKEND_URL
+                }Assets/images/story/${previewImgName}`}
               />
             </div>
           </Col>

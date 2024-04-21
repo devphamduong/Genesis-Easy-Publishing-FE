@@ -1,6 +1,6 @@
 import { ChangeEvent, FC, useEffect, useState } from "react";
 import "./PostedStories.scss";
-import { Input, Popconfirm, Table, Tooltip } from "antd";
+import { Flex, Input, Popconfirm, Table, Tooltip } from "antd";
 import Highlighter from "react-highlight-words";
 import { SearchOutlined } from "@ant-design/icons";
 import { useSelector } from "react-redux";
@@ -33,6 +33,7 @@ import { toast } from "react-toastify";
 import AuthorDrawer from "./AuthorDrawer";
 import { BsFiletypePdf, BsInfoCircleFill } from "react-icons/bs";
 import { ERouteEndPointForAuthor } from "../../../enums/route-end-point.enum";
+import { EStoryStatusKey, EStoryStatusLabel } from "../../../enums/story.enum";
 dayjs.extend(relativeTime);
 
 interface IProps {}
@@ -143,6 +144,35 @@ const PostedStoriesPage: FC<IProps> = (props: IProps) => {
       title: "SỐ NGƯỜI ĐÃ MUA",
       dataIndex: "userPurchaseStory",
       sorter: true,
+    },
+    {
+      title: "TRẠNG THÁI",
+      dataIndex: "storyStatus",
+      render(value: string, record: IStory) {
+        return (
+          <Flex align="center" gap={10}>
+            {record.storyStatus === EStoryStatusKey.NOT_PUBLIC && (
+              <Tooltip
+                title={
+                  <span>
+                    Truyện của bạn chỉ có thể được công bố khi đã đạt đủ điều
+                    kiện (
+                    <strong>
+                      có ít nhất 1 chương và đã được review thành công
+                    </strong>
+                    ).
+                  </span>
+                }
+              >
+                <BsInfoCircleFill className="pointer" />
+              </Tooltip>
+            )}
+            <span>
+              {EStoryStatusLabel[EStoryStatusKey[record.storyStatus]]}
+            </span>
+          </Flex>
+        );
+      },
     },
     {
       title: "NGÀY TẠO",

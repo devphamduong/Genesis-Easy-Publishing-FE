@@ -49,7 +49,7 @@ interface DataType {
   createTime: string;
   total: number;
   type: "volume" | "chapter";
-  status: number | null;
+  status: number;
   children?: DataType[];
 }
 
@@ -139,9 +139,11 @@ const PostedVolumes: FC<IProps> = (props: IProps) => {
         if (record.type === "chapter")
           return (
             <span>
-              {EChapterStatusLabel[
-                EChapterStatusKey[record.status as number]
-              ] ?? "Chưa đủ điều kiện"}
+              {record.status === EChapterStatusKey.QUALIFIED
+                ? EChapterStatusLabel[EChapterStatusKey[record.status]]
+                : record.status === EChapterStatusKey.NOT_QUALIFY
+                ? "Chưa được review"
+                : "Chưa đủ điều kiện"}
             </span>
           );
       },

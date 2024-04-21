@@ -35,8 +35,12 @@
         .ant-dropdown-menu,
         .loading-skeleton,
         .no-matching {
-            width : 70%;
-            height: 80vh;
+            width          : 70%;
+            height         : 80vh;
+            overflow-y     : auto;
+            overflow-x     : hidden;
+            scrollbar-width: thin;
+            scrollbar-color: unset;
         }
     }
 

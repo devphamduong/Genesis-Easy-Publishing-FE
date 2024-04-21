@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from "react";
 import { ERouteEndPointForUser } from "../../enums/route-end-point.enum";
-import { Affix, Col, Menu, MenuProps, Row } from "antd";
+import { Col, Menu, MenuProps, Row } from "antd";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import "./RankStoriesLayout.scss";
 import { ICategory } from "../../interfaces/category.interface";
@@ -93,7 +93,11 @@ const RankStoriesLayout: FC<IProps> = (props: IProps) => {
           }
           items={items}
         />
-        <EPFilter searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+        <EPFilter
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          domIdForPopupContainer="sticky-filter"
+        />
       </>
     );
   };
@@ -116,7 +120,9 @@ const RankStoriesLayout: FC<IProps> = (props: IProps) => {
             breakpoint === "md" ? (
               menuAndFilterTpl()
             ) : (
-              <Affix offsetTop={70}>{menuAndFilterTpl()}</Affix>
+              <div className="sticky-filter" id="sticky-filter">
+                {menuAndFilterTpl()}
+              </div>
             )}
           </Col>
           <Col xs={24} lg={19} className="right">

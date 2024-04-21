@@ -93,7 +93,10 @@ const SearchFilter: FC<IProps> = (props: IProps) => {
 
   return (
     <div className="search-filter-container">
-      <div className="search-filter-content d-flex flex-column gap-3">
+      <div
+        className="search-filter-content d-flex flex-column gap-3"
+        id="search-filter-content"
+      >
         {filters?.author && filters?.author.length > 0 && (
           <Select
             onClick={(e) => e.stopPropagation()}
@@ -103,6 +106,9 @@ const SearchFilter: FC<IProps> = (props: IProps) => {
             placeholder="Truyện theo tác giả"
             className="custom-author-search-dropdown"
             options={options}
+            getPopupContainer={() =>
+              document.getElementById("search-filter-content")!
+            }
             labelRender={(props) => {
               const { label, value } = props;
               const authorImage = filters.author.find(
@@ -171,6 +177,9 @@ const SearchFilter: FC<IProps> = (props: IProps) => {
           maxTagCount="responsive"
           placeholder="Thể loại"
           onChange={(e) => handleChangeFilter("cates", e)}
+          getPopupContainer={() =>
+            document.getElementById("search-filter-content")!
+          }
           options={
             filters &&
             filters?.cate?.map((item) => {
@@ -182,6 +191,9 @@ const SearchFilter: FC<IProps> = (props: IProps) => {
           placeholder="Trạng thái"
           defaultValue={EStoryStatusKey.NOT_COMPLETED}
           onChange={(e) => handleChangeFilter("status", e)}
+          getPopupContainer={() =>
+            document.getElementById("search-filter-content")!
+          }
           options={
             filters &&
             filters.status.map((item) => {

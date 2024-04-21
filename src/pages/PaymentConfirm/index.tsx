@@ -8,8 +8,7 @@ import {
   TLT_CURRENCY,
 } from "../../enums/transaction.enum";
 import { addTransactionTopUp } from "../../services/transaction-api-service";
-import { IRootState } from "../../redux/store";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { PacmanLoader } from "react-spinners";
 import { updateAccountBalanceAction } from "../../redux/account/accountSlice";
@@ -20,7 +19,6 @@ const { Paragraph, Text } = Typography;
 interface IProps {}
 
 const PaymentConfirmPage: FC<IProps> = (props: IProps) => {
-  const account = useSelector((state: IRootState) => state.account.user);
   const dispatch = useDispatch();
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();

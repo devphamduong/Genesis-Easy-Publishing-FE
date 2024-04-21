@@ -123,7 +123,7 @@ const HomePage: FC = (props) => {
     <>
       <div className="home-container container py-3">
         <div className="home-content">
-          <Row gutter={[16, 16]} className="content-top">
+          <Row gutter={[20, 16]} className="content-top">
             <Col xs={0} md={8} lg={6} xxl={5} className="content-top-item">
               <Categories setIsOpenDrawer={setIsOpenDrawer} />
             </Col>
@@ -134,7 +134,7 @@ const HomePage: FC = (props) => {
               xxl={14}
               className="content-top-item content-top-item-middle"
             >
-              <Carousel autoplay>
+              <Carousel>
                 <div>
                   <div
                     className="slide-item"

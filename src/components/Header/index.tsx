@@ -1,6 +1,5 @@
 import { MoonOutlined, SunOutlined, UserOutlined } from "@ant-design/icons";
 import {
-  Affix,
   Avatar,
   Badge,
   Button,
@@ -187,77 +186,75 @@ const Header: FC<IProps> = (props: IProps) => {
 
   return (
     <>
-      <Affix>
-        <div className="navbar header-container">
-          <div className="container-fluid px-xl-5">
-            <Row align={"middle"} justify={"space-between"} className="w-100">
-              <Col>
-                <Link className="logo-brand text-theme fs-2" to={"/"}>
-                  The Genesis
-                </Link>
-              </Col>
-              <Col xs={12} md={14}>
-                <Row align={"middle"} justify={"space-between"}>
-                  <Col xs={0} sm={15} lg={15}>
-                    <GlobalSearch />
+      <div className="header-container">
+        <div className="container-fluid px-xl-5">
+          <Row align={"middle"} justify={"space-between"} className="w-100">
+            <Col>
+              <Link className="logo-brand text-theme fs-2" to={"/"}>
+                The Genesis
+              </Link>
+            </Col>
+            <Col xs={12} md={14}>
+              <Row align={"middle"} justify={"space-between"}>
+                <Col xs={0} sm={15} lg={15}>
+                  <GlobalSearch />
+                </Col>
+                {!isAuthenticated ? (
+                  <Col
+                    xs={24}
+                    sm={7}
+                    lg={5}
+                    className="d-flex d-sm-block justify-content-end justify-content-sm-between"
+                  >
+                    <Button
+                      type="primary"
+                      onClick={() => navigate("/auth/login")}
+                    >
+                      Đăng nhập
+                    </Button>
                   </Col>
-                  {!isAuthenticated ? (
+                ) : (
+                  <>
+                    <Col xs={0} className="d-md-block account-info text-theme">
+                      <div>Xin chào {account.username ?? "friend"}</div>
+                      <div>
+                        Bạn đang có: <strong>{account.tlt}</strong> TLT
+                      </div>
+                      <strong className="pointer">
+                        <Popover
+                          content={popoverMenu()}
+                          title={popoverTitle()}
+                          trigger={"click"}
+                          placement="bottomRight"
+                          open={isPopoverOpen}
+                          getPopupContainer={() =>
+                            document.getElementById("account-info-label")!
+                          }
+                          onOpenChange={(isOpen) => setIsPopoverOpen(isOpen)}
+                        >
+                          <span className="account-info-label">Tài khoản</span>
+                        </Popover>
+                      </strong>
+                    </Col>
                     <Col
                       xs={24}
                       sm={7}
-                      lg={5}
-                      className="d-flex d-sm-block justify-content-end justify-content-sm-between"
+                      md={0}
+                      className="d-flex justify-content-end d-md-none"
                     >
-                      <Button
+                      <EPButton
                         type="primary"
-                        onClick={() => navigate("/auth/login")}
-                      >
-                        Đăng nhập
-                      </Button>
+                        icon={<IoIosMenu />}
+                        onClick={() => setOpenSidebar(true)}
+                      />
                     </Col>
-                  ) : (
-                    <>
-                      <Col
-                        xs={0}
-                        className="d-md-block account-info text-theme"
-                      >
-                        <div>Xin chào {account.username ?? "friend"}</div>
-                        <div>
-                          Bạn đang có: <strong>{account.tlt}</strong> TLT
-                        </div>
-                        <strong className="pointer">
-                          <Popover
-                            content={popoverMenu()}
-                            title={popoverTitle()}
-                            trigger={"click"}
-                            placement="bottomRight"
-                            open={isPopoverOpen}
-                            onOpenChange={(isOpen) => setIsPopoverOpen(isOpen)}
-                          >
-                            Tài khoản
-                          </Popover>
-                        </strong>
-                      </Col>
-                      <Col
-                        xs={24}
-                        sm={7}
-                        md={0}
-                        className="d-flex justify-content-end d-md-none"
-                      >
-                        <EPButton
-                          type="primary"
-                          icon={<IoIosMenu />}
-                          onClick={() => setOpenSidebar(true)}
-                        />
-                      </Col>
-                    </>
-                  )}
-                </Row>
-              </Col>
-            </Row>
-          </div>
+                  </>
+                )}
+              </Row>
+            </Col>
+          </Row>
         </div>
-      </Affix>
+      </div>
       <Sidebar
         open={openSidebar}
         setOpen={setOpenSidebar}

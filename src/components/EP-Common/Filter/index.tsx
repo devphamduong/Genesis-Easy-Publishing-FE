@@ -8,10 +8,11 @@ import { getFilterOptionsV1 } from "../../../services/common-api-service";
 interface IProps {
   searchTerm: string;
   setSearchTerm: (value: string) => void;
+  domIdForPopupContainer?: string;
 }
 
 const EPFilter: FC<IProps> = (props: IProps) => {
-  const { searchTerm, setSearchTerm } = props;
+  const { searchTerm, setSearchTerm, domIdForPopupContainer } = props;
   const [form] = Form.useForm();
   const [maxPrice, setMaxPrice] = useState(0);
   const [filterOptions, setFilterOptions] = useState<IFilterOptions>();
@@ -79,6 +80,9 @@ const EPFilter: FC<IProps> = (props: IProps) => {
             maxTagCount="responsive"
             placeholder="Thể loại"
             allowClear
+            getPopupContainer={() =>
+              document.getElementById(domIdForPopupContainer || "")!
+            }
             options={
               filterOptions &&
               filterOptions?.cate?.map((item) => {
@@ -90,6 +94,9 @@ const EPFilter: FC<IProps> = (props: IProps) => {
         <Form.Item name="status">
           <Select
             placeholder="Trạng thái"
+            getPopupContainer={() =>
+              document.getElementById(domIdForPopupContainer || "")!
+            }
             options={
               filterOptions &&
               filterOptions.status.map((item) => {

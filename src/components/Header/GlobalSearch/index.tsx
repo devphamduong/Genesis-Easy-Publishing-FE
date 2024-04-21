@@ -162,6 +162,7 @@ const GlobalSearch: FC<IProps> = (props: IProps) => {
           </div>
         )}
         open={isExpand}
+        getPopupContainer={() => ref.current}
         overlayClassName={`custom-global-search-dropdown ${breakpoint}`}
       >
         <Input

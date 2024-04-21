@@ -1,9 +1,15 @@
 .rank-stories-layout-container {
     .rank-stories-layout-content {
+        .left {
+            .sticky-filter {
+                position: sticky;
+                top     : 90px;
+            }
 
-        .ant-menu-title-content {
-            text-transform: capitalize;
-            font-size     : 15px;
+            .ant-menu-title-content {
+                text-transform: capitalize;
+                font-size     : 15px;
+            }
         }
     }
 }

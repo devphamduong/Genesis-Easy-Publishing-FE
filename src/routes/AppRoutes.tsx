@@ -41,6 +41,8 @@ import ReviewAChapterPage from "../pages/Author/Review/ReviewAChapter";
 import ReviewerProtectedRoute from "../components/ProtectedRoute/Reviewer";
 import StoriesLatestByChapter from "../pages/RankStories/StoriesLatestByChapter";
 import PreviewExportPage from "../pages/Author/PreviewExport";
+import UnreviewChaptersPage from "../pages/Author/PostedStories/UnreviewChapters";
+import ChaptersNeedToReviewPage from "../pages/Author/Review/ChaptersNeedToReview";
 
 interface IProps {}
 
@@ -149,6 +151,10 @@ const AppRoutes: FC<IProps> = (props: IProps) => {
             element={<AuthorLayout categories={categories} />}
           >
             <Route path="posted-stories" element={<PostedStoriesPage />} />
+            <Route
+              path="unreview-chapters"
+              element={<UnreviewChaptersPage />}
+            />
             <Route path="write-story" element={<WriteStoryPage />}></Route>
             <Route path="write-chapter" element={<WriteChapterPage />}></Route>
             <Route
@@ -167,6 +173,17 @@ const AppRoutes: FC<IProps> = (props: IProps) => {
               }
             ></Route>
             <Route
+              path="review/chapters-need-to-review"
+              element={
+                <ReviewerProtectedRoute
+                  isAuthenticated={isAuthenticated}
+                  role={role}
+                >
+                  <ChaptersNeedToReviewPage />
+                </ReviewerProtectedRoute>
+              }
+            ></Route>
+            <Route
               path="review-a-chapter"
               element={
                 <ReviewerProtectedRoute
@@ -181,10 +198,6 @@ const AppRoutes: FC<IProps> = (props: IProps) => {
         </Route>
         <Route path="*" element={<NotFoundPage />}></Route>
       </Routes>
-      {/* <PrivateRoutes path='/users' component={User} />
-             <PrivateRoutes path='/roles' component={Role} />
-             <PrivateRoutes path='/group-role' component={GroupRole} />
-             <PrivateRoutes path='/project' element={User}></PrivateRoutes> */}
     </>
   );
 };

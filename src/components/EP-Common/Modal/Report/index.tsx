@@ -15,6 +15,7 @@ const { TextArea } = Input;
 interface IProps extends IPropsEPModal {
   inChapter?: number;
   storyId?: string | number;
+  commentId?: string | number;
 }
 
 const formItemLayout = {
@@ -29,7 +30,7 @@ const formItemLayout = {
 };
 
 const EPModalReport: FC<IProps> = (props: IProps) => {
-  const { isModalOpen, setIsModalOpen, inChapter, storyId } = props;
+  const { isModalOpen, setIsModalOpen, inChapter, storyId, commentId } = props;
   const [form] = Form.useForm<IReportForm>();
   const [reportOptions, setReportOptions] = useState<IReportOption[]>([]);
 
@@ -54,10 +55,12 @@ const EPModalReport: FC<IProps> = (props: IProps) => {
   };
 
   const onFinish = async (values: IReportForm) => {
-    const payload = {
-      ...values,
-      storyId: +storyId!,
-    };
+    const payload = commentId
+      ? { ...values, commentId: commentId! }
+      : {
+          ...values,
+          storyId: +storyId!,
+        };
     const res = await reportStory(payload);
     if (res && res.ec === 0) {
       toast.success(res.em);
@@ -111,16 +114,6 @@ const EPModalReport: FC<IProps> = (props: IProps) => {
             <InputNumber disabled min={1} />
           </Form.Item>
         )}
-        {/* {inChapter && (
-          <Form.Item<IReportForm>
-            name="commentId"
-            label="Trong chương"
-            rules={[{ required: true, message: "Không được để trống! " }]}
-            initialValue={inChapter}
-          >
-            <InputNumber min={1} max={10} />
-          </Form.Item>
-        )} */}
       </Form>
     </Modal>
   );

@@ -7,7 +7,7 @@ import { Layout, Menu, theme } from "antd";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { IRootState } from "../../redux/store";
-import { EMenuLabel } from "../../enums/menu.enum";
+import { EAuthorMenuLabel } from "../../enums/menu.enum";
 import { ERouteEndPointForAuthor } from "../../enums/route-end-point.enum";
 import { GiBookshelf } from "react-icons/gi";
 import { TbBookUpload } from "react-icons/tb";
@@ -62,17 +62,27 @@ const AuthorLayout: FC<IProps> = (props: IProps) => {
   const items: MenuItem[] = [
     getItem(
       <div onClick={() => navigate(ERouteEndPointForAuthor.POSTED_STORIES)}>
-        {EMenuLabel.AUTHOR_POSTED_STORY}
+        {EAuthorMenuLabel.POSTED_STORY}
       </div>,
       ERouteEndPointForAuthor.POSTED_STORIES,
       <GiBookshelf
         className="fs-5"
         onClick={() => navigate(ERouteEndPointForAuthor.POSTED_STORIES)}
-      />
+      />,
+      [
+        getItem(
+          <div
+            onClick={() => navigate(ERouteEndPointForAuthor.UNREVIEW_CHAPTERS)}
+          >
+            {EAuthorMenuLabel.UNREVIEW_CHAPTERS}
+          </div>,
+          ERouteEndPointForAuthor.UNREVIEW_CHAPTERS
+        ),
+      ]
     ),
     getItem(
       <div onClick={() => navigate(ERouteEndPointForAuthor.WRITE_STORY)}>
-        {EMenuLabel.AUTHOR_WRITE_STORY}
+        {EAuthorMenuLabel.WRITE_STORY}
       </div>,
       ERouteEndPointForAuthor.WRITE_STORY,
       <TbBookUpload
@@ -81,7 +91,7 @@ const AuthorLayout: FC<IProps> = (props: IProps) => {
       />
     ),
     getItem(
-      <div>{EMenuLabel.AUTHOR_WRITE_CHAPTER}</div>,
+      <div>{EAuthorMenuLabel.WRITE_CHAPTER}</div>,
       ERouteEndPointForAuthor.WRITE_CHAPTER,
       <GrChapterAdd className="fs-5" />,
       undefined,
@@ -89,19 +99,34 @@ const AuthorLayout: FC<IProps> = (props: IProps) => {
     ),
     getItem(
       <div onClick={() => navigate(ERouteEndPointForAuthor.REVIEW)}>
-        {EMenuLabel.AUTHOR_REVIEW_STORY}
+        {EAuthorMenuLabel.REVIEW_STORY}
       </div>,
       ERouteEndPointForAuthor.REVIEW,
       <VscOpenPreview
         className="fs-5"
         onClick={() => navigate(ERouteEndPointForAuthor.REVIEW)}
-      />
+      />,
+      [
+        getItem(
+          <div
+            onClick={() =>
+              navigate(ERouteEndPointForAuthor.CHAPTERS_NEED_TO_REVIEW)
+            }
+          >
+            {EAuthorMenuLabel.CHAPTERS_NEED_TO_REVIEW}
+          </div>,
+          ERouteEndPointForAuthor.CHAPTERS_NEED_TO_REVIEW
+        ),
+      ]
     ),
   ];
 
   return (
     <>
-      <Layout style={{ minHeight: "100vh" }}>
+      <Layout
+        style={{ minHeight: "100vh" }}
+        className="author-layout-container"
+      >
         <Sider
           className="d-none d-lg-block"
           collapsible
@@ -119,7 +144,7 @@ const AuthorLayout: FC<IProps> = (props: IProps) => {
             theme="dark"
             defaultSelectedKeys={[currentParams]}
             selectedKeys={[currentParams]}
-            mode="inline"
+            mode="vertical"
             items={items}
           />
         </Sider>

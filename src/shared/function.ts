@@ -1,6 +1,7 @@
 import relativeTime from "dayjs/plugin/relativeTime";
 import dayjs from "dayjs";
-import { IExportPreview } from "../interfaces/story.interface";
+import "dayjs/locale/vi";
+dayjs.locale("vi");
 dayjs.extend(relativeTime);
 
 export const kFormatter = (num: number): number | string => {

@@ -90,6 +90,9 @@ export interface IPaginationStory {
 export interface IChapter {
   chapterId: number;
   volumeId: number;
+  volumeTitle: number;
+  volumeNumber: number;
+  storyId: string | number;
   storyTitle: string;
   chapterNumber: number;
   chapterTitle: string;
@@ -176,9 +179,9 @@ export interface IWriteChapterForm {
 
 export interface IReportForm {
   reportTypeId: number;
-  storyId: number;
+  storyId?: number;
   chapterId?: number;
-  commentId?: number;
+  commentId?: number | string;
   reportContent?: string;
 }
 

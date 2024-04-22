@@ -7,11 +7,16 @@ export enum EMenuLabel {
   READ_HISTORY = "Lịch sử đọc",
   CHANGE_PASSWORD = "Đổi mật khẩu",
   MANAGE = "Quản lý truyện",
-  AUTHOR_DASHBOARD = "Thống kê",
-  AUTHOR_WRITE_STORY = "Viết truyện",
-  AUTHOR_WRITE_CHAPTER = "Viết chương truyện",
-  AUTHOR_POSTED_STORY = "Truyện đã đăng",
-  AUTHOR_REVIEW_STORY = "Review",
+}
+
+export enum EAuthorMenuLabel {
+  DASHBOARD = "Thống kê",
+  WRITE_STORY = "Viết truyện",
+  WRITE_CHAPTER = "Viết chương truyện",
+  POSTED_STORY = "Truyện đã đăng",
+  UNREVIEW_CHAPTERS = "Các chương chưa được kiểm duyệt",
+  REVIEW_STORY = "Kiểm duyệt",
+  CHAPTERS_NEED_TO_REVIEW = "Các chương cần kiểm duyệt",
 }
 
 export enum EMenuKey {

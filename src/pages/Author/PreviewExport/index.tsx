@@ -60,6 +60,7 @@ const PreviewExportPage: FC<IProps> = (props: IProps) => {
                         </strong>
                         <div
                           className="content-html"
+                          style={{ textAlign: "justify" }}
                           dangerouslySetInnerHTML={{
                             __html: itemC.chapterContentHtml,
                           }}

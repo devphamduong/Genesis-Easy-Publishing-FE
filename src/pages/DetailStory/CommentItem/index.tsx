@@ -25,6 +25,7 @@ import { UserOutlined } from "@ant-design/icons";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import { IRootState } from "../../../redux/store";
+import EPModalReport from "../../../components/EP-Common/Modal/Report";
 
 interface IProps {
   createComment?: boolean;
@@ -40,6 +41,7 @@ const CommentItem: FC<IProps> = (props: IProps) => {
     useState<boolean>(false);
   const [commentContent, setCommentContent] = useState<string>("");
   const account = useSelector((state: IRootState) => state.account?.user);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleCommentAction = (
     option: "create" | "edit" | "delete",
@@ -67,177 +69,189 @@ const CommentItem: FC<IProps> = (props: IProps) => {
   };
 
   return (
-    <div className="comment-item-container">
-      <div className="comment-item-content">
-        {createComment ? (
-          <Flex gap={"small"} vertical className="create-comment">
-            <Row>
-              <Col xs={2} xl={1}>
-                <Avatar
-                  icon={<UserOutlined />}
-                  src={`${
-                    import.meta.env.VITE_BACKEND_URL
-                  }Assets/images/avatar/${account.userImage}`}
-                />
-              </Col>
-              <Col xs={22} xl={23}>
-                <TextArea
-                  variant="filled"
-                  placeholder="Bạn đang nghĩ gì?"
-                  autoSize
-                  value={commentContent}
-                  onChange={(e) => setCommentContent(e.target.value)}
-                  onFocus={() => setIsDisplayButtonComment(true)}
-                />
-              </Col>
-            </Row>
-            {isDisplayButtonComment && (
-              <Flex gap="small" justify="end">
-                <Button
-                  onClick={() => {
-                    setCommentContent("");
-                    setIsDisplayButtonComment(false);
-                  }}
-                >
-                  Hủy
-                </Button>
-                <Button
-                  type="primary"
-                  onClick={() =>
-                    handleCommentAction("create", commentContent, 0)
-                  }
-                >
-                  Bình luận
-                </Button>
-              </Flex>
-            )}
-          </Flex>
-        ) : (
-          comment && (
-            <List.Item className="comment-item">
-              <List.Item.Meta
-                avatar={
+    <>
+      <div className="comment-item-container">
+        <div className="comment-item-content">
+          {createComment ? (
+            <Flex gap={"small"} vertical className="create-comment">
+              <Row>
+                <Col xs={2} xl={1}>
                   <Avatar
-                    src={`https://api.dicebear.com/7.x/miniavs/svg?seed=${
-                      Math.random() * 11
-                    }`}
+                    icon={<UserOutlined />}
+                    src={`${
+                      import.meta.env.VITE_BACKEND_URL
+                    }Assets/images/avatar/${account.userImage}`}
                   />
-                }
-                title={
-                  !isEditingComment ? (
-                    <div className="d-flex align-items-center justify-content-between">
-                      <div className="d-flex align-items-center gap-2">
-                        <strong>{comment.userComment.userFullname}</strong>
-                        <span className="time text-small">
-                          {dayjsFrom(comment.commentDate)}
-                        </span>
-                      </div>
-                      <Popover
-                        rootClassName="comment-item-actions"
-                        content={
-                          <div className="d-flex flex-column align-items-center gap-2">
-                            {comment.commentWriter ? (
-                              <>
-                                <EPButton
-                                  type="text"
-                                  icon={<MdOutlineModeEdit className="fs-5" />}
-                                  onClick={() => {
-                                    setIsEditingComment(true);
-                                    setCommentContent(comment.commentContent);
-                                  }}
-                                >
-                                  Sửa
-                                </EPButton>
-                                <Popconfirm
-                                  title="Xóa bình luận"
-                                  description="Bạn có muốn xóa vĩnh viễn không?"
-                                  okText="Xóa"
-                                  cancelText="Hủy"
-                                  onConfirm={() =>
-                                    handleCommentAction(
-                                      "delete",
-                                      "",
-                                      comment.commentId
-                                    )
-                                  }
-                                >
+                </Col>
+                <Col xs={22} xl={23}>
+                  <TextArea
+                    variant="filled"
+                    placeholder="Bạn đang nghĩ gì?"
+                    autoSize
+                    value={commentContent}
+                    onChange={(e) => setCommentContent(e.target.value)}
+                    onFocus={() => setIsDisplayButtonComment(true)}
+                  />
+                </Col>
+              </Row>
+              {isDisplayButtonComment && (
+                <Flex gap="small" justify="end">
+                  <Button
+                    onClick={() => {
+                      setCommentContent("");
+                      setIsDisplayButtonComment(false);
+                    }}
+                  >
+                    Hủy
+                  </Button>
+                  <Button
+                    type="primary"
+                    onClick={() =>
+                      handleCommentAction("create", commentContent, 0)
+                    }
+                  >
+                    Bình luận
+                  </Button>
+                </Flex>
+              )}
+            </Flex>
+          ) : (
+            comment && (
+              <List.Item className="comment-item">
+                <List.Item.Meta
+                  avatar={
+                    <Avatar
+                      src={`https://api.dicebear.com/7.x/miniavs/svg?seed=${
+                        Math.random() * 11
+                      }`}
+                    />
+                  }
+                  title={
+                    !isEditingComment ? (
+                      <div className="d-flex align-items-center justify-content-between">
+                        <div className="d-flex align-items-center gap-2">
+                          <strong>{comment.userComment.userFullname}</strong>
+                          <span className="time text-small">
+                            {dayjsFrom(comment.commentDate)}
+                          </span>
+                        </div>
+                        <Popover
+                          rootClassName="comment-item-actions"
+                          content={
+                            <div className="d-flex flex-column align-items-center gap-2">
+                              {comment.commentWriter ? (
+                                <>
                                   <EPButton
                                     type="text"
-                                    icon={<MdDeleteOutline className="fs-5" />}
+                                    icon={
+                                      <MdOutlineModeEdit className="fs-5" />
+                                    }
+                                    onClick={() => {
+                                      setIsEditingComment(true);
+                                      setCommentContent(comment.commentContent);
+                                    }}
                                   >
-                                    Xóa
+                                    Sửa
                                   </EPButton>
-                                </Popconfirm>
-                              </>
-                            ) : (
-                              <EPButton
-                                type="text"
-                                icon={<MdOutlinedFlag className="fs-5" />}
+                                  <Popconfirm
+                                    title="Xóa bình luận"
+                                    description="Bạn có muốn xóa vĩnh viễn không?"
+                                    okText="Xóa"
+                                    cancelText="Hủy"
+                                    onConfirm={() =>
+                                      handleCommentAction(
+                                        "delete",
+                                        "",
+                                        comment.commentId
+                                      )
+                                    }
+                                  >
+                                    <EPButton
+                                      type="text"
+                                      icon={
+                                        <MdDeleteOutline className="fs-5" />
+                                      }
+                                    >
+                                      Xóa
+                                    </EPButton>
+                                  </Popconfirm>
+                                </>
+                              ) : (
+                                <EPButton
+                                  type="text"
+                                  icon={<MdOutlinedFlag className="fs-5" />}
+                                  onClick={() => setIsModalOpen(true)}
+                                >
+                                  Report
+                                </EPButton>
+                              )}
+                            </div>
+                          }
+                          trigger={"click"}
+                        >
+                          <EPButton shape="circle" type="text">
+                            <BsThreeDotsVertical />
+                          </EPButton>
+                        </Popover>
+                      </div>
+                    ) : (
+                      comment.commentWriter && (
+                        <Flex gap={"small"} vertical>
+                          <Row>
+                            <Col span={24}>
+                              <TextArea
+                                variant="filled"
+                                placeholder="Bạn đang nghĩ gì?"
+                                autoSize
+                                value={commentContent}
+                                onChange={(e) =>
+                                  setCommentContent(e.target.value)
+                                }
+                                onFocus={() => setIsDisplayButtonComment(true)}
+                              />
+                            </Col>
+                          </Row>
+                          {isDisplayButtonComment && (
+                            <Flex gap="small" justify="end">
+                              <Button
+                                onClick={() => {
+                                  setCommentContent("");
+                                  setIsEditingComment(false);
+                                }}
                               >
-                                Report
-                              </EPButton>
-                            )}
-                          </div>
-                        }
-                        trigger={"click"}
-                      >
-                        <EPButton shape="circle" type="text">
-                          <BsThreeDotsVertical />
-                        </EPButton>
-                      </Popover>
-                    </div>
-                  ) : (
-                    comment.commentWriter && (
-                      <Flex gap={"small"} vertical>
-                        <Row>
-                          <Col span={24}>
-                            <TextArea
-                              variant="filled"
-                              placeholder="Bạn đang nghĩ gì?"
-                              autoSize
-                              value={commentContent}
-                              onChange={(e) =>
-                                setCommentContent(e.target.value)
-                              }
-                              onFocus={() => setIsDisplayButtonComment(true)}
-                            />
-                          </Col>
-                        </Row>
-                        {isDisplayButtonComment && (
-                          <Flex gap="small" justify="end">
-                            <Button
-                              onClick={() => {
-                                setCommentContent("");
-                                setIsEditingComment(false);
-                              }}
-                            >
-                              Hủy
-                            </Button>
-                            <Button
-                              type="primary"
-                              onClick={() =>
-                                handleCommentAction(
-                                  "edit",
-                                  commentContent,
-                                  comment.commentId
-                                )
-                              }
-                            >
-                              Lưu thay đổi
-                            </Button>
-                          </Flex>
-                        )}
-                      </Flex>
+                                Hủy
+                              </Button>
+                              <Button
+                                type="primary"
+                                onClick={() =>
+                                  handleCommentAction(
+                                    "edit",
+                                    commentContent,
+                                    comment.commentId
+                                  )
+                                }
+                              >
+                                Lưu thay đổi
+                              </Button>
+                            </Flex>
+                          )}
+                        </Flex>
+                      )
                     )
-                  )
-                }
-                description={!isEditingComment && comment.commentContent}
-              />
-            </List.Item>
-          )
-        )}
+                  }
+                  description={!isEditingComment && comment.commentContent}
+                />
+              </List.Item>
+            )
+          )}
+        </div>
       </div>
-    </div>
+      <EPModalReport
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+        commentId={comment?.commentId}
+      />
+    </>
   );
 };
 

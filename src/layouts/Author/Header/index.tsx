@@ -163,6 +163,9 @@ const HeaderAuthor: FC<IProps> = (props: IProps) => {
         </Col>
         <Col>
           <div>Xin chào {account.username}</div>
+          <div>
+            Bạn đang có: <strong>{account.tlt}</strong> TLT
+          </div>
           <strong className="pointer">
             <Popover
               content={popoverMenu()}

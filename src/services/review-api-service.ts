@@ -7,7 +7,7 @@ import {
   IReviewChapterInfo,
   IReviewDetailChapterInfo,
 } from "../interfaces/review.interface";
-import { IStory, IVolume } from "../interfaces/story.interface";
+import { IChapter, IStory, IVolume } from "../interfaces/story.interface";
 import axios from "../utils/axios-customize";
 
 export const getStoriesReview = (
@@ -45,4 +45,20 @@ export const sendReviewResult = (
   data: IReviewChapterForm
 ): Promise<IApiResponse<null>> => {
   return axios.post(`reviews/send`, { ...data });
+};
+
+export const getUnreviewChapters = (
+  page: number,
+  pageSize: number
+): Promise<IApiResponsePagination<IChapter>> => {
+  return axios.get(
+    `reviews/chapter_review_author?&page=${page}&pageSize=${pageSize}`
+  );
+};
+
+export const getChaptersNeedToReview = (
+  page: number,
+  pageSize: number
+): Promise<IApiResponsePagination<IChapter>> => {
+  return axios.get(`reviews/chapter_review?&page=${page}&pageSize=${pageSize}`);
 };

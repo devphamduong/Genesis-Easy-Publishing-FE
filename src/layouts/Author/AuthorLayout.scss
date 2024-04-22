@@ -1,0 +1,20 @@
+.author-layout-container {
+    .ant-layout-sider {
+        .ant-layout-sider-children {
+            .ant-menu {
+                .ant-menu-submenu {
+
+                    .ant-menu-submenu-title {
+                        display    : flex;
+                        align-items: center;
+                    }
+                }
+
+                .ant-menu-item {
+                    display    : flex;
+                    align-items: center;
+                }
+            }
+        }
+    }
+}

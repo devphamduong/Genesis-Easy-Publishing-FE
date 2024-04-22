@@ -16,9 +16,11 @@ export enum ERouteEndPointForUser {
 export enum ERouteEndPointForAuthor {
   DASHBOARD = "/author/dashboard",
   POSTED_STORIES = "/author/posted-stories",
+  UNREVIEW_CHAPTERS = "/author/unreview-chapters",
   WRITE_STORY = "/author/write-story",
   WRITE_CHAPTER = "/author/write-chapter",
   REVIEW = "/author/review",
+  CHAPTERS_NEED_TO_REVIEW = "/author/review/chapters-need-to-review",
   REVIEW_CHAPTER = "/author/review-a-chapter",
   EXPORT_PREVIEW = "/author/export-preview",
 }

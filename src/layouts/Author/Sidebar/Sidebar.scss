@@ -1,4 +1,13 @@
-.ant-drawer-content-wrapper:has(.side-bar) {
+.side-bar-author-container {
+    .side-bar-author-options {
+        button {
+            display        : flex;
+            justify-content: start !important;
+        }
+    }
+}
+
+.ant-drawer-content-wrapper:has(.side-bar-author-container) {
     .ant-drawer-content {
         .ant-drawer-header {
             .ant-drawer-title {

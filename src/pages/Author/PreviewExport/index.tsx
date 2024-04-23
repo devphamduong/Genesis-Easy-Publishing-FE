@@ -1,5 +1,5 @@
 import { FC, useEffect, useRef, useState } from "react";
-// import "./PreviewExport.scss";
+import "./PreviewExport.scss";
 import { useLocation } from "react-router-dom";
 import { IExportPreview } from "../../../interfaces/story.interface";
 import { storyExportPreview } from "../../../services/author-api-service";
@@ -30,7 +30,7 @@ const PreviewExportPage: FC<IProps> = (props: IProps) => {
   };
 
   return (
-    <div className="export-preview-container">
+    <div className="export-preview-container" style={{ padding: "0 300px" }}>
       <div className="export-preview-content" ref={ref}>
         <div className="text-center story">
           <strong className="story-title fs-4">

@@ -12,6 +12,8 @@ export interface IStory {
     userId: number | string;
     userFullname: string;
   };
+  chapterNum: number;
+  reviewed: boolean;
   storyChapterNumber: number;
   storyChapters?: IChapter[];
   storyLatestChapter: {
@@ -164,6 +166,7 @@ export interface IWriteStoryForm {
   storyDescription?: string;
   storyDescriptionMarkdown?: string;
   storyDescriptionHtml?: string;
+  reviewed: boolean;
 }
 
 export interface IWriteChapterForm {

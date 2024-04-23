@@ -142,7 +142,7 @@ export const getGlobalSearchStories = (
   return axios.get(`story/search_global?${query}`);
 };
 
-export const uploadStoryCover = (
+export const updateStoryCover = (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   fileImg: any,
   storyId: number | string
@@ -153,6 +153,19 @@ export const uploadStoryCover = (
   return axios({
     method: "put",
     url: "story/update_storyImage",
+    data: bodyFormData,
+  });
+};
+
+export const uploadStoryCover = (
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  fileImg: any
+): Promise<IApiResponse<{ fileUploaded: string }>> => {
+  const bodyFormData = new FormData();
+  bodyFormData.append("image", fileImg);
+  return axios({
+    method: "put",
+    url: "story/upload_image",
     data: bodyFormData,
   });
 };

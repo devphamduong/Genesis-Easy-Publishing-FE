@@ -189,7 +189,7 @@ const SearchFilter: FC<IProps> = (props: IProps) => {
         />
         <Select
           placeholder="Trạng thái"
-          defaultValue={EStoryStatusKey.NOT_COMPLETED}
+          allowClear
           onChange={(e) => handleChangeFilter("status", e)}
           getPopupContainer={() =>
             document.getElementById("search-filter-content")!

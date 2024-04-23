@@ -54,7 +54,14 @@ const OwnedStoriesPage: FC<IProps> = (props: IProps) => {
                     key={`owned-story-${item.storyId}`}
                     hoverable
                     style={{ width: 180 }}
-                    cover={<img alt={item.storyTitle} src={item.storyImage} />}
+                    cover={
+                      <img
+                        alt={item.storyTitle}
+                        src={`${
+                          import.meta.env.VITE_BACKEND_URL
+                        }Assets/images/story/${item.storyImage}`}
+                      />
+                    }
                     onClick={() =>
                       navigate(getStoryDetailURL(item.storyId, item.storyTitle))
                     }

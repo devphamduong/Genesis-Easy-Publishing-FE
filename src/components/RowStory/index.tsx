@@ -53,7 +53,7 @@ const RowStory: FC<IProps> = (props: IProps) => {
           className="d-flex flex-column justify-content-between"
         >
           <Link
-            className="link-hover name"
+            className="link-hover name text-start"
             to={getStoryDetailURL(story.storyId, story.storyTitle)}
           >
             <strong>{story.storyTitle}</strong>
@@ -122,7 +122,7 @@ const RowStory: FC<IProps> = (props: IProps) => {
           className="d-flex flex-column justify-content-between"
         >
           <Link
-            className="link-hover name"
+            className="link-hover name text-start"
             to={getStoryDetailURL(story.storyId, story.storyTitle)}
           >
             <strong>{story.storyTitle}</strong>

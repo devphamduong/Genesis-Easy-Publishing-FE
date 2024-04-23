@@ -185,12 +185,14 @@ const CategoryPage: FC<IProps> = (props: IProps) => {
             </Row>
           </Col>
           <Col xs={24} xl={5} className="order-lg-0 order-xl-0">
-            <div className="border p-4 rounded-3 text-theme">
+            <div className="border p-2 rounded-3 text-theme">
               {categoryDetail?.categoryDescription}
             </div>
           </Col>
           <Col xs={24} xl={18} className="order-lg-2 order-xl-0">
-            <div className="fs-5">Truyện Kiếm Hiệp Mới Cập Nhật</div>
+            <div className="fs-5 text-theme">
+              Truyện {categoryDetail?.categoryName} Mới Cập Nhật
+            </div>
             <Divider />
             <Row gutter={[16, 16]}>
               {storiesUpdate && storiesUpdate.length > 0
@@ -219,14 +221,16 @@ const CategoryPage: FC<IProps> = (props: IProps) => {
           <Col xs={24} xl={6} className="order-lg-3 order-xl-0">
             <ListStories
               stories={storiesMostRead}
-              title="Truyện Kiếm Hiệp Được Đọc Nhiều"
+              title={`Truyện ${categoryDetail?.categoryName} Được Đọc Nhiều`}
               displayRead
               displayRank
               showDetailFirstStory
             />
           </Col>
           <Col xs={24} xl={18} className="order-lg-4 order-xl-0">
-            <div className="fs-5">Truyện Kiếm Hiệp Hoàn Thành</div>
+            <div className="fs-5 text-theme">
+              Truyện {categoryDetail?.categoryName} Hoàn Thành
+            </div>
             <Divider />
             <Row gutter={[16, 16]}>
               {storiesCompleted && storiesCompleted.length > 0
@@ -259,7 +263,7 @@ const CategoryPage: FC<IProps> = (props: IProps) => {
               displayRank
               showDetailFirstStory
               showMore={false}
-              title="Top Truyện Kiếm Hiệp Hoàn Thành"
+              title={`Top Truyện ${categoryDetail?.categoryName} Hoàn Thành`}
             />
           </Col>
         </Row>

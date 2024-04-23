@@ -109,7 +109,7 @@ const ListStories: FC<IProps> = (props: IProps) => {
             <span>{index + 1}</span>
           </div>
         </Col>
-        <Col span={16} className="d-flex flex-column">
+        <Col span={15} className="d-flex flex-column">
           <strong
             onClick={() =>
               navigate(getStoryDetailURL(item.storyId, item.storyTitle))

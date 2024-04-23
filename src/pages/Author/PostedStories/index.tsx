@@ -151,22 +151,23 @@ const PostedStoriesPage: FC<IProps> = (props: IProps) => {
       render(value: string, record: IStory) {
         return (
           <Flex align="center" gap={10}>
-            {record.storyStatus === EStoryStatusKey.NOT_PUBLIC && (
-              <Tooltip
-                title={
-                  <span>
-                    Truyện của bạn chỉ có thể được công bố khi đã đạt đủ điều
-                    kiện (
-                    <strong>
-                      có ít nhất 1 chương và đã được review thành công
-                    </strong>
-                    ).
-                  </span>
-                }
-              >
-                <BsInfoCircleFill className="pointer" />
-              </Tooltip>
-            )}
+            {record.storyStatus === EStoryStatusKey.NOT_PUBLIC &&
+              record.chapterNum <= 0 && (
+                <Tooltip
+                  title={
+                    <span>
+                      Truyện của bạn chỉ có thể được công bố khi đã đạt đủ điều
+                      kiện (
+                      <strong>
+                        có ít nhất 1 chương và đã được review thành công
+                      </strong>
+                      ).
+                    </span>
+                  }
+                >
+                  <BsInfoCircleFill className="pointer" />
+                </Tooltip>
+              )}
             <span>
               {EStoryStatusLabel[EStoryStatusKey[record.storyStatus]]}
             </span>

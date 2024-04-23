@@ -39,7 +39,10 @@ import {
 import { ERouteEndPointForAuthor } from "../../../enums/route-end-point.enum";
 import { EStoryStatusKey, EStoryStatusLabel } from "../../../enums/story.enum";
 import AIGenerateImage from "./AIGenerateImage";
-import { uploadStoryCover } from "../../../services/story-api-service";
+import {
+  updateStoryCover,
+  uploadStoryCover,
+} from "../../../services/story-api-service";
 
 const beforeUpload = (file) => {
   const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
@@ -114,6 +117,7 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
         status: res.dt.status,
         storyPrice: +res.dt.storyPrice,
         storySale: res.dt.storySale,
+        reviewed: res.dt.reviewed,
       });
       setPreviewImgName(res.dt.storyImage);
       handleEditorChange({
@@ -162,7 +166,12 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
 
   const handleUploadStoryCover = async (options) => {
     const { file, onSuccess, onError } = options;
-    const res = await uploadStoryCover(file, storyId!);
+    let res;
+    if (mode === "edit") {
+      res = await updateStoryCover(file, storyId!);
+    } else {
+      res = await uploadStoryCover(file);
+    }
     if (res && res.ec === 0) {
       setPreviewImgName(res.dt.fileUploaded);
       onSuccess("ok");
@@ -271,21 +280,13 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
                     name="status"
                   >
                     <Radio.Group buttonStyle="solid" size="large">
-                      <Radio.Button
-                        value={EStoryStatusKey.NOT_PUBLIC}
-                        disabled={
-                          form.getFieldValue("status") >
-                          EStoryStatusKey.NOT_PUBLIC
-                        }
-                      >
+                      <Radio.Button value={EStoryStatusKey.NOT_PUBLIC}>
                         {EStoryStatusLabel.NOT_PUBLIC}
                       </Radio.Button>
                       <Radio.Button
                         value={EStoryStatusKey.NOT_COMPLETED}
                         disabled={
-                          !form.getFieldValue("status") ||
-                          form.getFieldValue("status") ===
-                            EStoryStatusKey.NOT_PUBLIC
+                          mode !== "edit" || !form.getFieldValue("reviewed")
                         }
                       >
                         {EStoryStatusLabel.NOT_COMPLETED}
@@ -293,9 +294,7 @@ const WriteStoryPage: FC<IProps> = (props: IProps) => {
                       <Radio.Button
                         value={EStoryStatusKey.COMPLETED}
                         disabled={
-                          !form.getFieldValue("status") ||
-                          form.getFieldValue("status") ===
-                            EStoryStatusKey.NOT_PUBLIC
+                          mode !== "edit" || !form.getFieldValue("reviewed")
                         }
                       >
                         {EStoryStatusLabel.COMPLETED}

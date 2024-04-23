@@ -167,7 +167,7 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
       setStory(res.dt);
       PRICE = res.dt.storyPrice;
       SALE_PERCENT = res.dt.storySale;
-      NEW_PRICE = (PRICE - (SALE_PERCENT / 100) * PRICE).toFixed(2);
+      NEW_PRICE = PRICE - (SALE_PERCENT / 100) * PRICE;
     }
   };
 
@@ -578,7 +578,7 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
                     <td>Giá gốc</td>
                     <td>
                       <Text strong delete={story && story?.storySale < 0}>
-                        {story?.storyPrice ?? 0}
+                        {story?.storyPrice ?? 0} TLT
                       </Text>
                     </td>
                   </tr>
@@ -590,7 +590,7 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
                         </td>
                         <td>
                           <Text type="danger">
-                            <strong>{NEW_PRICE}</strong>
+                            <strong>{NEW_PRICE}</strong> TLT
                           </Text>
                         </td>
                       </tr>
@@ -602,7 +602,7 @@ const DetailStoryPage: FC<IProps> = (props: IProps) => {
                           </Text>
                         </td>
                         <td>
-                          <p>{(PRICE - (NEW_PRICE as number)).toFixed(2)}</p>
+                          <p>{PRICE - (NEW_PRICE as number)} TLT</p>
                         </td>
                       </tr>
                     </>

@@ -17,7 +17,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <PersistGate persistor={persistor}>
       <BrowserRouter>
         <App>
-          <ToastContainer position={"bottom-right"} />
+          <ToastContainer position={"bottom-right"} className={"text-start"} />
           <AppMain />
         </App>
       </BrowserRouter>

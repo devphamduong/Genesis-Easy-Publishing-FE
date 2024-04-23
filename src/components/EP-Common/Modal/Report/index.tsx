@@ -14,6 +14,7 @@ const { TextArea } = Input;
 
 interface IProps extends IPropsEPModal {
   inChapter?: number;
+  chapterId?: number;
   storyId?: string | number;
   commentId?: string | number;
 }
@@ -30,7 +31,14 @@ const formItemLayout = {
 };
 
 const EPModalReport: FC<IProps> = (props: IProps) => {
-  const { isModalOpen, setIsModalOpen, inChapter, storyId, commentId } = props;
+  const {
+    isModalOpen,
+    setIsModalOpen,
+    inChapter,
+    chapterId,
+    storyId,
+    commentId,
+  } = props;
   const [form] = Form.useForm<IReportForm>();
   const [reportOptions, setReportOptions] = useState<IReportOption[]>([]);
 
@@ -44,7 +52,7 @@ const EPModalReport: FC<IProps> = (props: IProps) => {
   }, []);
 
   useEffect(() => {
-    form.setFieldValue("chapterId", inChapter);
+    form.setFieldValue("inChapter", inChapter);
   }, [inChapter]);
 
   const fetchReportOptions = async () => {
@@ -59,6 +67,7 @@ const EPModalReport: FC<IProps> = (props: IProps) => {
       ? { ...values, commentId: commentId! }
       : {
           ...values,
+          chapterId: +chapterId!,
           storyId: +storyId!,
         };
     const res = await reportStory(payload);
@@ -107,7 +116,7 @@ const EPModalReport: FC<IProps> = (props: IProps) => {
         </Form.Item>
         {inChapter && (
           <Form.Item<IReportForm>
-            name="chapterId"
+            name="inChapter"
             label="Trong chương"
             rules={[{ required: true, message: "Không được để trống! " }]}
           >

@@ -183,6 +183,7 @@ export interface IWriteChapterForm {
 export interface IReportForm {
   reportTypeId: number;
   storyId?: number;
+  inChapter?: number;
   chapterId?: number;
   commentId?: number | string;
   reportContent?: string;

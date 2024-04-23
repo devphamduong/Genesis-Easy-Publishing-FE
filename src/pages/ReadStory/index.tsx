@@ -385,6 +385,7 @@ const ReadStoryPage: FC<IProps> = (props: IProps) => {
         isModalOpen={isModalReportOpen}
         setIsModalOpen={setIsModalReportOpen}
         inChapter={currentChapter}
+        chapterId={chapterContent?.chapterId}
         storyId={id}
       />
       {chapterContent && (
